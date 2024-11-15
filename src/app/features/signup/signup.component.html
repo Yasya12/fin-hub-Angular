@@ -1,0 +1,46 @@
+<section class="container mx-auto">
+  <div class="flex justify-center items-center min-h-screen bg-amber-300">
+    <form #form="ngForm" (ngSubmit)="signup(form.value)" class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-bold mb-6">Sign Up</h2>
+
+      <!-- Username Field -->
+      <div class="mb-6">
+        <label for="username" class="block text-gray-700 font-medium mb-2">Username</label>
+        <input placeholder="Username" class="form-input px-4 py-3 border border-gray-300 rounded-md w-full" id="username" name="username" type="text" [(ngModel)]="user.username" required>
+      </div>
+
+      <!-- Email Field -->
+      <div class="mb-6">
+        <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+        <input placeholder="Email" class="form-input px-4 py-3 border border-gray-300 rounded-md w-full" id="email" name="email" type="email" [(ngModel)]="user.email" required>
+      </div>
+
+      <!-- Password Field -->
+      <div class="mb-6">
+        <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+        <input placeholder="Password" class="form-input px-4 py-3 border border-gray-300 rounded-md w-full" id="password" name="password" type="password" [(ngModel)]="user.password" required>
+      </div>
+
+      <!-- Country Field -->
+      <div class="mb-6">
+        <label for="country" class="block text-gray-700 font-medium mb-2">Country</label>
+        <input placeholder="Country" class="form-input px-4 py-3 border border-gray-300 rounded-md w-full" id="country" name="country" type="text" [(ngModel)]="user.country" required>
+      </div>
+
+      <!-- Date of Birth Field -->
+      <div class="mb-6">
+        <label for="dateOfBirth" class="block text-gray-700 font-medium mb-2">Date of Birth</label>
+        <input placeholder="Date of Birth" class="form-input px-4 py-3 border border-gray-300 rounded-md w-full" id="dateOfBirth" name="dateOfBirth" type="date" [(ngModel)]="user.dateOfBirth" required>
+      </div>
+
+      <!-- Submit Button -->
+      <button class="btn bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-md w-full" type="submit">
+        Sign Up
+      </button>
+
+      <div *ngIf="errorMessage" [@fadeIn] class=" alert alert-danger mt-4 transition-all duration-300">
+        <pre class="text-wrap">{{ errorMessage }}</pre>
+      </div>
+    </form>
+  </div>
+</section>

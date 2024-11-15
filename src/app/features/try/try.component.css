@@ -1,0 +1,9 @@
+.signup-container {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #556B2F, #6b8e23);
+}
