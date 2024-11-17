@@ -1,13 +1,17 @@
-<div class="signup-container">
-  <input type="checkbox" aria-hidden="true">
-  <div class="signup">
-    <form>
-      <label>Sign Up</label>
-      <input type="text" name="username" placeholder="User Name" required="">
-      <input type="email" name="email" placeholder="Email" required="">
-      <input type="password" name="password" placeholder="Password" required="">
-      <button>Sign Up</button>
-    </form>
-
+<div class="px-[10px] sm: m-0 flex justify-center items-center min-h-screen bg-[linear-gradient(to_bottom,_#213c33,_#2f6e48,_#275940)]">
+  <div class="w-[350px]  h-[500px] bg-white rounded-xl overflow-h shadow-[5px_20px_50px_rgba(0,0,0,0.2)] bg-[url('/assets/images/1.jpg')] bg-no-repeat bg-center">
+    <input type="checkbox" aria-hidden="true" id="chk" class="hidden">
+    <div class="relative w-[100%] h-[100%]">
+      <form class="p-4">
+        <label [@expandElement] for="chk" class="text-[#fff] text-3xl flex justify-center m-[30px] font-bold cursor-pointer">Sign Up</label>
+        <input type="text" name="username" placeholder="User Name" required="" class="w-[80%] h-[20%] flex justify-center p-2 my-5 mx-auto border-none outline-none rounded-md">
+        <input type="email" name="email" placeholder="Email" required="" class="w-[80%] h-[20%] flex justify-center p-2 my-5 mx-auto border-none outline-none rounded-md">
+        <input type="password" name="password" placeholder="Password" required="" class="w-[80%] h-[20%] flex justify-center p-2 my-5 mx-auto border-none outline-none rounded-md">
+        <button class="w-[60%] h-[40px] my-2 mx-auto flex justify-center items-center text-[#404a3a] bg-[#afe3c0] text-sm font-bold rounded-md transition-all duration-200 ease-in-out outline-none border-none hover:bg-[#6bb383] cursor-pointer">
+          Sign Up
+        </button>
+        
+      </form>
+    </div>
   </div>
-</div>
+</div>  
