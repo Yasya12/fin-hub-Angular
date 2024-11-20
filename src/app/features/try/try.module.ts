@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TryComponent } from './try.component';
 import {TryRoutingModule} from "./try-routing.module";
-
+import { FormsModule } from '@angular/forms'; 
 
 
 @NgModule({
@@ -11,7 +11,8 @@ import {TryRoutingModule} from "./try-routing.module";
   ],
   imports: [
     CommonModule,
-    TryRoutingModule
+    TryRoutingModule,
+    FormsModule 
   ]
 })
 export class TryModule { }

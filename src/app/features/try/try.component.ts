@@ -1,5 +1,5 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-try',
@@ -21,12 +21,34 @@ import { Component, OnInit } from '@angular/core';
           transform: 'translateY(0)'
         }))
       ])
+    ]),
+    trigger('slideUpDown', [
+      state('down', style({
+        transform: 'translateY(100%)',
+        display: 'none'
+      })),
+      state('up', style({
+        transform: 'translateY(0)',
+        display: 'block'
+      })),
+      transition('down => up', [
+        style({ display: 'block' }),
+        animate('300ms ease-in-out')
+      ]),
+      transition('up => down', [
+        animate('300ms ease-in-out')
+      ])
     ])
   ]
 })
-export class TryComponent implements OnInit{
-    ngOnInit(): void {
-        console.log("loaded");
-    }
+export class TryComponent implements OnInit {
+  isLoginVisible = false;
 
+  toggleLogin() {
+    this.isLoginVisible = !this.isLoginVisible;
+  }
+
+  ngOnInit(): void {
+    console.log("loaded");
+  }
 }
