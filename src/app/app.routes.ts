@@ -9,5 +9,12 @@ export const routes: Routes = [
   {
     path: 'try',
     loadChildren: () => import('./features/try/try.module').then(m => m.TryModule)
+  },
+  {
+    path: 'dashboard', 
+    loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule)
+  },
+  {
+    path: '', redirectTo: 'try', pathMatch: 'full' 
   }
 ];
