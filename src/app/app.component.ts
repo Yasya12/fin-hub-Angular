@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {TryModule} from "./features/try/try.module";
-
 @Component({
   selector: 'app-root',
   standalone: true,
