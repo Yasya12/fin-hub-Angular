@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import {TryComponent} from "./features/try/try.component";
+import {HomeModule} from "./features/home/home.module";
 
 export const routes: Routes = [
   {
@@ -11,10 +11,14 @@ export const routes: Routes = [
     loadChildren: () => import('./features/try/try.module').then(m => m.TryModule)
   },
   {
-    path: 'dashboard', 
+    path: 'home',
+    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
+  },
+  {
+    path: 'dashboard',
     loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {
-    path: '', redirectTo: 'try', pathMatch: 'full' 
+    path: '', redirectTo: 'home', pathMatch: 'full'
   }
 ];
