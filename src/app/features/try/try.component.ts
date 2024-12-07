@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component} from '@angular/core';
 import {  expandElement, slideUpDown } from '../../core/services/animation/signup_animation.service';
 import { GoogleSigninService } from '../../core/services/google-signin.service';
 
@@ -11,16 +11,18 @@ import { GoogleSigninService } from '../../core/services/google-signin.service';
     slideUpDown
   ]
 })
-export class TryComponent implements OnInit {
+export class TryComponent implements AfterViewInit {
   isLoginVisible = false;
 
-  constructor(private googleSigninService: GoogleSigninService
+  constructor(
+    private googleSigninService: GoogleSigninService,
   ) {}
-
-  ngOnInit(): void {
-    // Підключення Google SDK
+  
+  ngAfterViewInit(): void {
+    // Load the Google SDK
     this.googleSigninService.loadSdk();
   }
+
   toggleLogin() {
     this.isLoginVisible = !this.isLoginVisible;
   }
