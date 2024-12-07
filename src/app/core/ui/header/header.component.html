@@ -1,0 +1,23 @@
+<div class="flex items-center justify-between bg-white px-6 py-2 border-b border-gray-200 shadow-md">
+  <div class="flex items-center">
+    <a routerLink="/home">
+      <img src="/assets/images/logo-finhub.png" alt="logo FinHub" style="width: 100px; height: 100%;">
+    </a>
+  </div>  
+
+  <button class="md:hidden" aria-label="Toggle menu" onclick="toggleMenu()">
+    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+    </svg>
+  </button>
+
+  <div class="hidden md:flex items-center space-x-4">
+    <a class="text-base font-medium text-gray-600 hover:text-gray-800" routerLink="/home" routerLinkActive="active">Home</a>
+    <a class="text-base font-medium text-gray-600 hover:text-gray-800" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a class="text-base font-medium text-gray-600 hover:text-gray-800" routerLink="/signup" routerLinkActive="active">Signup</a>
+
+    <button class="px-4 py-2 text-sm font-medium text-green-600 border border-green-600 rounded-lg hover:bg-green-600 hover:text-white transition">
+      <a class="text-base font-medium hover:text-gray-800" routerLink="/try">Signup</a>
+    </button>
+  </div>
+</div>
