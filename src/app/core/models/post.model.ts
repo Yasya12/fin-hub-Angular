@@ -1,4 +1,5 @@
 export interface Post {
+    id: string
     userName: string;
     categoryNames: string[];
     title: string;
@@ -6,5 +7,5 @@ export interface Post {
     createdAt: Date;
     profilePictureUrl: string;
     likesCount: number;
-    commentTexts: string[];
+    commentsCount: number;
   }
