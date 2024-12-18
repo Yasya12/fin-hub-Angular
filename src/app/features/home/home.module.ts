@@ -4,13 +4,15 @@ import { HomeComponent } from './home.component';
 import { HomeRoutingModule } from './home-routing.module';
 import { PostsComponent } from './posts/posts.component';
 import { HeroSectionComponent } from './hero-section/hero-section.component';
-import { NgOptimizedImage } from '@angular/common'
+import { NgOptimizedImage } from '@angular/common';
+import { PostDetailComponent } from './post-detail/post-detail.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     PostsComponent,
-    HeroSectionComponent
+    HeroSectionComponent,
+    PostDetailComponent
   ],
   imports: [
     CommonModule,

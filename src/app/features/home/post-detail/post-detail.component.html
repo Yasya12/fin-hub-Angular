@@ -1,0 +1,49 @@
+<div *ngIf="post" class="max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-lg">
+  <!-- Заголовок поста -->
+  <h2 class="text-4xl font-bold text-gray-900 mb-6">{{ post.title }}</h2>
+
+  <!-- Автор поста та дата -->
+  <div class="flex items-center mb-6">
+    <img [src]="post.profilePictureUrl || '/assets/images/Sample_User_Icon.png'" alt="Author's Profile Picture" class="w-12 h-12 object-cover rounded-full mr-4" />
+    <div>
+      <h4 class="text-xl font-semibold text-gray-800">{{ post.userName }}</h4>
+      <p class="text-sm text-gray-500">{{ post.createdAt | date: 'medium' }}</p>
+    </div>
+  </div>
+
+  <!-- Категорії поста -->
+  <div class="mb-6">
+    <p class="text-sm font-semibold text-gray-600">Categories</p>
+    <p class="text-gray-600 text-sm">
+      {{ post.categoryNames.join(', ') }}
+    </p>
+  </div>
+
+  <!-- Контент поста -->
+  <p class="text-gray-800 text-lg mb-6">{{ post.content }}</p>
+
+  <!-- Блок лайків -->
+  <div class="mb-6">
+    <p class="text-sm text-gray-600">Likes {{ post.likesCount }}</p>
+  </div>
+
+  <!-- Блок коментарів -->
+  <div class="mt-8">
+    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Comments</h3>
+    
+    <!-- Перевірка на наявність коментарів -->
+    <div *ngIf="post.comments && post.comments.length > 0; else noComments">
+      <ul class="space-y-4">
+        <li *ngFor="let comment of post.comments" class="p-4 bg-gray-100 rounded-md shadow-sm">
+          <p class="text-lg text-gray-800">{{ comment.content }}</p>
+          <p class="text-sm text-gray-500 mt-2">— {{ comment.authorName }} on {{ comment.createdAt | date: 'short' }}</p>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Повідомлення, якщо коментарів немає -->
+    <ng-template #noComments>
+      <p class="text-gray-600">No comments yet. Be the first to comment!</p>
+    </ng-template>
+  </div>
+</div>
