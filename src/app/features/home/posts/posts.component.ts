@@ -19,11 +19,9 @@ export class PostsComponent implements OnInit {
       (data) => {
         this.posts = data;
         this.loading = false;
-        console.log('Fetched posts:', this.posts); // Лог для отриманих постів
         
       },
       (error) => {
-        console.error('Error fetching posts:', error);
         this.loading = false;
       }
     )

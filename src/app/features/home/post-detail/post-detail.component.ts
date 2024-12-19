@@ -18,7 +18,6 @@ export class PostDetailComponent  implements OnInit {
     if (postId) {
       this.postService.getPostById(postId).subscribe((data) => {
         this.post = data;
-        console.log('Fetched posts:', this.post);
       });
     }
   }
