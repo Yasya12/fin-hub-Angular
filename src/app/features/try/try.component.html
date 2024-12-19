@@ -79,25 +79,38 @@
         [@slideUpDown]="isLoginVisible ? 'up' : 'down'"
         class="absolute bottom-0 left-0 h-[calc(100%-16px-var(--signup-popup-window-height))] w-full bg-white rounded-3xl shadow-lg"
       >
-        <form class="p-6">
+        <form #form="ngForm" (ngSubmit)="login(form.value)" class="p-6">
           <h2 class="block text-black-800 text-2xl font-bold text-center mb-6">
             Login
           </h2>
           <input
+            id="email" 
+            name="email"
             type="email"
             placeholder="Email"
+            [(ngModel)]="loginInfo.email" required
             class="w-full p-3 mb-4 bg-gray-100 rounded-md border-none outline-none"
           />
           <input
+            id="password" 
+            name="password"
             type="password"
             placeholder="Password"
+            [(ngModel)]="loginInfo.password" required
             class="w-full p-3 mb-4 bg-gray-100 rounded-md border-none outline-none"
           />
           <button
+            type="submit"
             class="w-full p-3 bg-[#0e673b] text-white rounded-md font-bold"
           >
             Login
           </button>
+          <div *ngIf="successMessage" [@fadeOut]>
+            {{ successMessage }}
+          </div>
+          <div *ngIf="errorMessage" class=" alert alert-danger mt-4 transition-all duration-300">
+            <pre class="text-wrap">{{ errorMessage }}</pre>
+          </div>
         </form>
       </div>
     </div>
