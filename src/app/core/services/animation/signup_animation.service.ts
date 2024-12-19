@@ -34,3 +34,10 @@ export const slideUpDown = trigger('slideUpDown', [
     animate('300ms ease-in-out')
   ])
 ]);
+
+export const fadeOut = trigger('fadeOut', [
+  transition(':leave', [
+    style({ opacity: 1 }),
+    animate('0.5s', style({ opacity: 0 }))
+  ])
+]);
