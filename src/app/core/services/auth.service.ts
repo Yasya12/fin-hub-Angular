@@ -26,14 +26,6 @@ export class AuthService {
     return null;
   }
 
-  getToken() {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('token');
-      return token;
-    }
-    return null;
-  }
-
   signup(credentials: User) : Observable<object> {
     return this.http.post("http://localhost:8080/api/user", credentials)
   }
