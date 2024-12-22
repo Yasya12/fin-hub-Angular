@@ -48,12 +48,8 @@ export class TryComponent implements AfterViewInit {
       this.authService.login(credentials).subscribe({
         next: (res) => {
           this.successMessage = 'Login successful! Redirecting...';
-  
-          // Плавне зникнення повідомлення
-          setTimeout(() => {
-            this.successMessage = ''; // Очищуємо повідомлення перед переходом
-            this.router.navigate(['/home']);
-          }, 10);
+          console.log(this.successMessage);
+          this.router.navigate(['/home']); 
         },
         error: (err) => {
           if (err.status === 401) {
