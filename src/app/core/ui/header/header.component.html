@@ -31,19 +31,19 @@
     </a>
 
     <button 
-      *ngIf="!loggedIn" 
+      *ngIf="!authService.currentUser()" 
       class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition"
     >
       <a routerLink="/try">Login</a>
     </button>
 
     <!-- Dropdown для користувача -->
-    <div class="relative" *ngIf="loggedIn">
+    <div class="relative" *ngIf="authService.currentUser() as fullUser">
       <button 
         class="flex items-center text-base font-medium text-gray-700 hover:text-green-600 transition"
         (click)="toggleDropdown()"
       >
-        {{ user.email }}
+      {{ fullUser.user.email}}
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>

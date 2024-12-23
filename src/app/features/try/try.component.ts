@@ -28,7 +28,6 @@ export class TryComponent implements AfterViewInit {
   ) {}
   
   ngAfterViewInit(): void {
-    // Load the Google SDK
     this.googleSigninService.loadSdk();
   }
 
@@ -42,13 +41,10 @@ export class TryComponent implements AfterViewInit {
     };
 
     errorMessage: string = '';
-    successMessage: string = ''; 
 
     login(credentials: Login) {
       this.authService.login(credentials).subscribe({
         next: (res) => {
-          this.successMessage = 'Login successful! Redirecting...';
-          console.log(this.successMessage);
           this.router.navigate(['/home']); 
         },
         error: (err) => {

@@ -20,8 +20,7 @@ export class PostDetailComponent  implements OnInit {
     if (postId) {
       this.postService.getPostById(postId).subscribe((data) => {
         this.post = data;
-        const token = this.authService.getToken();
-        console.log(token);
+        const token = this.authService.currentUser()?.token;
         if (token) {
           this.checkIfLiked(postId);
           }
