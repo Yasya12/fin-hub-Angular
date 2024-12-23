@@ -24,7 +24,12 @@
 
   <!-- Блок лайків -->
   <div class="mb-6">
-    <p class="text-sm text-gray-600">Likes {{ post.likesCount }}</p>
+    <button 
+      class="text-sm text-gray-600 bg-transparent border-none cursor-pointer"
+      [class.liked]="isLiked" 
+      (click)="toggleLike()">
+      Likes {{ post?.likesCount }}
+    </button>
   </div>
 
   <!-- Блок коментарів -->
