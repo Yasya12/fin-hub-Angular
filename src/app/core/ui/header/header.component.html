@@ -1,28 +1,84 @@
-<div class="flex items-center justify-between bg-white px-6 py-2 border-b border-gray-200 shadow-md">
+<div class="flex items-center justify-between bg-white px-6 py-2 shadow-md">
+  <!-- Логотип -->
   <div class="flex items-center">
     <a routerLink="/home">
-      <img src="/assets/images/logo-finhub.png" alt="logo FinHub" style="width: 100px; height: 100%;">
+      <img src="/assets/images/logo-finhub.png" alt="logo FinHub" class="w-32">
     </a>
-  </div>  
+  </div>
 
-  <button class="md:hidden" aria-label="Toggle menu" onclick="toggleMenu()">
-    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-    </svg>
-  </button>
+  <!-- Меню навігації -->
+  <div class="hidden md:flex items-center space-x-6">
+    <a 
+      class="text-base font-medium text-gray-700 hover:text-green-600 transition" 
+      routerLink="/home" 
+      routerLinkActive="font-bold text-green-600"
+    >
+      Home
+    </a>
+    <a 
+      class="text-base font-medium text-gray-700 hover:text-green-600 transition" 
+      routerLink="/dashboard" 
+      routerLinkActive="font-bold text-green-600"
+    >
+      Dashboard
+    </a>
+    <a 
+      class="text-base font-medium text-gray-700 hover:text-green-600 transition" 
+      routerLink="/signup" 
+      routerLinkActive="font-bold text-green-600"
+    >
+      Try
+    </a>
 
-  <div class="hidden md:flex items-center space-x-4">
-    <a class="text-base font-medium text-gray-600 hover:text-gray-800" routerLink="/home" routerLinkActive="active">Home</a>
-    <a class="text-base font-medium text-gray-600 hover:text-gray-800" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-    <a class="text-base font-medium text-gray-600 hover:text-gray-800" routerLink="/signup" routerLinkActive="active">Signup</a>
-
-    <button class="px-4 py-2 text-sm font-medium text-green-600 border border-green-600 rounded-lg hover:bg-green-600 hover:text-white transition" *ngIf="!user?.email">
-      <a class="text-base font-medium hover:text-gray-800" routerLink="/try">Signup</a>
+    <button 
+      *ngIf="!authService.currentUser()" 
+      class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition"
+    >
+      <a routerLink="/try">Login</a>
     </button>
 
-    <!-- Якщо користувач залогінений, показуємо його емейл -->
-    <span *ngIf="user?.email" class="text-base font-medium text-gray-600">{{ user.email }}</span>
+    <!-- Dropdown для користувача -->
+    <div class="relative" *ngIf="authService.currentUser() as fullUser">
+      <button 
+        class="flex items-center text-base font-medium text-gray-700 hover:text-green-600 transition"
+        (click)="toggleDropdown()"
+      >
+      {{ fullUser.user.email}}
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
 
-    <button (click)="onLogout()">Logout</button>
+      <div 
+        *ngIf="isDropdownOpen" 
+        class="absolute right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg w-48 z-50"
+      >
+        <a 
+          href="#" 
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          Edit Profile
+        </a>
+        <div class="border-t border-gray-200"></div>
+        <a 
+          href="#" 
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          (click)="logout()"
+        >
+          Logout
+        </a>
+      </div>
+    </div>
   </div>
+
+  <!-- Кнопка для мобільного меню -->
+  <button 
+    class="md:hidden text-gray-700" 
+    aria-label="Toggle menu" 
+    onclick="toggleMenu()"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+    </svg>
+  </button>
 </div>

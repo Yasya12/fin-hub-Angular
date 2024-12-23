@@ -105,9 +105,6 @@
           >
             Login
           </button>
-          <div *ngIf="successMessage" [@fadeOut]>
-            {{ successMessage }}
-          </div>
           <div *ngIf="errorMessage" class=" alert alert-danger mt-4 transition-all duration-300">
             <pre class="text-wrap">{{ errorMessage }}</pre>
           </div>
