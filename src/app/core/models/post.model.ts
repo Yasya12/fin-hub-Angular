@@ -8,4 +8,5 @@ export interface Post {
     profilePictureUrl: string;
     likesCount: number;
     commentsCount: number;
+    isLiked?: boolean; 
   }
