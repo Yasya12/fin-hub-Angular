@@ -6,6 +6,7 @@ import { PostsComponent } from './posts/posts.component';
 import { HeroSectionComponent } from './hero-section/hero-section.component';
 import { NgOptimizedImage } from '@angular/common';
 import { PostDetailComponent } from './post-detail/post-detail.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { PostDetailComponent } from './post-detail/post-detail.component';
   imports: [
     CommonModule,
     NgOptimizedImage,
-    HomeRoutingModule
+    HomeRoutingModule,
+    FormsModule
   ]
 })
 export class HomeModule { }
