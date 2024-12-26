@@ -1,18 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PostService } from '../../../core/services/post.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommentService } from '../../../core/services/comment.service';
-import { Comment } from '../../../core/models/comment.model';
+import { Comment } from '../../../core/models/Comment/comment.model';
+import { SinglePost } from '../../../core/models/single_post.model';
+import { CommentDisplay } from '../../../core/models/Comment/commentDisplay.model';
 
 @Component({
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',
-  styleUrls: ['./post-detail.component.css'] // Змінив на `styleUrls`
+  styleUrls: ['./post-detail.component.css']
 })
 export class PostDetailComponent implements OnInit {
-  post: any;
+  post: SinglePost | null = null;
   isLiked = false;
+  comments = signal<CommentDisplay[]>([]);
 
   constructor(
     private route: ActivatedRoute,
@@ -23,17 +26,31 @@ export class PostDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const postId = this.route.snapshot.paramMap.get('id');
-
     if (postId) {
-      this.postService.getPostById(postId).subscribe((data) => {
-        this.post = data;
-        console.log(data);
-        const token = this.authService.currentUser()?.token;
-        if (token) {
-          this.checkIfLiked(postId);
-        }
-      });
+      this.loadPost(postId);
     }
+  }
+
+  private loadPost(postId: string): void {
+    this.postService.getPostById(postId).subscribe((data) => {
+      this.post = data;
+      if (this.post && this.post.createdAt) {
+        this.post.createdAt = new Date(this.post.createdAt);
+      }
+      this.setComments(data.comments);
+      const token = this.authService.currentUser()?.token;
+      if (token) {
+        this.checkIfLiked(postId);
+      }
+    });
+  }
+
+  private setComments(commentsData: any[]): void {
+    const commentsDisplay: CommentDisplay[] = commentsData.map(comment => ({
+      ...comment,
+      createdAt: new Date(comment.createdAt)
+    }));
+    this.comments.set(commentsDisplay);
   }
 
   checkIfLiked(postId: string): void {
@@ -46,7 +63,9 @@ export class PostDetailComponent implements OnInit {
     if (this.post && this.post.id) {
       this.postService.toggleLike(this.post.id).subscribe((response: any) => {
         this.isLiked = response.success;
-        this.post.likesCount += this.isLiked ? 1 : -1;
+        if (this.post) {
+          this.post.likesCount += this.isLiked ? 1 : -1;
+        }
       });
     }
   }
@@ -54,23 +73,30 @@ export class PostDetailComponent implements OnInit {
   createNewComment(form: any): void {
     if (form.valid && this.post) {
       const comment: Comment = {
-        postId: this.post.id, // Використовуємо ID поточного поста
-        content: form.value.content, // Текст коментаря з форми
-        authorId: this.authService.currentUser()?.user.id || '' // ID автора з AuthService
-        
+        postId: this.post.id,
+        content: form.value.content,
+        authorId: this.authService.currentUser()?.user.id || ''
       };
-
-      console.log(this.authService.currentUser())
 
       this.commentService.addComment(comment).subscribe({
         next: (response) => {
-          console.log('Comment added successfully:', response);
-          form.reset(); // Очистити форму після успішного додавання
+          const newComment: CommentDisplay = {
+            ...comment,
+            authorName: this.authService.currentUser()?.user.username || 'Unknown',
+            createdAt: new Date()
+          };
+          // Оновлюємо сигнал коментарів
+          this.comments.update(comments => [...comments, newComment]);
+          form.reset(); // Очищення форми після успішного додавання
         },
         error: (err) => {
           console.error('Error adding comment:', err);
         }
       });
     }
+  }
+
+  getSortedComments(): CommentDisplay[] {
+    return this.comments().slice().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 }
