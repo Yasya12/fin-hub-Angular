@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PostService } from '../../../core/services/post.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -23,7 +23,7 @@ export class PostDetailComponent implements OnInit {
     private postService: PostService,
     public authService: AuthService,
     private commentService: CommentService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const postId = this.route.snapshot.paramMap.get('id');
@@ -124,4 +124,16 @@ export class PostDetailComponent implements OnInit {
       error: (err) => console.error('Error deleting comment:', err)
     });
   }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    // Перевірка, чи клік відбувся поза межами елемента меню
+    const clickedOutsideMenu = event.target instanceof HTMLElement &&
+      !event.target.closest('.comment-holder');
+
+    if (clickedOutsideMenu) {
+      this.selectedCommentId = null; // Закриваємо меню
+    }
+  }
+
 }
