@@ -16,11 +16,12 @@ export class PostDetailComponent implements OnInit {
   post: SinglePost | null = null;
   isLiked = false;
   comments = signal<CommentDisplay[]>([]);
+  selectedCommentId: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,
-    private authService: AuthService,
+    public authService: AuthService,
     private commentService: CommentService
   ) {}
 
@@ -34,33 +35,37 @@ export class PostDetailComponent implements OnInit {
   private loadPost(postId: string): void {
     this.postService.getPostById(postId).subscribe((data) => {
       this.post = data;
-      if (this.post && this.post.createdAt) {
-        this.post.createdAt = new Date(this.post.createdAt);
-      }
-      this.setComments(data.comments);
-      const token = this.authService.currentUser()?.token;
-      if (token) {
-        this.checkIfLiked(postId);
-      }
+      this.loadComments(postId);
+      this.checkIfLiked(postId);
     });
   }
 
-  private setComments(commentsData: any[]): void {
-    const commentsDisplay: CommentDisplay[] = commentsData.map(comment => ({
+  private loadComments(postId: string): void {
+    this.commentService.getComments(postId, 0, 100).subscribe(
+      (commentsDisplay: CommentDisplay[]) => this.processComments(commentsDisplay),
+      (error) => console.error('Error fetching comments:', error)
+    );
+  }
+
+  private processComments(commentsDisplay: CommentDisplay[]): void {
+    const processedComments = commentsDisplay.map(comment => ({
       ...comment,
       createdAt: new Date(comment.createdAt)
     }));
-    this.comments.set(commentsDisplay);
+    this.comments.set(processedComments);
   }
 
-  checkIfLiked(postId: string): void {
-    this.postService.isPostLiked(postId).subscribe((response: any) => {
-      this.isLiked = response.isLiked;
-    });
+  private checkIfLiked(postId: string): void {
+    const token = this.authService.currentUser()?.token;
+    if (token) {
+      this.postService.isPostLiked(postId).subscribe((response: any) => {
+        this.isLiked = response.isLiked;
+      });
+    }
   }
 
   toggleLike(): void {
-    if (this.post && this.post.id) {
+    if (this.post?.id) {
       this.postService.toggleLike(this.post.id).subscribe((response: any) => {
         this.isLiked = response.success;
         if (this.post) {
@@ -80,23 +85,43 @@ export class PostDetailComponent implements OnInit {
 
       this.commentService.addComment(comment).subscribe({
         next: (response) => {
-          const newComment: CommentDisplay = {
-            ...comment,
-            authorName: this.authService.currentUser()?.user.username || 'Unknown',
-            createdAt: new Date()
-          };
+          const newComment = this.createCommentDisplay(response.id || 'default-id', comment);
           // Оновлюємо сигнал коментарів
           this.comments.update(comments => [...comments, newComment]);
           form.reset(); // Очищення форми після успішного додавання
         },
-        error: (err) => {
-          console.error('Error adding comment:', err);
-        }
+        error: (err) => console.error('Error adding comment:', err)
       });
     }
   }
 
+  private createCommentDisplay(id: string, comment: Comment): CommentDisplay {
+    return {
+      id,
+      ...comment,
+      authorName: this.authService.currentUser()?.user.username || 'Unknown',
+      createdAt: new Date()
+    };
+  }
+
   getSortedComments(): CommentDisplay[] {
-    return this.comments().slice().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return [...this.comments()].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
+  toggleMenu(commentId: string): void {
+    this.selectedCommentId = this.selectedCommentId === commentId ? null : commentId;
+  }
+
+  deleteComment(commentId: string): void {
+    this.commentService.deleteComment(commentId).subscribe({
+      next: () => {
+        // Оновлюємо список коментарів після видалення
+        this.comments.update(comments => comments.filter(comment => comment.id !== commentId));
+        console.log('Comment deleted successfully');
+        // Закриваємо меню після видалення
+        this.selectedCommentId = null;
+      },
+      error: (err) => console.error('Error deleting comment:', err)
+    });
   }
 }

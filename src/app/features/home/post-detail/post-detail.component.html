@@ -127,30 +127,75 @@
     </form>
   </div>
 
- <!-- Блок коментарів -->
-<div class="mt-8">
-  <h3 class="text-2xl font-semibold text-gray-900 mb-4">Comments</h3>
+  <!-- Блок коментарів -->
+  <div class="mt-8">
+    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Comments</h3>
 
-  <!-- Перевірка на наявність коментарів -->
-  <div *ngIf="comments() && comments().length > 0; else noComments">
-    <ul class="space-y-4">
-      <li
-        *ngFor="let comment of getSortedComments()"
-        class="p-4 bg-gray-100 rounded-md shadow-sm"
+    <!-- Перевірка на наявність коментарів -->
+<div *ngIf="comments() && comments().length > 0; else noComments">
+  <ul class="space-y-4">
+    <li
+      *ngFor="let comment of getSortedComments()"
+      class="p-4 bg-gray-100 rounded-md shadow-sm relative"
+    >
+      <p class="text-lg text-gray-800">{{ comment.content }}</p>
+      <p class="text-sm text-gray-500 mt-2">
+        — {{ comment.authorName }} on
+        {{ comment.createdAt | date : "short" }}
+      </p>
+
+      <!-- Меню з трьома крапками -->
+      <button
+        (click)="toggleMenu(comment.id)"
+        class="absolute top-2 right-2"
       >
-        <p class="text-lg text-gray-800">{{ comment.content }}</p>
-        <p class="text-sm text-gray-500 mt-2">
-          — {{ comment.authorName }} on
-          {{ comment.createdAt | date : "short" }}
-        </p>
-      </li>
-    </ul>
-  </div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 12h12M6 6h12M6 18h12"
+          />
+        </svg>
+      </button>
 
-  <!-- Повідомлення, якщо коментарів немає -->
-  <ng-template #noComments>
-    <p class="text-gray-600">No comments yet. Be the first to comment!</p>
-  </ng-template>
+      <!-- Випадне меню -->
+      <div
+        *ngIf="selectedCommentId === comment.id"
+        class="absolute right-2 top-10 bg-white border rounded shadow-lg z-10"
+      >
+        <!-- Перевірка, чи є автором коментаря поточний користувач -->
+        <button
+          *ngIf="comment.authorName === authService.currentUser()?.user?.username" 
+          (click)="deleteComment(comment.id)"
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          Delete
+        </button>
+        
+        <!-- Кнопка Add для всіх інших користувачів -->
+        <button
+          *ngIf="comment.authorName !== authService.currentUser()?.user?.username" 
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+          Add
+        </button>
+      </div>
+    </li>
+  </ul>
 </div>
 
+<!-- Повідомлення, якщо коментарів немає -->
+<ng-template #noComments>
+  <p class="text-gray-600">No comments yet. Be the first to comment!</p>
+</ng-template>
+
+
+  </div>
 </div>
