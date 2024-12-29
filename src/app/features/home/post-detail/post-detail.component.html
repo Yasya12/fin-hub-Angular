@@ -131,19 +131,32 @@
   <div class="mt-8">
     <h3 class="text-2xl font-semibold text-gray-900 mb-4">Comments</h3>
 
-    <!-- Перевірка на наявність коментарів -->
     <div *ngIf="comments() && comments().length > 0; else noComments">
       <ul class="space-y-4">
         <li
           *ngFor="let comment of getSortedComments()"
           class="p-4 bg-gray-100 rounded-md shadow-sm relative"
         >
-          <p class="text-lg text-gray-800">{{ comment.content }}</p>
-          <p class="text-sm text-gray-500 mt-2">
-            — {{ comment.authorName }} on
-            {{ comment.createdAt | date : "short" }}
-          </p>
-
+          <!-- Верхній блок: Аватар, ім'я користувача та дата -->
+          <div class="flex items-center mb-2">
+            <!-- Аватар користувача -->
+            <img
+              [src]="comment.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
+              alt="Author's Profile Picture"
+              class="w-10 h-10 object-cover rounded-full mr-3"
+            />
+            <!-- Ім'я користувача та дата -->
+            <div>
+              <h4 class="text-sm font-semibold text-gray-800">{{ comment.authorName }}</h4>
+              <p class="text-xs text-gray-500">
+                {{ comment.createdAt | date: 'short' }}
+              </p>
+            </div>
+          </div>
+    
+          <!-- Текст коментаря -->
+          <p class="text-gray-800 text-base mb-2">{{ comment.content }}</p>
+    
           <!-- Меню з трьома крапками -->
           <button
             (click)="toggleMenu(comment.id)"
@@ -164,7 +177,7 @@
               />
             </svg>
           </button>
-
+    
           <!-- Випадне меню -->
           <div
             *ngIf="selectedCommentId === comment.id"
@@ -180,8 +193,8 @@
             >
               Delete
             </button>
-
-            <!-- Кнопка Add для всіх інших користувачів -->
+    
+            <!-- Кнопка Add для інших користувачів -->
             <button
               *ngIf="
                 comment.authorName !== authService.currentUser()?.user?.username
@@ -194,10 +207,12 @@
         </li>
       </ul>
     </div>
-
+    
     <!-- Повідомлення, якщо коментарів немає -->
     <ng-template #noComments>
       <p class="text-gray-600">No comments yet. Be the first to comment!</p>
     </ng-template>
+    
+    
   </div>
 </div>

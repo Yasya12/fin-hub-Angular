@@ -100,7 +100,8 @@ export class PostDetailComponent implements OnInit {
       id,
       ...comment,
       authorName: this.authService.currentUser()?.user.username || 'Unknown',
-      createdAt: new Date()
+      createdAt: new Date(),
+      profilePictureUrl: this.authService.currentUser()?.user.profilePictureUrl
     };
   }
 

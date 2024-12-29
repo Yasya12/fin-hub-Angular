@@ -28,10 +28,9 @@ import {animate, style, transition, trigger} from "@angular/animations";
 export class SignupComponent implements OnInit {
   user: User = {
     email: '',
-    password: '',
     username: '',
-    country: '',
-    dateOfBirth: new Date()
+    role: '',
+    profilePictureUrl: ''
   };
   errorMessage: string = '';
   constructor(private authService: AuthService, private errorHandler: ErrorHandlerService) { }
