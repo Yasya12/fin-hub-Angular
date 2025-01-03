@@ -1,0 +1,25 @@
+<app-comment-form
+  [postId]="postId"
+  (addComment)="onAddComment($event)"
+></app-comment-form>
+<div class="mt-8">
+  <div *ngIf="comments() && comments().length > 0; else noComments">
+    <ul class="space-y-4">
+      <li
+        *ngFor="let comment of getSortedComments()"
+        class="p-4 bg-gray-100 rounded-md shadow-sm relative"
+      >
+        <app-comment
+          [comment]="comment"
+          [selectedCommentId]="selectedCommentId"
+          (toggleMenu)="toggleMenu($event)"
+          (deleteComment)="deleteComment($event)"
+        ></app-comment>
+      </li>
+    </ul>
+  </div>
+
+  <ng-template #noComments>
+    <p class="text-gray-600">No comments yet. Be the first to comment!</p>
+  </ng-template>
+</div>
