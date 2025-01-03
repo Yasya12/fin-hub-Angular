@@ -1,0 +1,60 @@
+<div class="p-4 bg-gray-100 rounded-md shadow-sm relative">
+  <!-- Верхній блок: Аватар, ім'я користувача та дата -->
+  <div class="flex items-center mb-2">
+    <img
+      [src]="comment.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
+      alt="{{ comment.authorName }}"
+      class="w-10 h-10 object-cover rounded-full mr-3"
+    />
+    <div>
+      <h4 class="text-sm font-semibold">{{ comment.authorName }}</h4>
+      <p class="text-xs text-gray-500">
+        {{ comment.createdAt | date : "short" }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Текст коментаря -->
+  <p>{{ comment.content }}</p>
+
+  <!-- Меню -->
+  <button (click)="onToggleMenu()" class="absolute top-2 right-2">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M6 12h12M6 6h12M6 18h12"
+      />
+    </svg>
+  </button>
+
+  <!-- Випадне меню -->
+  <div
+    *ngIf="selectedCommentId === comment.id"
+    class="absolute right-2 top-10 bg-white border rounded shadow-lg z-10 comment-holder"
+  >
+    <!-- Кнопка "Delete" доступна тільки автору -->
+    <button
+      *ngIf="isAuthor()"
+      (click)="onDelete()"
+      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+    >
+      Delete
+    </button>
+
+    <!-- Інша кнопка для неавторів -->
+    <button
+      *ngIf="!isAuthor()"
+      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+    >
+      Add
+    </button>
+  </div>
+</div>
