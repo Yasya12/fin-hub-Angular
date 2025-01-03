@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from "../../core/models/user.model.";
+import {User} from "../../core/models/User/user.model.";
 import {AuthService} from "../../core/services/auth.service";
 import {ValidationError} from "../../core/models/validation-error.model";
 import {ErrorHandlerService} from "../../core/services/error-handler.service";

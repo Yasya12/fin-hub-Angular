@@ -1,9 +1,9 @@
 import { Injectable, signal } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {User} from "../models/user.model.";
+import {User} from "../models/User/user.model.";
 import {BehaviorSubject, Observable, tap} from "rxjs";
 import { Login } from '../models/login.model';
-import { FullUser } from '../models/full_user.model';
+import { FullUser } from '../models/User/full_user.model';
 
 export interface GoogleLoginResponse {
   token: string;

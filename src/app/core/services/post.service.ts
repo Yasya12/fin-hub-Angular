@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import {Post} from "../models/post.model";
-import {SinglePost} from "../models/single_post.model";
-import { PostResponse } from '../models/post_response';
+import {Post} from "../models/Post/post.model";
+import {SinglePost} from "../models/Post/single_post.model";
+import { PostResponse } from '../models/Post/post_response';
 
 
 @Injectable({
