@@ -1,5 +1,5 @@
 <div class="p-4 bg-gray-100 rounded-md shadow-sm relative">
-  <!-- Верхній блок: Аватар, ім'я користувача та дата -->
+  <!-- Інформація про автора -->
   <div class="flex items-center mb-2">
     <img
       [src]="comment.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
@@ -7,18 +7,53 @@
       class="w-10 h-10 object-cover rounded-full mr-3"
     />
     <div>
-      <h4 class="text-sm font-semibold">{{ comment.authorName }}</h4>
+      <h4 class="text-sm font-semibold text-gray-800">
+        {{ comment.authorName }}
+      </h4>
       <p class="text-xs text-gray-500">
-        {{ comment.createdAt | date : "short" }}
+        {{ comment.createdAt | date : 'short' }}
       </p>
     </div>
   </div>
 
   <!-- Текст коментаря -->
-  <p>{{ comment.content }}</p>
+  <p class="text-gray-700 mb-2">{{ comment.content }}</p>
 
-  <!-- Меню -->
-  <button (click)="onToggleMenu()" class="absolute top-2 right-2">
+  <!-- Кнопка "Reply" -->
+  <button
+    *ngIf="!isReplying"
+    (click)="replyToComment()"
+    class="text-sm text-blue-500 hover:underline"
+  >
+    Reply
+  </button>
+
+  <!-- Форма для відповіді -->
+  <div *ngIf="isReplying" class="mt-2">
+    <app-comment-form
+      [postId]="postId"
+      [parentId]="comment.id"
+      (addComment)="submitReply($event.content)"
+    ></app-comment-form>
+    <button (click)="cancelReply()" class="text-sm text-red-500 mt-2">
+      Cancel
+    </button>
+  </div>
+
+  <!-- Відображення відповідей -->
+  <div *ngIf="replies.length > 0" class="mt-4 border-l pl-4">
+    <app-comment
+      *ngFor="let reply of replies"
+      [comment]="reply"
+      [replies]="[]"
+      [postId]="postId"
+      (deleteComment)="deleteComment.emit($event)"
+      (addReply)="addReply.emit($event)"
+    ></app-comment>
+  </div>
+
+   <!-- Меню -->
+   <button (click)="onToggleMenu()" class="absolute top-2 right-2">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-5 w-5"
@@ -33,28 +68,28 @@
         d="M6 12h12M6 6h12M6 18h12"
       />
     </svg>
-  </button>
+   </button>
 
-  <!-- Випадне меню -->
-  <div
-    *ngIf="selectedCommentId === comment.id"
-    class="absolute right-2 top-10 bg-white border rounded shadow-lg z-10 comment-holder"
-  >
-    <!-- Кнопка "Delete" доступна тільки автору -->
-    <button
-      *ngIf="isAuthor()"
-      (click)="onDelete()"
-      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-    >
-      Delete
-    </button>
+   <!-- Випадне меню -->
+   <div
+     *ngIf="selectedCommentId === comment.id"
+     class="absolute right-2 top-10 bg-white border rounded shadow-lg z-10 comment-holder"
+   >
+     <!-- Кнопка "Delete" доступна тільки автору -->
+     <button
+       *ngIf="isAuthor()"
+       (click)="onDelete()"
+       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+     >
+       Delete
+     </button>
 
-    <!-- Інша кнопка для неавторів -->
-    <button
-      *ngIf="!isAuthor()"
-      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-    >
-      Add
-    </button>
-  </div>
+     <!-- Інша кнопка для неавторів -->
+     <button
+       *ngIf="!isAuthor()"
+       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+     >
+       Add
+     </button>
+   </div>
 </div>

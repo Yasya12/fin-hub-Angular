@@ -1,25 +1,25 @@
-import { Component, HostListener, Input, signal } from '@angular/core';
-import { CommentService } from '../../../../../core/services/comment.service';
-import { CommentDisplay } from '../../../../../core/models/Comment/commentDisplay.model';
+import { Component, Input, signal, computed } from '@angular/core';
 import { Comment } from '../../../../../core/models/Comment/comment.model';
+import { CommentDisplay } from '../../../../../core/models/Comment/commentDisplay.model';
+import { CommentService } from '../../../../../core/services/comment.service';
 import { AuthService } from '../../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-comment-list',
-  templateUrl: './comment-list.component.html'
+  templateUrl: './comment-list.component.html',
 })
 export class CommentListComponent {
   @Input() postId!: string;
+
   comments = signal<CommentDisplay[]>([]);
-  selectedCommentId: string | null = null;
 
-  constructor(private commentService: CommentService, private authService: AuthService) {}
+  constructor(private authService: AuthService, private commentService: CommentService) {}
 
-  ngOnInit() {
-    this.loadComments();
+  ngOnInit(): void {
+    this.loadComments(this.postId);
   }
 
-  private loadComments(): void {
+  private loadComments(postId: string): void {
     this.commentService.getComments(this.postId, 0, 100).subscribe(
       (commentsDisplay: CommentDisplay[]) => this.processComments(commentsDisplay),
       (error) => console.error('Error fetching comments:', error)
@@ -35,52 +35,48 @@ export class CommentListComponent {
   }
 
   getSortedComments(): CommentDisplay[] {
-    return [...this.comments()].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return [...this.comments()]
+    .filter(comment => comment.parentId === null)
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
-  onAddComment(newComment: Comment): void {
-    newComment.authorId = this.authService.currentUser()?.user.id || 'Unknown',
+  getReplies(parentId: string): CommentDisplay[] {
+    return this.comments().filter(comment => comment.parentId === parentId)
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
+  addComment(newComment: Comment): void {
+    newComment.authorId = this.authService.currentUser()?.user.id || '';
     this.commentService.addComment(newComment).subscribe({
-      next: (response) => {
-        const newCommentDisplay = this.createCommentDisplay(response.id || 'default-id', newComment);
-        this.comments.update(comments => [...comments, newCommentDisplay]); 
+      next: (response: Comment) => {
+        const transformedResponse = this.mapToCommentDisplay(response);
+        this.comments.update((currentComments) =>  [...currentComments, transformedResponse]);
+        this.getReplies(transformedResponse.parentId ?? "");
       },
-      error: (err) => console.error('Error adding comment:', err)
+      error: (err) => console.error('Error adding comment:', err),
     });
-  }
-
-  private createCommentDisplay(id: string, comment: Comment): CommentDisplay {
-    return {
-      id,
-      ...comment,
-      authorName: this.authService.currentUser()?.user.username || 'Unknown',
-      createdAt: new Date(),
-      profilePictureUrl: this.authService.currentUser()?.user.profilePictureUrl
-    };
-  }
-
-  toggleMenu(commentId: string): void {
-    this.selectedCommentId = this.selectedCommentId === commentId ? null : commentId;
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    // Перевірка, чи клік відбувся поза межами елемента меню
-    const clickedOutsideMenu = event.target instanceof HTMLElement &&
-      !event.target.closest('.comment-holder');
-
-    if (clickedOutsideMenu) {
-      this.selectedCommentId = null; // Закриваємо меню
-    }
   }
 
   deleteComment(commentId: string): void {
     this.commentService.deleteComment(commentId).subscribe({
       next: () => {
-        this.comments.update(comments => comments.filter(comment => comment.id !== commentId));
-        this.selectedCommentId = null;
+        this.comments.update((currentComments) =>
+          currentComments.filter(comment => comment.id !== commentId)
+        ); // Видалити коментар із сигналу
       },
-      error: (err) => console.error('Error deleting comment:', err)
+      error: (err) => console.error('Error deleting comment:', err),
     });
+  }
+
+  private mapToCommentDisplay(comment: Comment): CommentDisplay {
+    const transformed = {
+      id: comment.id || '',
+      content: comment.content,
+      authorName: this.authService.currentUser()?.user.username || 'Anonymous',
+      createdAt: new Date(),
+      profilePictureUrl: this.authService.currentUser()?.user.profilePictureUrl,
+      parentId: comment.parentId,
+    };
+    return transformed;
   }
 }

@@ -1,40 +1,36 @@
 <div class="mb-6">
-    <form
-      (ngSubmit)="onSubmit(form)"
-      #form="ngForm"
-      class="flex flex-col"
+  <form (ngSubmit)="onSubmit()" class="flex flex-col">
+    <!-- Поле для введення коментаря -->
+    <textarea
+      [(ngModel)]="content"
+      name="content"
+      class="w-full px-4 py-2 mb-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition"
+      rows="4"
+      placeholder="Write your comment here..."
+      required
+    ></textarea>
+
+    <!-- Кнопка для відправки -->
+    <button
+      type="submit"
+      [disabled]="!content.trim()" 
+      class="self-end flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition"
     >
-      <!-- Поле для введення коментаря -->
-      <textarea
-        class="w-full px-4 py-2 mb-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition"
-        rows="4"
-        placeholder="Write your comment here..."
-        name="content"
-        ngModel
-        required
-      ></textarea>
-  
-      <!-- Кнопка для відправки -->
-      <button
-        type="submit"
-        class="self-end flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition"
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 mr-2"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 mr-2"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 13l4 4L19 7"
-          ></path>
-        </svg>
-        Post Comment
-      </button>
-    </form>
-  </div>
-  
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7"
+        ></path>
+      </svg>
+      Post Comment
+    </button>
+  </form>
+</div>
