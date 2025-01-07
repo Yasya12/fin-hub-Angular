@@ -4,6 +4,5 @@ export interface CommentDisplay {
     authorName: string; 
     createdAt: Date; 
     profilePictureUrl?: string
+    parentId?: string | null;
 }
-  
-  
