@@ -33,7 +33,7 @@
     <app-comment-form
       [postId]="postId"
       [parentId]="comment.id"
-      (addComment)="submitReply($event.content)"
+      (addComment)="submitReply($event)"
     ></app-comment-form>
     <button (click)="cancelReply()" class="text-sm text-red-500 mt-2">
       Cancel

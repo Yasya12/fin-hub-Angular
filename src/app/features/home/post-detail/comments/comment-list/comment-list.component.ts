@@ -16,11 +16,11 @@ export class CommentListComponent {
   constructor(private authService: AuthService, private commentService: CommentService) {}
 
   ngOnInit(): void {
-    this.loadComments(this.postId);
+    this.loadComments();
   }
 
-  private loadComments(postId: string): void {
-    this.commentService.getComments(this.postId, 0, 100).subscribe(
+  private loadComments(): void {
+    this.commentService.getComments(this.postId, 0, 100).subscribe( //тут чекнути як реалізуватипагінацію на сайті а не хардкодити
       (commentsDisplay: CommentDisplay[]) => this.processComments(commentsDisplay),
       (error) => console.error('Error fetching comments:', error)
     );
@@ -51,7 +51,6 @@ export class CommentListComponent {
       next: (response: Comment) => {
         const transformedResponse = this.mapToCommentDisplay(response);
         this.comments.update((currentComments) =>  [...currentComments, transformedResponse]);
-        this.getReplies(transformedResponse.parentId ?? "");
       },
       error: (err) => console.error('Error adding comment:', err),
     });
@@ -62,7 +61,7 @@ export class CommentListComponent {
       next: () => {
         this.comments.update((currentComments) =>
           currentComments.filter(comment => comment.id !== commentId)
-        ); // Видалити коментар із сигналу
+        ); 
       },
       error: (err) => console.error('Error deleting comment:', err),
     });

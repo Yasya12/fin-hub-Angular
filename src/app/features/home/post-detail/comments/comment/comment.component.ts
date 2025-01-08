@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { CommentDisplay } from '../../../../../core/models/Comment/commentDisplay.model';
 import { Comment } from '../../../../../core/models/Comment/comment.model';
 import { AuthService } from '../../../../../core/services/auth.service';
@@ -32,15 +32,9 @@ export class CommentComponent {
     this.isReplying = false;
   }
 
-  submitReply(content: string): void {
-    if (content.trim()) {
-      const reply: Comment = {
-        postId: this.postId,
-        content: content.trim(),
-        parentId: this.comment.id,
-        authorId: this.authService.currentUser()?.user.id || '',
-      };
-
+  submitReply(reply: Comment): void {
+    if (reply && reply.content.trim()) {
+      reply.authorId = this.authService.currentUser()?.user.id || '',
       this.addReply.emit(reply);
       this.isReplying = false;
     }
@@ -57,5 +51,15 @@ export class CommentComponent {
   onDelete(): void {
     this.deleteComment.emit(this.comment.id);
     this.selectedCommentId = null; 
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    // Перевірка, чи клік відбувся поза межами елемента меню
+    const clickedOutsideMenu = event.target instanceof HTMLElement &&
+      !event.target.closest('.comment-holder');
+    if (clickedOutsideMenu) {
+      this.selectedCommentId = null; // Закриваємо меню
+    }
   }
 }
