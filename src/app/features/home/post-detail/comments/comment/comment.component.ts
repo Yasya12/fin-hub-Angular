@@ -9,14 +9,16 @@ import { AuthService } from '../../../../../core/services/auth.service';
 })
 export class CommentComponent {
   @Input() comment!: CommentDisplay;
-  @Input() replies: CommentDisplay[] = []; 
   @Input() postId!: string;
+  @Input() level: number = 0; 
+  @Input() selectedCommentId: string | null = null;
+
 
   @Output() deleteComment = new EventEmitter<string>();
   @Output() addReply = new EventEmitter<Comment>();
+  @Output() toggleMenu = new EventEmitter<string | null>();
 
   isReplying: boolean = false;
-  selectedCommentId: string | null = null; 
   constructor(private authService: AuthService) {}
 
   isAuthor(): boolean {
@@ -34,19 +36,16 @@ export class CommentComponent {
 
   submitReply(reply: Comment): void {
     if (reply && reply.content.trim()) {
-      reply.authorId = this.authService.currentUser()?.user.id || '',
       this.addReply.emit(reply);
       this.isReplying = false;
     }
   }
 
   onToggleMenu(): void {
-    if (this.selectedCommentId === this.comment.id) {
-      this.selectedCommentId = null; // Закрити меню
-    } else {
-      this.selectedCommentId = this.comment.id; // Відкрити меню
-    }
+    const newSelectedId = this.selectedCommentId === this.comment.id ? null : this.comment.id;
+    this.toggleMenu.emit(newSelectedId); // Передаємо новий стан до батьківського компонента
   }
+  
 
   onDelete(): void {
     this.deleteComment.emit(this.comment.id);
@@ -59,7 +58,7 @@ export class CommentComponent {
     const clickedOutsideMenu = event.target instanceof HTMLElement &&
       !event.target.closest('.comment-holder');
     if (clickedOutsideMenu) {
-      this.selectedCommentId = null; // Закриваємо меню
+      this.toggleMenu.emit(null); // Закриваємо меню
     }
   }
 }

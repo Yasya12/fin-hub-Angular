@@ -16,9 +16,10 @@
         <app-comment
           [postId]="postId"
           [comment]="comment"
-          [replies]="getReplies(comment.id)" 
+          [selectedCommentId]="selectedCommentId"
           (deleteComment)="deleteComment($event)"
-          (addReply)="addComment($event)"
+          (addReply)="addReply($event)"
+          (toggleMenu)="onChildToggleMenu($event)"
         ></app-comment>
       </li>
     </ul>

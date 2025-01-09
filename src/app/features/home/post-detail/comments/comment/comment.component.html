@@ -1,10 +1,10 @@
-<div class="p-4 bg-gray-100 rounded-md shadow-sm relative">
+<div class="comment relative border-l-2 border-gray-300 pl-4" [style.marginLeft.px]="level * 20">
   <!-- Інформація про автора -->
   <div class="flex items-center mb-2">
     <img
       [src]="comment.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
       alt="{{ comment.authorName }}"
-      class="w-10 h-10 object-cover rounded-full mr-3"
+      class="w-10 h-10 object-cover rounded-full mr-3 border border-gray-300 shadow-sm"
     />
     <div>
       <h4 class="text-sm font-semibold text-gray-800">
@@ -17,7 +17,7 @@
   </div>
 
   <!-- Текст коментаря -->
-  <p class="text-gray-700 mb-2">{{ comment.content }}</p>
+  <p class="text-gray-700 mb-2 leading-relaxed">{{ comment.content }}</p>
 
   <!-- Кнопка "Reply" -->
   <button
@@ -40,20 +40,8 @@
     </button>
   </div>
 
-  <!-- Відображення відповідей -->
-  <div *ngIf="replies.length > 0" class="mt-4 border-l pl-4">
-    <app-comment
-      *ngFor="let reply of replies"
-      [comment]="reply"
-      [replies]="[]"
-      [postId]="postId"
-      (deleteComment)="deleteComment.emit($event)"
-      (addReply)="addReply.emit($event)"
-    ></app-comment>
-  </div>
-
-   <!-- Меню -->
-   <button (click)="onToggleMenu()" class="absolute top-2 right-2">
+  <!-- Меню -->
+  <button (click)="onToggleMenu()" class="absolute top-2 right-2">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-5 w-5"
@@ -68,7 +56,7 @@
         d="M6 12h12M6 6h12M6 18h12"
       />
     </svg>
-   </button>
+  </button>
 
    <!-- Випадне меню -->
    <div
@@ -92,4 +80,19 @@
        Add
      </button>
    </div>
+
+   <!-- Відображення дочірніх елементів -->
+   <ul *ngIf="comment && comment.children && comment.children.length > 0" class="replies mt-3 space-y-3">
+     <li *ngFor="let child of comment.children" class="">
+       <app-comment
+         [postId]="postId"
+         [comment]="child"
+         [level]="level + 1"
+         [selectedCommentId]="selectedCommentId"
+         (deleteComment)="deleteComment.emit($event)"
+         (addReply)="submitReply($event)"
+         (toggleMenu)="toggleMenu.emit($event)"
+       ></app-comment>
+     </li>
+   </ul>
 </div>

@@ -12,8 +12,9 @@ export class CommentListComponent {
   @Input() postId!: string;
 
   comments = signal<CommentDisplay[]>([]);
+  selectedCommentId: string | null = null;
 
-  constructor(private authService: AuthService, private commentService: CommentService) {}
+  constructor(private authService: AuthService, private commentService: CommentService) { }
 
   ngOnInit(): void {
     this.loadComments();
@@ -31,18 +32,20 @@ export class CommentListComponent {
       ...comment,
       createdAt: new Date(comment.createdAt)
     }));
-    this.comments.set(processedComments);
+
+    const tree = this.buildCommentTree(processedComments);
+    this.comments.set(tree);
   }
 
   getSortedComments(): CommentDisplay[] {
     return [...this.comments()]
-    .filter(comment => comment.parentId === null)
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      .filter(comment => comment.parentId === null)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
   getReplies(parentId: string): CommentDisplay[] {
     return this.comments().filter(comment => comment.parentId === parentId)
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
   addComment(newComment: Comment): void {
@@ -56,12 +59,40 @@ export class CommentListComponent {
     });
   }
 
+  addReply(newReply: Comment): void {
+    newReply.authorId = this.authService.currentUser()?.user.id || '';
+    this.commentService.addComment(newReply).subscribe({
+      next: (response: Comment) => {
+        const transformedResponse = this.mapToCommentDisplay(response);
+  
+        // Знайти батьківський коментар
+        if (transformedResponse.parentId) {
+          const parent = this.findCommentById(transformedResponse.parentId);
+          if (parent) {
+            parent.children = [...(parent.children || []), transformedResponse]; // Оновлюємо children
+          }
+          this.loadComments();
+        }
+      },
+      error: (err) => console.error('Error adding reply:', err),
+    });
+  }
+  
+  private findCommentById(id: string): CommentDisplay | undefined {
+    const stack = [...this.comments()];
+    while (stack.length) {
+      const current = stack.pop();
+      if (current?.id === id) return current;
+      if (current?.children?.length) stack.push(...current.children);
+    }
+    return undefined;
+  }
+  
+
   deleteComment(commentId: string): void {
     this.commentService.deleteComment(commentId).subscribe({
-      next: () => {
-        this.comments.update((currentComments) =>
-          currentComments.filter(comment => comment.id !== commentId)
-        ); 
+      next: () => { 
+        this.loadComments()
       },
       error: (err) => console.error('Error deleting comment:', err),
     });
@@ -78,4 +109,34 @@ export class CommentListComponent {
     };
     return transformed;
   }
+
+  private buildCommentTree(comments: CommentDisplay[]): CommentDisplay[] {
+    const map = new Map<string, CommentDisplay>();
+
+    comments.forEach(comment => {
+      comment.children = [];
+      map.set(comment.id, comment);
+    });
+
+    const rootComments: CommentDisplay[] = [];
+
+    comments.forEach(comment => {
+      if (comment.parentId) {
+        const parent = map.get(comment.parentId);
+        if (parent) {
+          parent.children?.push(comment);
+        }
+      } else {
+        rootComments.push(comment);
+      }
+    });
+
+    return rootComments;
+  }
+
+  onChildToggleMenu(newSelectedId: string | null): void {
+    this.selectedCommentId = newSelectedId; // Оновлюємо стан меню
+  }
+  
+  
 }
