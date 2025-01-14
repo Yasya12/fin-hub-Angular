@@ -1,12 +1,13 @@
-import { Component, Input, signal, computed } from '@angular/core';
-import { Comment } from '../../../../../core/models/Comment/comment.model';
-import { CommentDisplay } from '../../../../../core/models/Comment/commentDisplay.model';
-import { CommentService } from '../../../../../core/services/comment.service';
-import { AuthService } from '../../../../../core/services/auth.service';
+import { Component, Input, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Comment } from '../../../../core/models/Comment/comment.model';
+import { CommentDisplay } from '../../../../core/models/Comment/commentDisplay.model';
+import { CommentService } from '../../../../core/services/comment.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-comment-list',
   templateUrl: './comment-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentListComponent {
   @Input() postId!: string;
@@ -14,18 +15,37 @@ export class CommentListComponent {
   comments = signal<CommentDisplay[]>([]);
   selectedCommentId: string | null = null;
 
+  currentPage: number = 0;
+  pageSize: number = 5;
+  hasMoreComments: boolean = true; // Відстежує, чи є ще коментарі
+
+
   constructor(private authService: AuthService, private commentService: CommentService) { }
 
   ngOnInit(): void {
-    this.loadComments();
+    this.loadComments(this.currentPage, this.pageSize);
   }
 
-  private loadComments(): void {
-    this.commentService.getComments(this.postId, 0, 100).subscribe( //тут чекнути як реалізуватипагінацію на сайті а не хардкодити
-      (commentsDisplay: CommentDisplay[]) => this.processComments(commentsDisplay),
+  private loadComments(page: number, pageSize: number): void {
+    this.commentService.getComments(this.postId, page, pageSize).subscribe( //тут чекнути як реалізуватипагінацію на сайті а не хардкодити
+      (commentsDisplay: CommentDisplay[]) => 
+        {
+          console.log('1');
+          if (commentsDisplay.length < this.pageSize) {
+            console.log('No more comments to load');
+            this.hasMoreComments = false;
+          }
+          this.processComments(commentsDisplay)
+        },
       (error) => console.error('Error fetching comments:', error)
     );
   }
+
+  loadMoreComments(): void {
+    this.pageSize += 5; 
+    this.loadComments(this.currentPage, this.pageSize);
+  }
+  
 
   private processComments(commentsDisplay: CommentDisplay[]): void {
     const processedComments = commentsDisplay.map(comment => ({
@@ -53,7 +73,7 @@ export class CommentListComponent {
     this.commentService.addComment(newComment).subscribe({
       next: (response: Comment) => {
         const transformedResponse = this.mapToCommentDisplay(response);
-        this.comments.update((currentComments) =>  [...currentComments, transformedResponse]);
+        this.comments.update((currentComments) => [...currentComments, transformedResponse]);
       },
       error: (err) => console.error('Error adding comment:', err),
     });
@@ -64,20 +84,20 @@ export class CommentListComponent {
     this.commentService.addComment(newReply).subscribe({
       next: (response: Comment) => {
         const transformedResponse = this.mapToCommentDisplay(response);
-  
+
         // Знайти батьківський коментар
         if (transformedResponse.parentId) {
           const parent = this.findCommentById(transformedResponse.parentId);
           if (parent) {
             parent.children = [...(parent.children || []), transformedResponse]; // Оновлюємо children
           }
-          this.loadComments();
+          this.loadComments(this.currentPage, this.pageSize);
         }
       },
       error: (err) => console.error('Error adding reply:', err),
     });
   }
-  
+
   private findCommentById(id: string): CommentDisplay | undefined {
     const stack = [...this.comments()];
     while (stack.length) {
@@ -87,12 +107,12 @@ export class CommentListComponent {
     }
     return undefined;
   }
-  
+
 
   deleteComment(commentId: string): void {
     this.commentService.deleteComment(commentId).subscribe({
-      next: () => { 
-        this.loadComments()
+      next: () => {
+        this.loadComments(this.currentPage, this.pageSize);
       },
       error: (err) => console.error('Error deleting comment:', err),
     });
@@ -137,6 +157,6 @@ export class CommentListComponent {
   onChildToggleMenu(newSelectedId: string | null): void {
     this.selectedCommentId = newSelectedId; // Оновлюємо стан меню
   }
-  
-  
+
+
 }

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
-import { CommentDisplay } from '../../../../../core/models/Comment/commentDisplay.model';
-import { Comment } from '../../../../../core/models/Comment/comment.model';
-import { AuthService } from '../../../../../core/services/auth.service';
+import { CommentDisplay } from '../../../../core/models/Comment/commentDisplay.model';
+import { Comment } from '../../../../core/models/Comment/comment.model';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-comment',

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Comment } from '../../../../../core/models/Comment/comment.model';
+import { Comment } from '../../../../core/models/Comment/comment.model';
 
 @Component({
   selector: 'app-comment-form',

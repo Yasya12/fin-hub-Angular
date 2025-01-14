@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Post } from '../../../core/models/Post/post.model';
-import { PostService } from "../../../core/services/post.service";
-import { AuthService } from "../../../core/services/auth.service";
+import { Post } from '../../../../core/models/Post/post.model';
+import { PostService } from "../../../../core/services/post.service";
+import { AuthService } from "../../../../core/services/auth.service";
 
 @Component({
   selector: 'app-posts',
-  templateUrl: './posts.component.html',
-  styleUrl: './posts.component.css'
+  templateUrl: './posts.component.html'
 })
 export class PostsComponent implements OnInit {
   posts: Post[] = [];

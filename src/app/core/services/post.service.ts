@@ -28,6 +28,7 @@ export class PostService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
     });
   }
+
   isPostLiked(postId: string): Observable<any> {
     const token = localStorage.getItem('token');
     
