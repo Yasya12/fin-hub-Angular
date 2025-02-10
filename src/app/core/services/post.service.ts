@@ -32,6 +32,6 @@ export class PostService {
   }
 
   getPostById(id: string): Observable<SinglePost> {
-    return this.http.get<SinglePost>(`${this.baseUrl}/post'}/${id}`);
+    return this.http.get<SinglePost>(`${this.baseUrl}/post/${id}`);
   }
 }

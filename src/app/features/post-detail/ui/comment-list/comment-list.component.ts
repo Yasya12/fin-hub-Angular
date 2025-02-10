@@ -17,7 +17,7 @@ export class CommentListComponent {
 
   currentPage: number = 0;
   pageSize: number = 5;
-  hasMoreComments: boolean = true; // Відстежує, чи є ще коментарі
+  hasMoreComments: boolean = true; 
 
 
   constructor(private authService: AuthService, private commentService: CommentService) { }
@@ -30,7 +30,6 @@ export class CommentListComponent {
     this.commentService.getComments(this.postId, page, pageSize).subscribe( //тут чекнути як реалізуватипагінацію на сайті а не хардкодити
       (commentsDisplay: CommentDisplay[]) => 
         {
-          console.log('1');
           if (commentsDisplay.length < this.pageSize) {
             console.log('No more comments to load');
             this.hasMoreComments = false;
@@ -85,11 +84,10 @@ export class CommentListComponent {
       next: (response: Comment) => {
         const transformedResponse = this.mapToCommentDisplay(response);
 
-        // Знайти батьківський коментар
         if (transformedResponse.parentId) {
           const parent = this.findCommentById(transformedResponse.parentId);
           if (parent) {
-            parent.children = [...(parent.children || []), transformedResponse]; // Оновлюємо children
+            parent.children = [...(parent.children || []), transformedResponse]; 
           }
           this.loadComments(this.currentPage, this.pageSize);
         }
@@ -155,7 +153,7 @@ export class CommentListComponent {
   }
 
   onChildToggleMenu(newSelectedId: string | null): void {
-    this.selectedCommentId = newSelectedId; // Оновлюємо стан меню
+    this.selectedCommentId = newSelectedId; 
   }
 
 

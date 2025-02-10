@@ -5,15 +5,15 @@ import { CommentListComponent } from './ui/comment-list/comment-list.component';
 import { CommentFormComponent } from './ui/comment-form/comment-form.component';
 import { PostDetailComponent } from './post-detail.component';
 import { FormsModule } from '@angular/forms';
-
-
+import { PostViewComponent } from './ui/post-view/post-view.component';
 
 @NgModule({
   declarations: [
     PostDetailComponent,
     CommentComponent,
     CommentListComponent,
-    CommentFormComponent
+    CommentFormComponent,
+    PostViewComponent
   ],
   imports: [
     CommonModule,

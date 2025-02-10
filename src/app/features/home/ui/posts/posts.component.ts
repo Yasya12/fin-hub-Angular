@@ -32,11 +32,9 @@ export class PostsComponent implements OnInit {
         (data) => {
           this.posts = data;
           this.loading = false;
-          console.log(this.posts);
         },
         (error) => {
           this.loading = false;
-          //console.error('Error loading posts with likes:', error);
         }
       );
     } else {
@@ -47,7 +45,6 @@ export class PostsComponent implements OnInit {
         },
         (error) => {
           this.loading = false;
-          //console.error('Error loading posts:', error);
         }
       );
     }
@@ -55,14 +52,11 @@ export class PostsComponent implements OnInit {
 
   toggleLike(post: Post): void {
     this.likeService.toggleLike(post.id).subscribe(() => {
-      // Копіюємо пост у новий об'єкт
       const updatedPost = { ...post };
   
-      // Оновлюємо властивості нового об'єкта
       updatedPost.isLiked = !post.isLiked;
       updatedPost.likesCount += updatedPost.isLiked ? 1 : -1;
   
-      // Замінюємо старий пост у масиві на оновлений
       this.posts = this.posts.map(p => p.id === post.id ? updatedPost : p);
     });
   }
