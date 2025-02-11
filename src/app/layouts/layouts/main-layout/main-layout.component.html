@@ -1,0 +1,13 @@
+<div class="h-screen flex flex-col">
+    <app-header class="shrink-0"></app-header>
+    <div class="flex justify-center flex-1 overflow-hidden">
+      <!-- Сайдбар -->
+      <app-side-bar class="w-[18rem] shrink-0 sticky"></app-side-bar>
+  
+      <!-- Контейнер для контенту -->
+      <div class="w-1/2 overflow-y-auto">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  
