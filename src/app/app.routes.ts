@@ -22,10 +22,6 @@ export const routes: Routes = [
         loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
       },
       {
-        path: 'try',
-        loadChildren: () => import('./features/try/try.module').then(m => m.TryModule)
-      },
-      {
         path: 'post-detail/:id',
         loadChildren: () => import('./features/post-detail/post-detail.module').then(m => m.PostDetailModule)
       }
