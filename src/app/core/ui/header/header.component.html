@@ -15,26 +15,13 @@
     >
       Home
     </a>
-    <a 
-      class="text-base font-medium text-gray-700 hover:text-green-600 transition" 
-      routerLink="/dashboard" 
-      routerLinkActive="font-bold text-green-600"
-    >
-      Dashboard
-    </a>
-    <a 
-      class="text-base font-medium text-gray-700 hover:text-green-600 transition" 
-      routerLink="/signup" 
-      routerLinkActive="font-bold text-green-600"
-    >
-      Try
-    </a>
 
     <button 
       *ngIf="!authService.currentUser()" 
       class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition"
+      routerLink="/signup"
     >
-      <a routerLink="/try">Login</a>
+      <a>Login</a>
     </button>
 
     <!-- Dropdown для користувача -->
