@@ -1,31 +1,9 @@
-<div class="w-64 p-4 flex flex-col bg-whiteshadow-lg h-full">
-  <div class="flex items-center mb-6 text-xl">
-    <img src="/assets/images/social-network_icon.png" alt="Notification Icon" class="size-6 mr-2" />  
-    Головна
+<div class="w-full flex flex-col bg-white h-full">
+  <div 
+    *ngFor="let category of categories" 
+    class="flex items-center mb-3 hover:bg-green-100 cursor-pointer p-1 break-words whitespace-normal"
+  >
+    <img src="/assets/images/link_icon.png" alt="Notification Icon" class="size-6 mr-2" />
+    {{ category }}
   </div>
-  <ul class="space-y-3 flex-1">
-    <li class="flex items-center p-2 rounded-lg hover:bg-green-100 cursor-pointer">
-      <img src="/assets/images/comments_icon.png" alt="Notification Icon" class="size-6 mr-2" />
-      Ознайомлення
-    </li>
-    <li class="flex items-center p-2 rounded-lg hover:bg-green-100 cursor-pointer">
-      <img src="/assets/images/notification_icon.png" alt="Notification Icon" class="size-6 mr-2" />
-      Сповіщення
-    </li>
-    <li class="flex items-center p-2 rounded-lg hover:bg-green-100 cursor-pointer">
-      <img src="/assets/images/chat_icon.png" alt="Notification Icon" class="size-6 mr-2" />
-      Повідомлення
-    </li>
-    <li class="flex items-center p-2 rounded-lg hover:bg-green-100 cursor-pointer">
-      <img src="/assets/images/link_icon.png" alt="Notification Icon" class="size-6 mr-2" />
-      Закладки
-    </li>
-    <li class="flex items-center p-2 rounded-lg hover:bg-green-100 cursor-pointer">
-      <img src="/assets/images/profile_icon.png" alt="Notification Icon" class="size-6 mr-2" />
-      Профіль
-    </li>
-  </ul>
-  <button class="mt-auto bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 font-medium">
-    Опублікувати пост
-  </button>
 </div>

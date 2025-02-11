@@ -6,5 +6,12 @@ import { Component } from '@angular/core';
   styleUrl: './side-bar.component.css'
 })
 export class SideBarComponent {
-
+  categories = [
+    "Інвестстратег",
+    "Криптоаналітик",
+    "Фінтех-розробник",
+    "Ризик-менеджер",
+    "Консультант з капіталу",
+    "Експерт з фінповедінки"
+  ];
 }
