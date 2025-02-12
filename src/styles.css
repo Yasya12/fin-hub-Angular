@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 /* You can add global styles to this file, and also import other style files */
-html, body {
-  overflow-x: hidden;
-}
+@layer base {
+    body {
+      @apply bg-[#e6e6e6] ;
+    }
+  }
+  

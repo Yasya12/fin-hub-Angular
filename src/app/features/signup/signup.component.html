@@ -1,28 +1,115 @@
-<section class="container mx-auto">
-  <div class="flex justify-center items-center min-h-screen bg-amber-300">
-    <form #form="ngForm" (ngSubmit)="signup(form.value)" class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-bold mb-6">Sign Up</h2>
+<div
+  class="relative px-[10px] sm:m-0 flex justify-center items-center min-h-screen bg-[linear-gradient(to_bottom,_#213c33,_#2f6e48,_#275940)]"
+>
 
-      <!-- Username Field -->
-      <div class="mb-6">
-        <label for="username" class="block text-gray-700 font-medium mb-2">Username</label>
-        <input placeholder="Username" class="form-input px-4 py-3 border border-gray-300 rounded-md w-full" id="username" name="username" type="text" [(ngModel)]="user.username" required>
+  <div
+    class="w-[350px] h-[500px] rounded-xl overflow-h shadow-[5px_20px_50px_rgba(0,0,0,0.2)] bg-[url('/assets/images/1.jpg')] bg-cover bg-center overflow-hidden"
+  >
+    <input type="checkbox" aria-hidden="true" id="chk" class="hidden" />
+
+    <div class="relative w-[100%] h-[100%]">
+      <form class="p-4">
+        <label
+          (click)="toggleLogin()"
+          [@expandElement]
+          for="chk"
+          class="text-[#fff] h-[--signup-popup-window-height] text-3xl flex justify-center items-center font-bold cursor-pointer"
+          >Sign Up</label
+        >
+        <input
+          type="text"
+          name="username"
+          placeholder="User Name"
+          required=""
+          class="w-[80%] h-[20%] flex justify-center p-2 my-5 mx-auto border-none outline-none rounded-md"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          required=""
+          class="w-[80%] h-[20%] flex justify-center p-2 my-5 mx-auto border-none outline-none rounded-md"
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required=""
+          class="w-[80%] h-[20%] flex justify-center p-2 my-5 mx-auto border-none outline-none rounded-md"
+        />
+        <button
+          class="w-[60%] h-[40px] my-2 mx-auto flex justify-center items-center text-[#404a3a] bg-[#afe3c0] text-sm font-bold rounded-md transition-all duration-200 ease-in-out outline-none border-none hover:bg-[#6bb383] cursor-pointer"
+        >
+          Sign Up
+        </button>
+
+        <div class="flex justify-center p-2 my-5 mx-auto">
+          <div
+            id="g_id_onload"
+            data-client_id="338848987617-d03vnfo57c3g809vc4umirrjas5s4gr6.apps.googleusercontent.com"
+            data-callback="handleCredentialResponse"
+            data-scope="email profile"
+            data-context="use"
+            data-ux_mode="popup"
+            data-auto_prompt="false"
+          ></div>
+
+          <div
+            class="g_id_signin"
+            data-type="standard"
+            data-shape="pill"
+            data-theme="outline"
+            data-text="continue_with"
+            data-size="medium"
+            data-logo_alignment="left"
+          ></div>
+        </div>
+      </form>
+
+      <!-- Login Button/Area -->
+      <div
+        (click)="toggleLogin()"
+        class="absolute bottom-0 left-0 w-full h-14 bg-white rounded-t-3xl cursor-pointer flex items-center justify-center"
+      >
+        <span class="text-black-800 text-2xl font-bold">Login</span>
       </div>
 
-      <!-- Email Field -->
-      <div class="mb-6">
-        <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
-        <input placeholder="Email" class="form-input px-4 py-3 border border-gray-300 rounded-md w-full" id="email" name="email" type="email" [(ngModel)]="user.email" required>
+      <!-- Login Form -->
+      <div
+        [@slideUpDown]="isLoginVisible ? 'up' : 'down'"
+        class="absolute bottom-0 left-0 h-[calc(100%-16px-var(--signup-popup-window-height))] w-full bg-white rounded-3xl shadow-lg"
+      >
+        <form #form="ngForm" (ngSubmit)="login(form.value)" class="p-6">
+          <h2 class="block text-black-800 text-2xl font-bold text-center mb-6">
+            Login
+          </h2>
+          <input
+            id="email" 
+            name="email"
+            type="email"
+            placeholder="Email"
+            [(ngModel)]="loginInfo.email" required
+            class="w-full p-3 mb-4 bg-gray-100 rounded-md border-none outline-none"
+          />
+          <input
+            id="password" 
+            name="password"
+            type="password"
+            placeholder="Password"
+            [(ngModel)]="loginInfo.password" required
+            class="w-full p-3 mb-4 bg-gray-100 rounded-md border-none outline-none"
+          />
+          <button
+            type="submit"
+            class="w-full p-3 bg-[#0e673b] text-white rounded-md font-bold"
+          >
+            Login
+          </button>
+          <div *ngIf="errorMessage" class=" alert alert-danger mt-4 transition-all duration-300">
+            <pre class="text-wrap">{{ errorMessage }}</pre>
+          </div>
+        </form>
       </div>
-
-      <!-- Submit Button -->
-      <button class="btn bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-md w-full" type="submit">
-        Sign Up
-      </button>
-
-      <div *ngIf="errorMessage" [@fadeIn] class=" alert alert-danger mt-4 transition-all duration-300">
-        <pre class="text-wrap">{{ errorMessage }}</pre>
-      </div>
-    </form>
+    </div>
   </div>
-</section>
+</div>

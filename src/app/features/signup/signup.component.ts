@@ -1,56 +1,65 @@
-import {Component, OnInit} from '@angular/core';
-import {User} from "../../core/models/User/user.model.";
-import {AuthService} from "../../core/services/auth.service";
-import {ValidationError} from "../../core/models/validation-error.model";
-import {ErrorHandlerService} from "../../core/services/error-handler.service";
-import {animate, style, transition, trigger} from "@angular/animations";
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AuthService } from "../../core/services/auth.service";
+import { ValidationError } from "../../core/models/validation-error.model";
+import { ErrorHandlerService } from "../../core/services/error-handler.service";
+import { animate, style, transition, trigger } from "@angular/animations";
+import { expandElement, fadeOut, slideUpDown } from '../../core/services/animation/signup_animation.service';
+import { GoogleSigninService } from '../../core/services/google-signin.service';
+import { Router } from '@angular/router';
+import { Login } from '../../core/models/login.model';
 
 @Component({
   selector: 'app-signup',
   standalone: false,
   templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css',
   animations: [
-    trigger('fadeIn', [
-      transition(':enter', [
-        style({
-          opacity: 0,
-          transform: 'scale(0.5)' // початковий масштаб (малий)
-        }),
-        animate('700ms', style({
-          opacity: 1,
-          transform: 'scale(1)' // фінальний масштаб (нормальний)
-        }))
-      ])
-    ])
+    expandElement,
+    slideUpDown,
+    fadeOut
   ]
 })
-export class SignupComponent implements OnInit {
-  user: User = {
-    email: '',
-    username: '',
-    role: '',
-    profilePictureUrl: ''
-  };
-  errorMessage: string = '';
-  constructor(private authService: AuthService, private errorHandler: ErrorHandlerService) { }
+export class SignupComponent implements AfterViewInit {
+  isLoginVisible = false;
 
-  ngOnInit(): void {
-  }
-  signup(credentials: User) {
-    console.log(credentials);
-    this.authService.signup(credentials).subscribe({
-      next: (res) => {
-        console.log('Success:', res);
-        // Redirect to user dashboard or handle successful response here
-      },
-      error: (err) => {
-        console.log('Error:', err);
-        const validationErrors: ValidationError = err.error.errors;
-        this.errorMessage = this.errorHandler.formatErrors(validationErrors);
-      }
-    });
+  constructor(
+    private googleSigninService: GoogleSigninService,
+    private authService: AuthService, 
+    private errorHandler: ErrorHandlerService,
+    private router: Router
+  ) {}
+  
+  ngAfterViewInit(): void {
+    this.googleSigninService.loadSdk();
   }
 
-  protected readonly Object = Object;
+  toggleLogin() {
+    this.isLoginVisible = !this.isLoginVisible;
+  }
+
+  loginInfo: Login = {
+      email: '',
+      password: ''
+    };
+
+    errorMessage: string = '';
+
+    login(credentials: Login) {
+      this.authService.login(credentials).subscribe({
+        next: (res) => {
+          this.router.navigate(['/home']); 
+        },
+        error: (err) => {
+          if (err.status === 401) {
+            this.errorMessage = 'This user does not exist or the password is incorrect';
+          } else {
+            if (err.error && err.error.errors) {
+              const validationErrors: ValidationError = err.error.errors;
+              this.errorMessage = this.errorHandler.formatErrors(validationErrors);
+            } else {
+              this.errorMessage = 'Something went wrong. Try again later.';
+            }
+          }
+        }
+      });
+    } 
 }
