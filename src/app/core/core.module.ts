@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './ui/header/header.component';
 import { RouterModule } from '@angular/router';
 import { SideBarComponent } from './ui/side-bar/side-bar.component';
+import { ChartsViewComponent } from './ui/charts-view/charts-view.component';
 
 
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    SideBarComponent
+    SideBarComponent,
+    ChartsViewComponent
   ],
   imports: [
     CommonModule,
@@ -17,7 +19,8 @@ import { SideBarComponent } from './ui/side-bar/side-bar.component';
   ],
   exports: [
     HeaderComponent,
-    SideBarComponent
+    SideBarComponent,
+    ChartsViewComponent
   ]
 })
 export class CoreModule { }
