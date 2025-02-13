@@ -6,6 +6,7 @@ import { CommentFormComponent } from './ui/comment-form/comment-form.component';
 import { PostDetailComponent } from './post-detail.component';
 import { FormsModule } from '@angular/forms';
 import { PostViewComponent } from './ui/post-view/post-view.component';
+import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { PostViewComponent } from './ui/post-view/post-view.component';
     CommentComponent,
     CommentListComponent,
     CommentFormComponent,
-    PostViewComponent
+    PostViewComponent,
+    TimeAgoPipe
   ],
   imports: [
     CommonModule,

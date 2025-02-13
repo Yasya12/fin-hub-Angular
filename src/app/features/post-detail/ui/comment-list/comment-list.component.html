@@ -3,38 +3,36 @@
   (addComment)="addComment($event)"
 ></app-comment-form>
 
-<div class="mt-8">
-  <!-- Відображення кореневих коментарів -->
-  <div *ngIf="comments() && comments().length > 0; else noComments">
-    <ul class="space-y-4">
-      <!-- Перебір кореневих (основних) коментарів -->
-      <li
-        *ngFor="let comment of getSortedComments()"
-        class="py-4 bg-gray-100 rounded-md shadow-sm relative"
-      >
-        <!-- Передача кореневого коментаря в app-comment -->
-        <app-comment
-          [postId]="postId"
-          [comment]="comment"
-          [selectedCommentId]="selectedCommentId"
-          (deleteComment)="deleteComment($event)"
-          (addReply)="addReply($event)"
-          (toggleMenu)="onChildToggleMenu($event)"
-        ></app-comment>
-      </li>
-    </ul>
-
-    <button
-      *ngIf="hasMoreComments"
-      class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      (click)="loadMoreComments()"
+<!-- Відображення кореневих коментарів -->
+<div *ngIf="comments() && comments().length > 0; else noComments">
+  <ul class="">
+    <!-- Перебір кореневих (основних) коментарів -->
+    <li
+      *ngFor="let comment of getSortedComments()"
+      class="py-4 bg-gray-100 relative"
     >
-      +
-    </button>
-  </div>
+      <!-- Передача кореневого коментаря в app-comment -->
+      <app-comment
+        [postId]="postId"
+        [comment]="comment"
+        [selectedCommentId]="selectedCommentId"
+        (deleteComment)="deleteComment($event)"
+        (addReply)="addReply($event)"
+        (toggleMenu)="onChildToggleMenu($event)"
+      ></app-comment>
+    </li>
+  </ul>
 
-  <!-- Шаблон для відсутності коментарів -->
-  <ng-template #noComments>
-    <p class="text-gray-600">No comments yet. Be the first to comment!</p>
-  </ng-template>
+  <button
+    *ngIf="hasMoreComments"
+    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+    (click)="loadMoreComments()"
+  >
+    +
+  </button>
 </div>
+
+<!-- Шаблон для відсутності коментарів -->
+<ng-template #noComments>
+  <p class="text-gray-600">No comments yet. Be the first to comment!</p>
+</ng-template>

@@ -1,8 +1,6 @@
 @if (postId) {
-<div class="flex flex-col items-center">
-  <div class="w-[50%]">
-    <app-post-view  [postId]="postId"></app-post-view>
-    <app-comment-list [postId]="postId"></app-comment-list>
-  </div>
+<div class="flex flex-col items-center w-full">
+  <app-post-view class="w-full" [postId]="postId"></app-post-view>
+  <app-comment-list class="w-full" [postId]="postId"></app-comment-list>
 </div>
 }

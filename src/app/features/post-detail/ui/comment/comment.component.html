@@ -1,43 +1,53 @@
-<div class="comment relative border-l-2 border-gray-300 pl-4" [style.marginLeft.px]="level * 20">
-  <!-- Інформація про автора -->
-  <div class="flex items-center mb-2">
+<!-- Контейнер коментаря -->
+<div
+  class="comment relative pl-4"
+  [style.marginLeft.px]="level * 20"
+  [ngClass]="{ 'border-b border-gray-300 pb-4': level === 0 }"
+>
+  <!-- Контейнер автора -->
+  <div class="flex items-start gap-3">
+    <!-- Фото автора -->
     <img
       [src]="comment.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
       alt="{{ comment.authorName }}"
-      class="w-10 h-10 object-cover rounded-full mr-3 border border-gray-300 shadow-sm"
+      [ngClass]="{ 'size-11': level === 0, 'size-9': level > 0 }"
+      class="object-cover rounded-full border border-gray-300 shadow-sm"
     />
-    <div>
-      <h4 class="text-sm font-semibold text-gray-800">
-        {{ comment.authorName }}
-      </h4>
-      <p class="text-xs text-gray-500">
-        {{ comment.createdAt | date : 'short' }}
-      </p>
+
+    <!-- Текстовий блок (автор, дата, коментар) -->
+    <div class="flex-1">
+      <div class="flex items-center gap-4">
+        <h4 class="text-[14px] font-semibold text-gray-800">
+          {{ comment.authorName }}
+        </h4>
+        <p class="text-[14px] text-gray-500">
+          {{ comment.createdAt | timeAgo }}
+        </p>
+      </div>
+
+      <!-- Текст коментаря -->
+      <p class="text-gray-700 text-[14px] leading-relaxed">{{ comment.content }}</p>
+
+      <!-- Кнопка "Reply" -->
+      <button
+        *ngIf="!isReplying"
+        (click)="replyToComment()"
+        class="text-[14px] hover:bg-[#e6e6e6] px-4 py-1 rounded-full transition"
+      >
+        Reply
+      </button>
+
+      <!-- Форма для відповіді -->
+      <div *ngIf="isReplying" class="mt-2">
+        <app-comment-form
+          [postId]="postId"
+          [parentId]="comment.id"
+          [isReply]="isReplying"
+          (addComment)="submitReply($event)"
+          (isRepling)="checkIfRepling($event)"
+        ></app-comment-form>
+      </div>
     </div>
-  </div>
-
-  <!-- Текст коментаря -->
-  <p class="text-gray-700 mb-2 leading-relaxed">{{ comment.content }}</p>
-
-  <!-- Кнопка "Reply" -->
-  <button
-    *ngIf="!isReplying"
-    (click)="replyToComment()"
-    class="text-sm text-blue-500 hover:underline"
-  >
-    Reply
-  </button>
-
-  <!-- Форма для відповіді -->
-  <div *ngIf="isReplying" class="mt-2">
-    <app-comment-form
-      [postId]="postId"
-      [parentId]="comment.id"
-      (addComment)="submitReply($event)"
-    ></app-comment-form>
-    <button (click)="cancelReply()" class="text-sm text-red-500 mt-2">
-      Cancel
-    </button>
   </div>
 
   <!-- Меню -->
@@ -58,41 +68,38 @@
     </svg>
   </button>
 
-   <!-- Випадне меню -->
-   <div
-     *ngIf="selectedCommentId === comment.id"
-     class="absolute right-2 top-10 bg-white border rounded shadow-lg z-10 comment-holder"
-   >
-     <!-- Кнопка "Delete" доступна тільки автору -->
-     <button
-       *ngIf="isAuthor()"
-       (click)="onDelete()"
-       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-     >
-       Delete
-     </button>
+  <!-- Випадаюче меню -->
+  <div
+    *ngIf="selectedCommentId === comment.id"
+    class="absolute right-2 top-10 bg-white border rounded shadow-lg z-10"
+  >
+    <button
+      *ngIf="isAuthor()"
+      (click)="onDelete()"
+      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+    >
+      Delete
+    </button>
+    <button
+      *ngIf="!isAuthor()"
+      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+    >
+      Add
+    </button>
+  </div>
 
-     <!-- Інша кнопка для неавторів -->
-     <button
-       *ngIf="!isAuthor()"
-       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-     >
-       Add
-     </button>
-   </div>
-
-   <!-- Відображення дочірніх елементів -->
-   <ul *ngIf="comment && comment.children && comment.children.length > 0" class="replies mt-3 space-y-3">
-     <li *ngFor="let child of comment.children" class="">
-       <app-comment
-         [postId]="postId"
-         [comment]="child"
-         [level]="level + 1"
-         [selectedCommentId]="selectedCommentId"
-         (deleteComment)="deleteComment.emit($event)"
-         (addReply)="submitReply($event)"
-         (toggleMenu)="toggleMenu.emit($event)"
-       ></app-comment>
-     </li>
-   </ul>
+  <!-- Відображення дочірніх коментарів -->
+  <ul *ngIf="comment?.children?.length" class="replies mt-3 space-y-3">
+    <li *ngFor="let child of comment.children">
+      <app-comment
+        [postId]="postId"
+        [comment]="child"
+        [level]="level + 1"
+        [selectedCommentId]="selectedCommentId"
+        (deleteComment)="deleteComment.emit($event)"
+        (addReply)="submitReply($event)"
+        (toggleMenu)="toggleMenu.emit($event)"
+      ></app-comment>
+    </li>
+  </ul>
 </div>

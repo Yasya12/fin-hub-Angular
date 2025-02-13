@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { Comment } from '../../../../core/models/Comment/comment.model';
 
 @Component({
@@ -8,9 +8,19 @@ import { Comment } from '../../../../core/models/Comment/comment.model';
 export class CommentFormComponent {
   @Input() postId!: string;
   @Input() parentId: string | null = null;
+  @Input() isReply: boolean = false;
   @Output() addComment = new EventEmitter<Comment>();
+  @Output() isRepling = new EventEmitter<boolean>();
 
-  content: string = ''; // Поле для зберігання тексту коментаря
+  isReplyFormOpen: boolean = false;
+  content: string = '';
+
+  constructor(private elementRef: ElementRef) {}
+
+  ngOnInit()
+  {
+    this.isReplyFormOpen = this.isReply;
+  }
 
   onSubmit(): void {
     if (this.content.trim()) {
@@ -18,11 +28,19 @@ export class CommentFormComponent {
         postId: this.postId,
         content: this.content.trim(),
         parentId: this.parentId,
-        authorId: '' // Автор доданий на рівні сервісу
+        authorId: ''
       };
 
       this.addComment.emit(comment);
-      this.content = ''; 
+      this.content = '';
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.isReplyFormOpen && !this.elementRef.nativeElement.contains(event.target)) {
+      this.isReplyFormOpen = false;
+      this.isRepling.emit(false);
     }
   }
 }

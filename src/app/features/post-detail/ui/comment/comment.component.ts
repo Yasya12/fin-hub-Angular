@@ -41,6 +41,10 @@ export class CommentComponent {
     }
   }
 
+  checkIfRepling(check: boolean): void{
+    this.isReplying = check;
+  }
+
   onToggleMenu(): void {
     const newSelectedId = this.selectedCommentId === this.comment.id ? null : this.comment.id;
     this.toggleMenu.emit(newSelectedId); // Передаємо новий стан до батьківського компонента
