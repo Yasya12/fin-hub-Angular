@@ -1,44 +1,67 @@
 <div class="p-4 bg-[#ffffff] mt-4 rounded-xl shadow-lg">
+  <input
+    type="text"
+    placeholder="What do you want to share?"
+    class="w-full p-2 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 border"
+    (click)="openModal()"
+  />
+  <div class="flex flex-row justify-center items-center">
+    <div class="text-gray-200">|</div>
+    <button
+      class="mt-2 w-1/4 hover:bg-green-600 hover:text-white py-2 rounded-full flex items-center justify-center gap-2"
+      (click)="openModal()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        class="w-5 h-5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M16.862 3.487a2.125 2.125 0 113.005 3.005L7.5 18.86 3 20.25l1.39-4.5L16.862 3.487z"
+        />
+      </svg>
+      Post
+    </button>
+    <div class="text-gray-200">|</div>
+  </div>
+</div>
+
+<!-- Модальне вікно -->
+<div
+  *ngIf="isModalOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+>
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <h2 class="text-xl font-semibold mb-4">Create Post</h2>
     <input
       type="text"
-      placeholder="What do you want to share?"
-      class="w-full p-2 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 border"
-      (click)="openModal()"
+      placeholder="Title"
+      [(ngModel)]="title"
+      class="w-full p-2 mb-2 border rounded-md focus:ring-2 focus:ring-green-600"
     />
-    <div class="flex flex-row justify-center items-center">
-      <div class="text-gray-200">|</div>
-      <button 
-        class="mt-2 w-1/4 hover:bg-green-600 hover:text-white py-2 rounded-full flex items-center justify-center gap-2"
-        (click)="openModal()"
+    <textarea
+      placeholder="Write your content here..."
+      [(ngModel)]="content"
+      class="w-full p-2 h-32 border rounded-md focus:ring-2 focus:ring-green-600"
+    ></textarea>
+    <div class="flex justify-end mt-4 gap-2">
+      <button
+        (click)="closeModal()"
+        class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 3.487a2.125 2.125 0 113.005 3.005L7.5 18.86 3 20.25l1.39-4.5L16.862 3.487z"/>
-        </svg>
+        Cancel
+      </button>
+      <button
+        (click)="submitPost()"
+        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+      >
         Post
       </button>
-      <div class="text-gray-200">|</div>
     </div>
   </div>
-  
-  <!-- Модальне вікно -->
-  <div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-      <h2 class="text-xl font-semibold mb-4">Create Post</h2>
-      <input 
-        type="text" 
-        placeholder="Title" 
-        [(ngModel)]="title"
-        class="w-full p-2 mb-2 border rounded-md focus:ring-2 focus:ring-green-600"
-      />
-      <textarea 
-        placeholder="Write your content here..." 
-        [(ngModel)]="content"
-        class="w-full p-2 h-32 border rounded-md focus:ring-2 focus:ring-green-600"
-      ></textarea>
-      <div class="flex justify-end mt-4 gap-2">
-        <button (click)="closeModal()" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Cancel</button>
-        <button (click)="submitPost()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Post</button>
-      </div>
-    </div>
-  </div>
-  
+</div>
