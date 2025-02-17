@@ -30,7 +30,11 @@ export class HeaderComponent implements OnInit {
   selectTab(tab: string) {
     this.selectedTab.set(tab);
     this.cdr.detectChanges();
-    this.router.navigate([this.menuItems.find(item => item.key === tab)?.route || 'home']);
+    if (tab === 'signup') {
+      this.router.navigate(['/signup']);
+    } else {
+      this.router.navigate([this.menuItems.find(item => item.key === tab)?.route || '/home']);
+    }
   }
 
   setCurrentUser() {

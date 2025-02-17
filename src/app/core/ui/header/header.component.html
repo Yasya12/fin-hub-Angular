@@ -34,14 +34,13 @@
   <button
     *ngIf="!authService.currentUser()"
     class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition"
-    routerLink="/signup"
-    (click)="selectTab('login')"
+    (click)="selectTab('signup')"
   >
     Login
   </button>
 
   <div class="relative" *ngIf="authService.currentUser() as fullUser">
-    <button (click)="toggleDropdown(); selectTab('login')">
+    <button (click)="toggleDropdown();">
       <img
         [src]="fullUser.user.profilePictureUrl"
         alt="User Icon"
