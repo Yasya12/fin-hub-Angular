@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PostDetailComponent implements OnInit {
   postId: string | null = null;
+  commentCount = 0;
 
   constructor(
     private route: ActivatedRoute
@@ -16,5 +17,9 @@ export class PostDetailComponent implements OnInit {
   ngOnInit(): void {
     const postId = this.route.snapshot.paramMap.get('id');
     this.postId = postId;
+  }
+
+  updateCommentCount(newCount: number): void {
+    this.commentCount = newCount; 
   }
 }

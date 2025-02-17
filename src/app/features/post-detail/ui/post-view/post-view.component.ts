@@ -11,6 +11,7 @@ import { LikeService } from '../../../../core/services/like.service';
 })
 export class PostViewComponent {
   @Input() postId!: string;
+  @Input() commentCount: number = 0;
   post: SinglePost | null = null;
   isLiked = false;
   selectedCommentId: string | null = null;
@@ -22,7 +23,6 @@ export class PostViewComponent {
   ) { }
 
   ngOnInit(): void {
-    console.log("postid - " + this.postId)
     this.loadPost(this.postId);
   }
 

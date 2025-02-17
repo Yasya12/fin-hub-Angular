@@ -3,15 +3,27 @@
   (addComment)="addComment($event)"
 ></app-comment-form>
 
+<div class="relative px-3 py-2 flex flex-row justify-between bg-white">
+  Comments
+  <app-comments-filter
+    class="absolute right-4 z-50"
+    [comments]="comments()"
+    (filteredComments)="updateComments($event)"
+  ></app-comments-filter>
+</div>
+
 <!-- Відображення кореневих коментарів -->
-<div *ngIf="comments() && comments().length > 0; else noComments">
-  <ul class="">
+<div
+  class="bg-white overflow-hidden"
+  *ngIf="comments() && comments().length > 0; else noComments"
+>
+  <ul class="divide-y divide-gray-200 border-t border-gray-200 mt-2">
     <!-- Перебір кореневих (основних) коментарів -->
     <li
-      *ngFor="let comment of getSortedComments()"
-      class="py-4 bg-gray-100 relative"
+      *ngFor="let comment of allComments()"
+      class="pt-2 pl-4 relative"
+      [ngClass]="{ 'bg-gray-100': isNewComment(comment) }"
     >
-      <!-- Передача кореневого коментаря в app-comment -->
       <app-comment
         [postId]="postId"
         [comment]="comment"
@@ -23,13 +35,15 @@
     </li>
   </ul>
 
-  <button
-    *ngIf="hasMoreComments"
-    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-    (click)="loadMoreComments()"
-  >
-    +
-  </button>
+  <div class="flex justify-center items-center">
+    <button
+      *ngIf="hasMoreComments"
+      class="w-[80%] rounded-full my-4 px-2 py-2 bg-green-500 text-white hover:bg-green-600"
+      (click)="loadMoreComments()"
+    >
+      View more
+    </button>
+  </div>
 </div>
 
 <!-- Шаблон для відсутності коментарів -->

@@ -1,4 +1,4 @@
-import { Component, Input, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, signal, Output, EventEmitter } from '@angular/core';
 import { Comment } from '../../../../core/models/Comment/comment.model';
 import { CommentDisplay } from '../../../../core/models/Comment/commentDisplay.model';
 import { CommentService } from '../../../../core/services/comment.service';
@@ -7,44 +7,51 @@ import { AuthService } from '../../../../core/services/auth.service';
 @Component({
   selector: 'app-comment-list',
   templateUrl: './comment-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentListComponent {
   @Input() postId!: string;
+  @Output() commentsUpdated = new EventEmitter<number>();
 
+  allComments = signal<CommentDisplay[]>([]);
   comments = signal<CommentDisplay[]>([]);
+
   selectedCommentId: string | null = null;
 
   currentPage: number = 0;
-  pageSize: number = 5;
-  hasMoreComments: boolean = true; 
+  pageSize: number = 3;
+  hasMoreComments: boolean = true;
 
 
   constructor(private authService: AuthService, private commentService: CommentService) { }
 
   ngOnInit(): void {
-    this.loadComments(this.currentPage, this.pageSize);
+    this.loadComments();
   }
 
-  private loadComments(page: number, pageSize: number): void {
-    this.commentService.getComments(this.postId, page, pageSize).subscribe( //тут чекнути як реалізуватипагінацію на сайті а не хардкодити
-      (commentsDisplay: CommentDisplay[]) => 
-        {
-          if (commentsDisplay.length < this.pageSize) {
-            console.log('No more comments to load');
-            this.hasMoreComments = false;
-          }
-          this.processComments(commentsDisplay)
-        },
+  private loadComments(): void {
+    this.commentService.getComments(this.postId).subscribe(
+      (commentsDisplay: CommentDisplay[]) => {
+        this.processComments(commentsDisplay);
+        this.comments.set(this.getSortedComments());
+        this.updatePaginatedComments();
+        setTimeout(() => {
+          this.commentsUpdated.emit(this.comments().length);
+        });
+      },
       (error) => console.error('Error fetching comments:', error)
     );
   }
 
-  loadMoreComments(): void {
-    this.pageSize += 5; 
-    this.loadComments(this.currentPage, this.pageSize);
+  updatePaginatedComments(): void {
+    const sorted = this.getSortedComments();
+    this.allComments.set(this.comments().slice(0, this.pageSize));
+    this.hasMoreComments = sorted.length > this.pageSize;
   }
-  
+
+  loadMoreComments(): void {
+    this.pageSize += 3;
+    this.updatePaginatedComments();
+  }
 
   private processComments(commentsDisplay: CommentDisplay[]): void {
     const processedComments = commentsDisplay.map(comment => ({
@@ -62,6 +69,13 @@ export class CommentListComponent {
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 
+  updateComments(filtered: CommentDisplay[]): void {
+    this.comments.set(filtered);
+    this.allComments.set(filtered.slice(0, this.pageSize)); // Оновлюємо відображені коментарі
+    this.hasMoreComments = filtered.length > this.pageSize;
+  }
+
+
   getReplies(parentId: string): CommentDisplay[] {
     return this.comments().filter(comment => comment.parentId === parentId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -72,7 +86,12 @@ export class CommentListComponent {
     this.commentService.addComment(newComment).subscribe({
       next: (response: Comment) => {
         const transformedResponse = this.mapToCommentDisplay(response);
-        this.comments.update((currentComments) => [...currentComments, transformedResponse]);
+
+        this.comments.set([...this.comments(), transformedResponse]);
+        this.comments.set(this.getSortedComments());
+        this.commentsUpdated.emit(this.comments().length);
+
+        this.allComments.set(this.comments().slice(0, this.pageSize));
       },
       error: (err) => console.error('Error adding comment:', err),
     });
@@ -87,9 +106,9 @@ export class CommentListComponent {
         if (transformedResponse.parentId) {
           const parent = this.findCommentById(transformedResponse.parentId);
           if (parent) {
-            parent.children = [...(parent.children || []), transformedResponse]; 
+            parent.children = [...(parent.children || []), transformedResponse];
           }
-          this.loadComments(this.currentPage, this.pageSize);
+          this.loadComments();
         }
       },
       error: (err) => console.error('Error adding reply:', err),
@@ -110,7 +129,7 @@ export class CommentListComponent {
   deleteComment(commentId: string): void {
     this.commentService.deleteComment(commentId).subscribe({
       next: () => {
-        this.loadComments(this.currentPage, this.pageSize);
+        this.loadComments();
       },
       error: (err) => console.error('Error deleting comment:', err),
     });
@@ -153,7 +172,14 @@ export class CommentListComponent {
   }
 
   onChildToggleMenu(newSelectedId: string | null): void {
-    this.selectedCommentId = newSelectedId; 
+    this.selectedCommentId = newSelectedId;
+  }
+
+  isNewComment(comment: CommentDisplay): boolean {
+    const now = new Date();
+    const commentDate = new Date(comment.createdAt);
+    const diffInMinutes = (now.getTime() - commentDate.getTime()) / 60000;
+    return diffInMinutes <= 1; // Вважаємо комент новим, якщо йому менше 5 хвилин
   }
 
 

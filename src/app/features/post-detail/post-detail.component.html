@@ -1,6 +1,6 @@
 @if (postId) {
 <div class="flex flex-col items-center w-full">
-  <app-post-view class="w-full" [postId]="postId"></app-post-view>
-  <app-comment-list class="w-full" [postId]="postId"></app-comment-list>
+  <app-post-view class="w-full" [postId]="postId" [commentCount]="commentCount"></app-post-view>
+  <app-comment-list class="w-full" [postId]="postId" (commentsUpdated)="updateCommentCount($event)"></app-comment-list>
 </div>
 }
