@@ -18,12 +18,10 @@ export class CommentService {
     return this.http.delete(`http://localhost:8080/api/Comment/${commentId}`);
   }  
 
-  getComments(postId: string, skip: number, take: number): Observable<CommentDisplay[]> {
+  getComments(postId: string): Observable<CommentDisplay[]> {
     const params = new HttpParams()
-      .set('postId', postId)
-      .set('skip', skip.toString())
-      .set('take', take.toString());
-
+      .set('postId', postId);
+      
     return this.http.get<CommentDisplay[]>(`http://localhost:8080/api/Comment`, { params });
   }
 }
