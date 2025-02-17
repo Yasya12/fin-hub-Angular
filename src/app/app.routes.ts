@@ -5,6 +5,11 @@ import { AuthLayoutComponent } from './layouts/layouts/auth-layout/auth-layout.c
 export const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full', // Запобігає неправильному матчінгу
+    redirectTo: 'home', 
+  },
+  {
+    path: '',
     component: AuthLayoutComponent,
     children: [
       {
@@ -27,4 +32,8 @@ export const routes: Routes = [
       }
     ]
   },
+  {
+    path: '**', // Обробка невідомих маршрутів
+    redirectTo: 'home',
+  }
 ];
