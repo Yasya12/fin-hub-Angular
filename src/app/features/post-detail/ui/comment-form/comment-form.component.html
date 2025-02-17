@@ -2,7 +2,7 @@
   @if(!isReply) {
   <form
     (ngSubmit)="onSubmit()"
-    class="flex flex-row justify-between gap-3 p-2 px-3 bg-[#F0F0F0]"
+    class="flex flex-row justify-between gap-3 p-2 px-3 bg-white"
   >
     <img
       [src]="'/assets/images/Sample_User_Icon.png'"
@@ -46,7 +46,7 @@
   @if(isReplyFormOpen) {
   <form
     (ngSubmit)="onSubmit()"
-    class="flex flex-row justify-between gap-3 pr-2"
+    class="flex flex-row justify-between gap-3 pr-2 mb-2"
   >
     <input
       type="text"

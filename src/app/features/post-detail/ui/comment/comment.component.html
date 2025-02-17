@@ -1,8 +1,8 @@
 <!-- Контейнер коментаря -->
 <div
-  class="comment relative pl-4"
+  class="comment relative"
   [style.marginLeft.px]="level * 20"
-  [ngClass]="{ 'border-b border-gray-300 pb-4': level === 0 }"
+  [ngClass]="{ 'pt-2': level === 0 }"
 >
   <!-- Контейнер автора -->
   <div class="flex items-start gap-3">
@@ -11,7 +11,7 @@
       [src]="comment.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
       alt="{{ comment.authorName }}"
       [ngClass]="{ 'size-11': level === 0, 'size-9': level > 0 }"
-      class="object-cover rounded-full border border-gray-300 shadow-sm"
+      class="object-cover rounded-full"
     />
 
     <!-- Текстовий блок (автор, дата, коментар) -->
