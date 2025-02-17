@@ -7,6 +7,7 @@ import { PostDetailComponent } from './post-detail.component';
 import { FormsModule } from '@angular/forms';
 import { PostViewComponent } from './ui/post-view/post-view.component';
 import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
+import { CommentsFilterComponent } from './ui/comments-filter/comments-filter.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
     CommentListComponent,
     CommentFormComponent,
     PostViewComponent,
-    TimeAgoPipe
+    TimeAgoPipe,
+    CommentsFilterComponent
   ],
   imports: [
     CommonModule,
