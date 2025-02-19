@@ -2,7 +2,7 @@ import { Component, Input, signal, Output, EventEmitter } from '@angular/core';
 import { Comment } from '../../../../core/models/Comment/comment.model';
 import { CommentDisplay } from '../../../../core/models/Comment/commentDisplay.model';
 import { CommentService } from '../../../../core/services/comment.service';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthService } from '../../../signup/services/auth.service';
 
 @Component({
   selector: 'app-comment-list',

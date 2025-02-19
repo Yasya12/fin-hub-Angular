@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../features/signup/services/auth.service';
 import { User } from '../../models/User/user.model.';
 import { FullUser } from '../../models/User/full_user.model';
 import { Router } from '@angular/router';

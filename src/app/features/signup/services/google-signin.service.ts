@@ -1,11 +1,13 @@
-import { Injectable, NgZone } from '@angular/core';
-import {AuthService} from "../../core/services/auth.service";
+import { Injectable, NgZone, signal } from '@angular/core';
+import {AuthService} from "./auth.service";
 import { Router } from '@angular/router';
+import { ResponseModel } from '../models/response.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoogleSigninService {
+  currentUser = signal<ResponseModel | null>(null);
 
   constructor(private authService: AuthService,
               private router: Router,
@@ -42,6 +44,8 @@ export class GoogleSigninService {
             next: (data) => {
               console.log('Успішна автентифікація:', data);
               localStorage.setItem('token', data.token);
+              localStorage.setItem('user', JSON.stringify(data.user));
+              this.currentUser.set(data);
               this.router.navigate(['/dashboard']);
             },
             error: (error) => {

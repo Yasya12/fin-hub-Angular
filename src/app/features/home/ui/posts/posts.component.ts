@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../../../../core/models/Post/post.model';
 import { PostService } from "../../../../core/services/post.service";
-import { AuthService } from "../../../../core/services/auth.service";
+import { AuthService } from "../../../signup/services/auth.service";
 import { LikeService } from '../../../../core/services/like.service';
 
 
