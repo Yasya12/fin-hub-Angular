@@ -1,65 +1,79 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { AuthService } from "../../core/services/auth.service";
-import { ValidationError } from "../../core/models/validation-error.model";
-import { ErrorHandlerService } from "../../core/services/error-handler.service";
-import { animate, style, transition, trigger } from "@angular/animations";
-import { expandElement, fadeOut, slideUpDown } from '../../core/services/animation/signup_animation.service';
-import { GoogleSigninService } from '../../core/services/google-signin.service';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AuthService } from "./services/auth.service";
+import { ErrorHandlerService } from "./services/error-handler.service";
+import { GoogleSigninService } from './services/google-signin.service';
 import { Router } from '@angular/router';
-import { Login } from '../../core/models/login.model';
+import { Login } from './models/login.model';
+import { Signup } from './models/signup.model';
+import { expandElement, fadeOut, slideUpDown } from '../../core/services/animation/signup_animation.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-signup',
   standalone: false,
   templateUrl: './signup.component.html',
-  animations: [
-    expandElement,
-    slideUpDown,
-    fadeOut
-  ]
+  animations: [expandElement, slideUpDown, fadeOut]
 })
 export class SignupComponent implements AfterViewInit {
   isLoginVisible = false;
+  errorMessage: string = '';
+
+  @ViewChild('signupForm') signupForm!: NgForm;
+  @ViewChild('loginForm') loginForm!: NgForm;
 
   constructor(
     private googleSigninService: GoogleSigninService,
-    private authService: AuthService, 
+    private authService: AuthService,
     private errorHandler: ErrorHandlerService,
     private router: Router
-  ) {}
-  
+  ) { }
+
   ngAfterViewInit(): void {
     this.googleSigninService.loadSdk();
   }
 
   toggleLogin() {
     this.isLoginVisible = !this.isLoginVisible;
+    this.errorMessage = "";
+    this.clearForm();
   }
 
-  loginInfo: Login = {
-      email: '',
-      password: ''
-    };
+  loginInfo: Login = { email: '', password: '' };
 
-    errorMessage: string = '';
+  login() {
+    if (this.loginForm.invalid) {
+      this.errorMessage = "Please fill in all fields correctly.";
+      return;
+    }
+    this.authService.login(this.loginInfo).subscribe({
+      next: () => this.router.navigate(['/home']),
+      error: (err) => {
+        this.errorMessage = this.errorHandler.handleHttpError(err);
+      }
+    });
+  }
 
-    login(credentials: Login) {
-      this.authService.login(credentials).subscribe({
-        next: (res) => {
-          this.router.navigate(['/home']); 
-        },
-        error: (err) => {
-          if (err.status === 401) {
-            this.errorMessage = 'This user does not exist or the password is incorrect';
-          } else {
-            if (err.error && err.error.errors) {
-              const validationErrors: ValidationError = err.error.errors;
-              this.errorMessage = this.errorHandler.formatErrors(validationErrors);
-            } else {
-              this.errorMessage = 'Something went wrong. Try again later.';
-            }
-          }
-        }
-      });
-    } 
+  signupData: Signup = { username: '', email: '', password: '' };
+
+  signup() {
+    if (this.signupForm.invalid) {
+      this.errorMessage = "Please fill in all fields correctly.";
+      return;
+    }
+    
+    this.authService.signup(this.signupData).subscribe({
+      next: () => this.router.navigate(['/home']),
+      error: (err) => {
+        this.errorMessage = this.errorHandler.handleHttpError(err);
+      }
+    });
+  }
+  
+
+  clearForm() {
+    this.signupData = { username: '', email: '', password: '' };
+    this.loginInfo = { email: '', password: '' };
+    if (this.signupForm) this.signupForm.resetForm();
+    if (this.loginForm) this.loginForm.resetForm();
+  }
 }
