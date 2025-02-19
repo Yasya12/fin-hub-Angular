@@ -43,10 +43,8 @@ export class GoogleSigninService {
           this.authService.googleLogin({ token }).subscribe({
             next: (data) => {
               console.log('Успішна автентифікація:', data);
-              localStorage.setItem('token', data.token);
-              localStorage.setItem('user', JSON.stringify(data.user));
-              this.currentUser.set(data);
-              this.router.navigate(['/dashboard']);
+              this.authService.handleAuthResponse(data);
+              this.router.navigate(['/home']);
             },
             error: (error) => {
               console.error('Помилка автентифікації:', error);

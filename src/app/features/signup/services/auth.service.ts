@@ -15,11 +15,14 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  private handleAuthResponse(response: ResponseModel): void {
+  handleAuthResponse(response: ResponseModel): void {
     if (response) {
       localStorage.setItem('user', JSON.stringify(response.user));
       localStorage.setItem('token', response.token);
       this.currentUser.set(response);
+      const expiration = Date.now() + 60 * 60 * 1000;
+      localStorage.setItem('token_expiration', expiration.toString());
+      this.startLogoutTimer();
     }
   }
 
@@ -44,4 +47,17 @@ export class AuthService {
   googleLogin(tokenRequest: { token: string }): Observable<ResponseModel> {
     return this.http.post<ResponseModel>(`${this.baseUrl}/auth/google`, tokenRequest);
   }
+
+  startLogoutTimer() {
+    const expiration = localStorage.getItem('token_expiration');
+    if (!expiration) return;
+  
+    const timeLeft = +expiration - Date.now();
+    if (timeLeft > 0) {
+      setTimeout(() => this.logout(), timeLeft);
+    } else {
+      this.logout();
+    }
+  }
+  
 }
