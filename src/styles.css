@@ -11,11 +11,6 @@
   ::-webkit-scrollbar {
     width: 4px !important;
   }
-
-  ::-webkit-scrollbar-track {
-    margin: 26px; 
-  }
-  
   
   ::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2) !important;
