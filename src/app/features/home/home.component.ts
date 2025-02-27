@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../signup/services/auth.service';
-import { FullUser } from '../../core/models/User/full_user.model';
+import { ResponseModel } from '../signup/models/response.model';
 
 @Component({
   selector: 'app-home',
@@ -8,6 +8,7 @@ import { FullUser } from '../../core/models/User/full_user.model';
 })
 export class HomeComponent implements OnInit {
   curretnUserEmail: string |null = null;
+  curretnUser: ResponseModel |null = null;
 
   constructor(
     private authService: AuthService
@@ -15,5 +16,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.curretnUserEmail = this.authService.currentUser()?.user.email ?? null;
+    this.curretnUser = this.authService.currentUser();
   }
 }

@@ -35,33 +35,12 @@
 <div
   *ngIf="isModalOpen"
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+  (mousedown)="onMouseDown($event)"
+  (mouseup)="onMouseUp($event)"
 >
-  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-    <h2 class="text-xl font-semibold mb-4">Create Post</h2>
-    <input
-      type="text"
-      placeholder="Title"
-      [(ngModel)]="title"
-      class="w-full p-2 mb-2 border rounded-md focus:ring-2 focus:ring-green-600"
-    />
-    <textarea
-      placeholder="Write your content here..."
-      [(ngModel)]="content"
-      class="w-full p-2 h-32 border rounded-md focus:ring-2 focus:ring-green-600"
-    ></textarea>
-    <div class="flex justify-end mt-4 gap-2">
-      <button
-        (click)="closeModal()"
-        class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
-      >
-        Cancel
-      </button>
-      <button
-        (click)="submitPost()"
-        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-      >
-        Post
-      </button>
-    </div>
-  </div>
+  <app-post-editor
+    class="w-[40rem]"
+    (close)="closeModal()"
+    [curretnUser]="curretnUser" 
+  ></app-post-editor>
 </div>

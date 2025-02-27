@@ -26,7 +26,7 @@
     </div>
 
     <!-- Контент поста -->
-    <p class="text-gray-800 text-lg mb-6">{{ post.content }}</p>
+    <div class="text-gray-800 text-lg mb-6" [innerHTML]="post.content"></div>
 
     <div class="flex items-center justify-between text-gray-600 text-sm">
       <!-- Блок лайків -->

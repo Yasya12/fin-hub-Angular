@@ -25,14 +25,14 @@ export class ChartsViewComponent implements AfterViewInit {
             "symbols": [
               { "s": "NASDAQ:NDX" },
               { "s": "NASDAQ:META" },
-              { "s": "NASDAQ:TSLA" },
-              { "s": "NASDAQ:GOOG" },
+              { "s": "NYSE:V" },
+              { "s": "NASDAQ:GOOGL" },
               { "s": "NASDAQ:MSFT" },
               { "s": "NYSE:TSM" },
               { "s": "NASDAQ:NVDA" },
               { "s": "NASDAQ:AMZN" },
               { "s": "NYSE:KO" },
-              { "s": "NASDAQ:AAPL" }
+              { "s": "NYSE:UBER" }
             ]
           }
         ],

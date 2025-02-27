@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CreatePost } from '../../models/create-post';
 import { PostService } from '../../services/posts.service';
+import { ResponseModel } from '../../../signup/models/response.model';
 
 @Component({
   selector: 'app-create-post',
@@ -9,6 +10,7 @@ import { PostService } from '../../services/posts.service';
 })
 export class CreatePostComponent {
   @Input() curretnUserEmail!: string | null;
+  @Input() curretnUser!: ResponseModel | null;
   isModalOpen = false;
   title = '';
   content = '';
@@ -16,6 +18,7 @@ export class CreatePostComponent {
     title: '', content: '',
     userEmail: ''
   };
+  private isInsideModal = false;
 
   constructor(private postService: PostService) { }
 
@@ -53,5 +56,17 @@ export class CreatePostComponent {
         console.log("yes")
       }
     );
+  }
+
+  onMouseDown(event: MouseEvent) {
+    // Перевіряємо, чи натискання відбулося всередині модального вікна
+    this.isInsideModal = (event.target as HTMLElement).closest('app-post-editor') !== null;
+  }
+
+  onMouseUp(event: MouseEvent) {
+    // Якщо клік завершився поза модальним вікном і почався поза ним – закриваємо
+    if (!this.isInsideModal && (event.target as HTMLElement).closest('app-post-editor') === null) {
+      this.closeModal();
+    }
   }
 }
