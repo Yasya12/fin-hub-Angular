@@ -42,5 +42,6 @@
     class="w-[40rem]"
     (close)="closeModal()"
     [curretnUser]="curretnUser" 
+    (contentValue)="handleContentChange($event)"
   ></app-post-editor>
 </div>

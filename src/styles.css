@@ -20,3 +20,6 @@
 
 .ql-container.ql-snow { border: none !important;}
 
+.text-gray-800 a {
+  @apply text-blue-600 underline;
+}

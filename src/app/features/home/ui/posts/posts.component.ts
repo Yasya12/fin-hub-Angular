@@ -3,6 +3,8 @@ import { Post } from '../../../../core/models/Post/post.model';
 import { PostService } from "../../../../core/services/post.service";
 import { AuthService } from "../../../signup/services/auth.service";
 import { LikeService } from '../../../../core/services/like.service';
+import { Router } from '@angular/router';
+import { marked } from 'marked'; 
 
 
 @Component({
@@ -16,40 +18,39 @@ export class PostsComponent implements OnInit {
   constructor(
     private postService: PostService,
     private authService: AuthService,
-    private likeService: LikeService
+    private likeService: LikeService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.loadPosts();
   }
 
-  loadPosts(): void {
+  async loadPosts(): Promise<void> {
     this.loading = true;
     const userId = this.authService.currentUser()?.user.id;
-
-    if (userId) {
-      this.postService.getPostsWithLikes(userId).subscribe(
-        (data) => {
-          this.posts = data;
-          this.loading = false;
-        },
-        (error) => {
-          this.loading = false;
-        }
+  
+    const postObservable = userId
+      ? this.postService.getPostsWithLikes(userId)
+      : this.postService.getPosts();
+  
+    postObservable.subscribe(async (data) => {
+      // Convert Markdown to HTML asynchronously
+      const parsedPosts = await Promise.all(
+        data.map(async (post) => ({
+          ...post,
+          content: await marked.parse(post.content) // Ensure `content` is fully resolved
+        }))
       );
-    } else {
-      this.postService.getPosts().subscribe(
-        (data) => {
-          this.posts = data;
-          this.loading = false;
-        },
-        (error) => {
-          this.loading = false;
-        }
-      );
-    }
+  
+      this.posts = parsedPosts; // Now posts have proper `string` content
+      this.loading = false;
+    }, 
+    (error) => {
+      this.loading = false;
+    });
   }
-
+  
   toggleLike(post: Post): void {
     this.likeService.toggleLike(post.id).subscribe(() => {
       const updatedPost = { ...post };
@@ -59,6 +60,16 @@ export class PostsComponent implements OnInit {
   
       this.posts = this.posts.map(p => p.id === post.id ? updatedPost : p);
     });
+  }
+
+  navigateToPost(postId: string) {
+    this.router.navigateByUrl(`/home/post/${postId}`);
+  }
+  
+  handleLinkClick(event: Event, postId: string) {
+    event.preventDefault(); // Блокуємо відкриття посилання
+    event.stopPropagation(); // Зупиняємо подальше розповсюдження кліку
+    this.navigateToPost(postId);
   }
   
 }

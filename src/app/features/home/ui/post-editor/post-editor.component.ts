@@ -12,10 +12,11 @@ import { ResponseModel } from '../../../signup/models/response.model';
 export class PostEditorComponent {
   @Input() curretnUser!: ResponseModel | null;
   @Output() close = new EventEmitter<void>();
+  @Output() contentValue = new EventEmitter<string>();
   editorForm = new FormGroup({
     content: new FormControl('') // Initialize with an empty string
   });
-  
+
 
   modules = {
     toolbar: '#quillToolbar' // Attach the toolbar to an external div
@@ -46,33 +47,53 @@ export class PostEditorComponent {
       toolbar.addHandler('link', () => {
         const currentSelection = this.quill.getSelection();
 
-        // Prevent adding a new link if the previous text is already a link
-        if (this.isCursorInsideLink()) {
-          return; // Prevent opening the modal
-        }
+        if (this.isCursorInsideLink()) return; // Prevent opening modal if inside a link
 
         this.openCustomModal().then((url: string) => {
           if (!url) return;
 
-          // Automatically add "http://" if missing
           if (!url.startsWith('http://') && !url.startsWith('https://')) {
             url = 'http://' + url;
           }
 
           let range = this.quill.getSelection() || currentSelection;
+
           if (range) {
-            if (range.length === 0) {
-              this.quill.insertText(range.index, url, 'link', url);
-            } else {
+            if (range.length > 0) {
               this.quill.format('link', url);
+            } else {
+              let index = range.index;
+              const textBefore = this.quill.getText(index - 1, 1);
+
+              // Додаємо пробіл перед посиланням, якщо його немає
+              if (index > 0 && !textBefore.match(/\s/)) {
+                this.quill.insertText(index, " ");
+                index++; // Зсуваємо індекс на 1
+              }
+
+              // Вставляємо посилання
+              this.quill.insertText(index, url, 'link', url);
+              index += url.length;
+
+              // **ВАЖЛИВО!** Знімаємо форматування перед вставкою пробілу
+              this.quill.setSelection(index, 1); // Виділяємо місце після посилання
+              this.quill.format('link', false); // Знімаємо форматування посилання
+
+              this.quill.setSelection(index + 1);
             }
           }
 
-          // Ensure new links open in a new tab
+          setTimeout(() => {
+            this.quill.formatText(range.index, url.length, 'link', url);
+          }, 10);
+
+          this.editorForm.controls['content'].setValue(this.quill.root.innerHTML);
+          this.quill.setSelection(this.quill.getLength());
+
           this.makeLinksClickable();
         });
       });
-
+      
       // Apply event listener to make links clickable of initial content
       this.makeLinksClickable();
     }
@@ -185,15 +206,7 @@ export class PostEditorComponent {
 
   submitPost() {
     const contentValue = this.editorForm.value.content || '';
-    
-    this.postService.createPost({
-      userEmail: '1@1',
-      title: 'new',
-      content: contentValue,
-    }).subscribe(() => {
-      this.close.emit(); // Close the modal after successful submission
-    });
+    console.log("child htlm" + contentValue)
+    this.contentValue.emit(contentValue);
   }
-  
-  
 }

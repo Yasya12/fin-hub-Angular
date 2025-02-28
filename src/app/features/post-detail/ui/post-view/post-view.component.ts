@@ -1,8 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input, PLATFORM_ID } from '@angular/core';
 import { SinglePost } from '../../../../core/models/Post/single_post.model';
 import { PostService } from '../../../../core/services/post.service';
 import { AuthService } from '../../../signup/services/auth.service';
 import { LikeService } from '../../../../core/services/like.service';
+import { marked } from 'marked';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-post-view',
@@ -19,7 +21,8 @@ export class PostViewComponent {
   constructor(
     private postService: PostService,
     public authService: AuthService,
-    private likeService: LikeService
+    private likeService: LikeService,
+    @Inject(PLATFORM_ID) private platformId: object
   ) { }
 
   ngOnInit(): void {
@@ -28,8 +31,11 @@ export class PostViewComponent {
 
   private loadPost(postId: string): void {
     this.postService.getPostById(postId).subscribe((data) => {
-      this.post = data;
-      this.checkIfLiked(postId);
+      this.post = {
+        ...data,
+        content: marked.parse(data.content) as string
+      };
+      this.checkIfLiked(postId); this.makeLinksClickable();
     });
   }
 
@@ -41,6 +47,18 @@ export class PostViewComponent {
       });
     }
   }
+  
+  private makeLinksClickable() {
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        document.querySelectorAll('a').forEach((link) => {
+          link.setAttribute('target', '_blank');
+          link.setAttribute('rel', 'noopener noreferrer');
+        });
+      }, 1);
+    }
+  }
+  
 
   toggleLike(): void {
     if (this.post?.id) {

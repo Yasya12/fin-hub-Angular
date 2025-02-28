@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CreatePost } from '../../models/create-post';
 import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../signup/models/response.model';
+import TurndownService from 'turndown';
 
 @Component({
   selector: 'app-create-post',
@@ -32,28 +33,37 @@ export class CreatePostComponent {
     this.content = '';
   }
 
+  handleContentChange(content: string) {
+    this.content = content;
+    this.submitPost();
+  }
+
   submitPost() {
     if (!this.curretnUserEmail) {
-      console.log(this.curretnUserEmail)
+      console.log(this.curretnUserEmail);
       alert("You must login!");
       return;
     }
-
-    if (!this.content.trim() || !this.content.trim()) {
-      alert("Title cannot be empty!");
+  
+    if (!this.content.trim()) {
+      alert("Content cannot be empty!");
       return;
     }
-
-
+  
+    // Convert HTML to Markdown
+    const turndownService = new TurndownService();
+    const markdownContent = turndownService.turndown(this.content);
+    console.log(markdownContent)
+  
     this.postData = {
       userEmail: this.curretnUserEmail,
-      title: this.title,
-      content: this.content
+      title: this.title,  
+      content: markdownContent // Now storing Markdown instead of HTML
     };
-
+  
     this.postService.createPost(this.postData).subscribe(
       (data) => {
-        console.log("yes")
+        console.log("Post submitted as Markdown.");
       }
     );
   }
