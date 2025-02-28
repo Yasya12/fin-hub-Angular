@@ -1,14 +1,27 @@
 <div class="p-4 bg-[#ffffff] rounded-xl shadow-lg">
-  <input
-    type="text"
-    placeholder="What do you want to share?"
-    class="w-full p-2 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 border"
-    (click)="openModal()"
-  />
+  <div class="flex flex-row">
+    @if(curretnUser)
+    {
+    <img
+      [src]="
+        curretnUser.user.profilePictureUrl || '/assets/images/Sample_User_Icon.png'
+      "
+      alt="User Avatar"
+      class="w-10 h-10 rounded-full mr-3 shadow-sm"
+    />
+    }
+    <div
+      class="w-full p-1 pl-2 text-gray-600 bg-gray-100 rounded-full border border-gray-300 cursor-pointer flex items-center"
+      (click)="openModal()"
+    >
+      What do you want to share?
+    </div>
+  </div>
+
   <div class="flex flex-row justify-center items-center">
     <div class="text-gray-200">|</div>
     <button
-      class="mt-2 w-1/4 hover:bg-green-600 hover:text-white py-2 rounded-full flex items-center justify-center gap-2"
+      class="mt-2 w-1/4 hover:bg-gray-100 py-1 rounded-full flex items-center justify-center gap-2"
       (click)="openModal()"
     >
       <svg
@@ -41,7 +54,7 @@
   <app-post-editor
     class="w-[40rem]"
     (close)="closeModal()"
-    [curretnUser]="curretnUser" 
+    [curretnUser]="curretnUser"
     (contentValue)="handleContentChange($event)"
   ></app-post-editor>
 </div>

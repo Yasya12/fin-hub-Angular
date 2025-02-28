@@ -24,6 +24,11 @@ export class CreatePostComponent {
   constructor(private postService: PostService) { }
 
   openModal() {
+    if (!this.curretnUser) {
+      alert("You must login!");
+      return;
+    }
+    
     this.isModalOpen = true;
   }
 
@@ -39,28 +44,16 @@ export class CreatePostComponent {
   }
 
   submitPost() {
-    if (!this.curretnUserEmail) {
-      console.log(this.curretnUserEmail);
-      alert("You must login!");
-      return;
-    }
-  
-    if (!this.content.trim()) {
-      alert("Content cannot be empty!");
-      return;
-    }
-  
     // Convert HTML to Markdown
     const turndownService = new TurndownService();
     const markdownContent = turndownService.turndown(this.content);
-    console.log(markdownContent)
-  
+
     this.postData = {
-      userEmail: this.curretnUserEmail,
-      title: this.title,  
+      userEmail: this.curretnUserEmail!,
+      title: this.title,
       content: markdownContent // Now storing Markdown instead of HTML
     };
-  
+
     this.postService.createPost(this.postData).subscribe(
       (data) => {
         console.log("Post submitted as Markdown.");
