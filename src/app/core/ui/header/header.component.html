@@ -42,7 +42,7 @@
   <div class="relative" *ngIf="authService.currentUser() as fullUser">
     <button (click)="toggleDropdown();">
       <img
-        [src]="fullUser.user.profilePictureUrl"
+        [src]="fullUser.user.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
         alt="User Icon"
         class="size-10 rounded-full"
       />
