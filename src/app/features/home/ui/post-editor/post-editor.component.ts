@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Output, PLATFORM_ID } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { PostService } from '../../services/posts.service';
@@ -13,6 +13,7 @@ export class PostEditorComponent {
   @Input() curretnUser!: ResponseModel | null;
   @Output() close = new EventEmitter<void>();
   @Output() contentValue = new EventEmitter<string>();
+  @ViewChild('textInput') textInput!: ElementRef;
   editorForm = new FormGroup({
     content: new FormControl('') // Initialize with an empty string
   });
@@ -28,6 +29,10 @@ export class PostEditorComponent {
     private postService: PostService,
     @Inject(PLATFORM_ID) private platformId: object
   ) { }
+
+  focusInput() {
+    this.textInput?.nativeElement?.focus();
+  }
 
   closeModal() {
     this.close.emit();
