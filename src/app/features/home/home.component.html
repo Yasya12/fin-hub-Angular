@@ -1,3 +1,3 @@
-<app-create-post [curretnUserEmail]="curretnUserEmail" [curretnUser]="curretnUser"></app-create-post>
-<app-posts></app-posts>
+<app-create-post [curretnUserEmail]="curretnUserEmail" [curretnUser]="curretnUser" (addPost)="addPost($event)"></app-create-post>
+<app-posts  [newPost]="newPost"></app-posts>
 

@@ -32,10 +32,10 @@ export class PostViewComponent {
   private loadPost(postId: string): void {
     this.postService.getPostById(postId).subscribe((data) => {
       this.post = {
-        ...data,
-        content: marked.parse(data.content) as string
+        ...data
       };
-      this.checkIfLiked(postId); this.makeLinksClickable();
+      this.checkIfLiked(postId);
+      this.makeLinksClickable();
     });
   }
 
@@ -47,7 +47,7 @@ export class PostViewComponent {
       });
     }
   }
-  
+
   private makeLinksClickable() {
     if (isPlatformBrowser(this.platformId)) {
       setTimeout(() => {
@@ -58,7 +58,7 @@ export class PostViewComponent {
       }, 1);
     }
   }
-  
+
 
   toggleLike(): void {
     if (this.post?.id) {

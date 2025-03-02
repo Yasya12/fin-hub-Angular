@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CreatePost } from '../../models/create-post';
 import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../signup/models/response.model';
 import TurndownService from 'turndown';
+import { Post } from '../../../../core/models/Post/post.model';
 
 @Component({
   selector: 'app-create-post',
@@ -12,6 +13,8 @@ import TurndownService from 'turndown';
 export class CreatePostComponent {
   @Input() curretnUserEmail!: string | null;
   @Input() curretnUser!: ResponseModel | null;
+  @Output() addPost = new EventEmitter<Post>();
+
   isModalOpen = false;
   title = '';
   content = '';
@@ -28,7 +31,7 @@ export class CreatePostComponent {
       alert("You must login!");
       return;
     }
-    
+
     this.isModalOpen = true;
   }
 
@@ -44,21 +47,35 @@ export class CreatePostComponent {
   }
 
   submitPost() {
-    // Convert HTML to Markdown
-    const turndownService = new TurndownService();
-    const markdownContent = turndownService.turndown(this.content);
-
     this.postData = {
       userEmail: this.curretnUserEmail!,
       title: this.title,
-      content: markdownContent // Now storing Markdown instead of HTML
+      content: this.content 
     };
 
     this.postService.createPost(this.postData).subscribe(
       (data) => {
-        console.log("Post submitted as Markdown.");
+        this.closeModal();
+        this.addPost.emit(this.mapToPost(data));
       }
     );
+  }
+
+  private mapToPost(createPost: CreatePost): Post {
+    const transformed = {
+      id: createPost.id!,
+      userName: this.curretnUser?.user.username!, 
+      categoryNames: [], 
+      title: createPost.title!, 
+      content: createPost.content,
+      createdAt: new Date(), 
+      profilePictureUrl: this.curretnUser?.user.profilePictureUrl!, 
+      likesCount: 0,
+      commentsCount: 0, 
+      isLiked: false,
+    };
+
+    return transformed;
   }
 
   onMouseDown(event: MouseEvent) {

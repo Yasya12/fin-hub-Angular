@@ -211,7 +211,6 @@ export class PostEditorComponent {
 
   submitPost() {
     const contentValue = this.editorForm.value.content || '';
-    console.log("child htlm" + contentValue)
     this.contentValue.emit(contentValue);
   }
 }
