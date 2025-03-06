@@ -1,4 +1,4 @@
-<div class="pt-7 rounded w-full bg-white relative">
+<div class="pt-7 rounded w-full h-[33rem] bg-white relative">
   <!-- Close Button -->
   <button
     class="absolute top-2 left-2 text-black rounded-full hover:bg-gray-100 p-1 px-4"
@@ -51,14 +51,14 @@
     </div>
 
     <!-- Quill Editor -->
-    <div class="relative w-full h-[300px]" (click)="focusInput()">
+    <div class="relative w-full h-[360px]" (click)="focusInput()">
       <quill-editor
         #textInput
         formControlName="content"
         [modules]="modules"
         [debounceTime]="650"
         class="w-full h-full"
-        [styles]="{ 'min-height': '300px' }"
+        [styles]="{ 'min-height': '360px' }"
         placeholder="Напишіть щось цікавеньке..."
         (onEditorCreated)="onEditorCreated($event)"
       >

@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../signup/models/response.model';
+import Quill from 'quill';
 
 @Component({
   selector: 'app-post-editor',
@@ -12,7 +13,7 @@ import { ResponseModel } from '../../../signup/models/response.model';
 export class PostEditorComponent {
   @Input() curretnUser!: ResponseModel | null;
   @Output() close = new EventEmitter<void>();
-  @Output() contentValue = new EventEmitter<string>();
+  @Output() contentValue = new EventEmitter<[string, string[]]>();
   @ViewChild('textInput') textInput!: ElementRef;
   editorForm = new FormGroup({
     content: new FormControl('') // Initialize with an empty string
@@ -23,7 +24,8 @@ export class PostEditorComponent {
     toolbar: '#quillToolbar' // Attach the toolbar to an external div
   };
 
-  private quill!: any;
+  private quill!: Quill;
+  pendingImages: { file: File; localUrl: string }[] = [];
 
   constructor(
     private postService: PostService,
@@ -38,7 +40,7 @@ export class PostEditorComponent {
     this.close.emit();
   }
 
-  onEditorCreated(quillInstance: any) {
+  onEditorCreated(quillInstance: Quill) {
     if (isPlatformBrowser(this.platformId)) {
       this.quill = quillInstance;
 
@@ -48,7 +50,9 @@ export class PostEditorComponent {
         tooltip.remove();
       }
 
-      const toolbar = this.quill.getModule('toolbar');
+      const toolbar: any = this.quill.getModule('toolbar');
+
+      // Toolbar handlers
       toolbar.addHandler('link', () => {
         const currentSelection = this.quill.getSelection();
 
@@ -63,7 +67,7 @@ export class PostEditorComponent {
 
           let range = this.quill.getSelection() || currentSelection;
 
-          if (range) {
+          if (range !== null) {
             if (range.length > 0) {
               this.quill.format('link', url);
             } else {
@@ -86,11 +90,10 @@ export class PostEditorComponent {
 
               this.quill.setSelection(index + 1);
             }
+            setTimeout(() => {
+              this.quill.formatText(range.index, url.length, 'link', url);
+            }, 10);
           }
-
-          setTimeout(() => {
-            this.quill.formatText(range.index, url.length, 'link', url);
-          }, 10);
 
           this.editorForm.controls['content'].setValue(this.quill.root.innerHTML);
           this.quill.setSelection(this.quill.getLength());
@@ -98,12 +101,100 @@ export class PostEditorComponent {
           this.makeLinksClickable();
         });
       });
-      
+      toolbar.addHandler('image', () => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = () => {
+          const file = input.files ? input.files[0] : null;
+          if (file) {
+            // Convert file to Base64 for preview
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const localUrl = event.target?.result as string; // Base64 URL
+
+              // Store in memory (so it can be uploaded later)
+              this.pendingImages.push({ file, localUrl });
+
+              // Ensure each image is wrapped in a <p> tag
+              const range = this.quill.getSelection();
+              const index = range ? range.index : this.quill.getLength();
+
+              // Insert a placeholder paragraph
+              this.quill.insertText(index, '\n', 'user'); // Create a new line before inserting
+              this.quill.insertEmbed(index + 1, 'image', localUrl);
+              this.quill.insertText(index + 2, '\n', 'user'); // Create a new line after inserting
+
+              // Add delete button
+              setTimeout(() => this.addDeleteButton(localUrl), 10);
+
+              // Update the form content
+              this.editorForm.controls['content'].setValue(this.quill.root.innerHTML);
+            };
+
+            reader.readAsDataURL(file); // Convert file to Base64
+          }
+        };
+      });
       // Apply event listener to make links clickable of initial content
       this.makeLinksClickable();
     }
   }
 
+  addDeleteButton(imageUrl: string) {
+    // Ensure unique image selection
+    const images = this.quill.container.querySelectorAll(`img[src^="${imageUrl}"]`);
+
+    images.forEach((value, index) => {
+      const img = value as HTMLImageElement; // Type assertion
+
+      let parentP = document.createElement("p");
+      img.insertAdjacentElement("beforebegin", parentP);
+      parentP.appendChild(img);
+
+      // Ensure parent has the correct styles
+      parentP.style.position = "relative"; // Ensure relative positioning
+      parentP.style.overflow = "visible"; // Ensure button is not clipped
+
+      // Create delete button
+      const deleteButton = document.createElement("span");
+      deleteButton.classList.add("delete-button");
+      deleteButton.textContent = "×";
+
+      deleteButton.style.cssText = `
+      position: absolute;
+      top: -5px;
+      right: 150px;
+      color: white;
+      background-color: red;
+      font-size: 14px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 50%;
+      border: none;
+      padding: 0;
+      line-height: 20px;
+      text-align: center;
+      z-index: 50;
+  `;
+
+      // Attach delete functionality
+      deleteButton.onclick = () => {
+        parentP?.remove();
+        this.pendingImages = this.pendingImages.filter(img => img.localUrl !== imageUrl);
+      };
+
+      // Append delete button
+      parentP.appendChild(deleteButton);
+    });
+  }
+  
   private isCursorInsideLink(): boolean {
     const range = this.quill.getSelection();
     if (!range) return false;
@@ -116,8 +207,8 @@ export class PostEditorComponent {
     const nextChar = index < textLength - 1 ? this.quill.getContents(index, 1).ops[0] : null;
 
     // Check if the previous or next character is part of a link
-    const prevIsLink = prevChar?.attributes?.link;
-    const nextIsLink = nextChar?.attributes?.link;
+    const prevIsLink = prevChar?.attributes?.['link'];
+    const nextIsLink = nextChar?.attributes?.['link'];
 
     return !!prevIsLink || !!nextIsLink;
   }
@@ -211,6 +302,10 @@ export class PostEditorComponent {
 
   submitPost() {
     const contentValue = this.editorForm.value.content || '';
-    this.contentValue.emit(contentValue);
+
+     // Extract Base64 images from pendingImages
+     const images = this.pendingImages.map(img => img.localUrl);
+
+     this.contentValue.emit([contentValue, images]);
   }
 }
