@@ -11,7 +11,7 @@ export class PostService {
   
   constructor(private http: HttpClient) { }
 
-  createPost(post: CreatePost) : Observable<CreatePost>  {
-    return this.http.post<CreatePost> (`${this.baseUrl}/post`, post)
-  }
+  createPost(post: FormData): Observable<CreatePost> {
+    return this.http.post<CreatePost>(`${this.baseUrl}/post`, post);
+  }  
 }
