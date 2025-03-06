@@ -15,9 +15,6 @@
       </div>
     </div>
 
-    <!-- Заголовок поста -->
-    <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ post.title }}</h2>
-
     <!-- Категорії поста -->
     <div class="mb-6">
       <p class="text-gray-600 text-sm">
@@ -25,8 +22,16 @@
       </p>
     </div>
 
-    <!-- Контент поста -->
-    <div class="text-gray-800 text-lg mb-6" [innerHTML]="post.content"></div>
+    <div class="mb-6">
+      <!-- Контент поста -->
+      <div class="text-gray-800 text-lg mb-3" [innerHTML]="post.content"></div>
+      <!-- Перебір зображень -->
+      <div *ngIf="post.images && post.images.length > 0">
+        <div *ngFor="let image of post.images">
+          <img [src]="image" alt="Post Image" class="w-full" />
+        </div>
+      </div>
+    </div>
 
     <div class="flex items-center justify-between text-gray-600 text-sm">
       <!-- Блок лайків -->
