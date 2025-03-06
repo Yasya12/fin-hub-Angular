@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Post } from "../models/Post/post.model";
-import { SinglePost } from "../models/Post/single_post.model";
+import { SinglePost } from "../../features/post-detail/models/single_post.model";
 import { PostResponse } from '../models/Post/post_response';
 import { environment } from '../../../../environment';
 
