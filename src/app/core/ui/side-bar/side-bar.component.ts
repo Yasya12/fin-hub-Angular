@@ -7,11 +7,13 @@ import { Component } from '@angular/core';
 })
 export class SideBarComponent {
   categories = [
-    "Інвестстратег",
-    "Криптоаналітик",
-    "Фінтех-розробник",
-    "Ризик-менеджер",
-    "Консультант з капіталу",
-    "Експерт з фінповедінки"
+    "Health",
+    "Computer Science",
+    "Marketing",
+    "Finance",
+    "Philosophy",
+    "Economics",
+    "Fashion and Style",
+    "Science"
   ];
 }
