@@ -4,6 +4,7 @@ import { HeaderComponent } from './ui/header/header.component';
 import { RouterModule } from '@angular/router';
 import { SideBarComponent } from './ui/side-bar/side-bar.component';
 import { ChartsViewComponent } from './ui/charts-view/charts-view.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 
 
@@ -15,7 +16,8 @@ import { ChartsViewComponent } from './ui/charts-view/charts-view.component';
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    TooltipModule.forRoot()
   ],
   exports: [
     HeaderComponent,
