@@ -46,7 +46,10 @@ export class SignupComponent implements AfterViewInit {
       return;
     }
     this.authService.login(this.loginInfo).subscribe({
-      next: () => this.router.navigate(['/home']),
+      next: () => {
+        localStorage.setItem('selectedTab', 'home');
+        this.router.navigate(['/home']);
+      },
       error: (err) => {
         this.errorMessage = this.errorHandler.handleHttpError(err);
       }
@@ -60,7 +63,7 @@ export class SignupComponent implements AfterViewInit {
       this.errorMessage = "Please fill in all fields correctly.";
       return;
     }
-    
+
     this.authService.signup(this.signupData).subscribe({
       next: () => this.router.navigate(['/home']),
       error: (err) => {
@@ -68,7 +71,7 @@ export class SignupComponent implements AfterViewInit {
       }
     });
   }
-  
+
 
   clearForm() {
     this.signupData = { username: '', email: '', password: '' };
