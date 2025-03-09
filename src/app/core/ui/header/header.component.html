@@ -45,6 +45,8 @@
   >} @else {
   <div
     class="relative hover:bg-[#e6e6e6] hover:rounded-md p-1 px-2"
+    [tooltip]="fullUser.user.username"
+    [tooltipPlacement]="'top'"
     *ngIf="authService.currentUser() as fullUser"
   >
     <button (click)="toggleDropdown()">
@@ -59,6 +61,7 @@
     </button>
 
     <div
+      #dropdownMenu
       *ngIf="isDropdownOpen"
       class="absolute right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg w-48 z-50"
     >

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, ElementRef, HostListener, OnInit, signal, ViewChild } from '@angular/core';
 import { AuthService } from '../../../features/signup/services/auth.service';
 import { User } from '../../models/User/user.model.';
 import { FullUser } from '../../models/User/full_user.model';
@@ -21,6 +21,7 @@ export class HeaderComponent implements OnInit {
     { key: 'hubs', icon: 'hubs_icon', chosenIcon: 'chosen_hubs_icon', route: '/under-development' },
     { key: 'notifications', icon: 'notifications_icon', chosenIcon: 'chosen_notifications_icon', route: '/under-development' },
   ];
+  @ViewChild('dropdownMenu') dropdownMenu: ElementRef | undefined;
 
   constructor(
     protected authService: AuthService,
@@ -30,7 +31,7 @@ export class HeaderComponent implements OnInit {
       if (typeof window !== 'undefined') {
         localStorage.setItem('selectedTab', this.selectedTab());
       }
-    });    
+    });
   }
 
   ngOnInit(): void {
@@ -69,5 +70,15 @@ export class HeaderComponent implements OnInit {
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: MouseEvent) {
+    if (
+      this.dropdownMenu &&
+      !this.dropdownMenu.nativeElement.contains(event.target)
+    ) {
+      this.isDropdownOpen = false;
+    }
   }
 }
