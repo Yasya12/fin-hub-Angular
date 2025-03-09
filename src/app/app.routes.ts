@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layouts/layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/layouts/auth-layout/auth-layout.component';
+import { UnderDevelopmentComponent } from './shared/ui/under-development/under-development.component';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,10 @@ export const routes: Routes = [
       {
         path: 'signup',
         loadChildren: () => import('./features/signup/signup.module').then(m => m.SignupModule)
+      },
+      {
+        path: 'under-development',  
+        component: UnderDevelopmentComponent 
       }
     ]
   },
