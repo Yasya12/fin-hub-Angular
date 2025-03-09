@@ -15,7 +15,7 @@ import { NgForm } from '@angular/forms';
   animations: [expandElement, slideUpDown, fadeOut]
 })
 export class SignupComponent implements AfterViewInit {
-  isLoginVisible = false;
+  isSignUpVisible = false;
   errorMessage: string = '';
 
   @ViewChild('signupForm') signupForm!: NgForm;
@@ -32,8 +32,8 @@ export class SignupComponent implements AfterViewInit {
     this.googleSigninService.loadSdk();
   }
 
-  toggleLogin() {
-    this.isLoginVisible = !this.isLoginVisible;
+  toggleSignUp() {
+    this.isSignUpVisible = !this.isSignUpVisible;
     this.errorMessage = "";
     this.clearForm();
   }
