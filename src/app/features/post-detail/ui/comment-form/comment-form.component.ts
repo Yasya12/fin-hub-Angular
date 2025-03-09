@@ -1,5 +1,6 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
 import { Comment } from '../../../../core/models/Comment/comment.model';
+import { ResponseModel } from '../../../signup/models/response.model';
 
 @Component({
   selector: 'app-comment-form',
@@ -9,16 +10,16 @@ export class CommentFormComponent {
   @Input() postId!: string;
   @Input() parentId: string | null = null;
   @Input() isReply: boolean = false;
+  @Input() currentUser = signal<ResponseModel | null>(null);
   @Output() addComment = new EventEmitter<Comment>();
   @Output() isRepling = new EventEmitter<boolean>();
 
   isReplyFormOpen: boolean = false;
   content: string = '';
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private elementRef: ElementRef) { }
 
-  ngOnInit()
-  {
+  ngOnInit() {
     this.isReplyFormOpen = this.isReply;
   }
 

@@ -1,5 +1,6 @@
 <app-comment-form
   [postId]="postId"
+  [currentUser]="currentUser"
   (addComment)="addComment($event)"
 ></app-comment-form>
 
@@ -28,6 +29,7 @@
         [postId]="postId"
         [comment]="comment"
         [selectedCommentId]="selectedCommentId"
+        [currentUser]="currentUser"
         (deleteComment)="deleteComment($event)"
         (addReply)="addReply($event)"
         (toggleMenu)="onChildToggleMenu($event)"

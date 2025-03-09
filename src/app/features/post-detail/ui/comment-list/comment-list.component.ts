@@ -3,6 +3,7 @@ import { Comment } from '../../../../core/models/Comment/comment.model';
 import { CommentDisplay } from '../../../../core/models/Comment/commentDisplay.model';
 import { CommentService } from '../../../../core/services/comment.service';
 import { AuthService } from '../../../signup/services/auth.service';
+import { ResponseModel } from '../../../signup/models/response.model';
 
 @Component({
   selector: 'app-comment-list',
@@ -11,6 +12,8 @@ import { AuthService } from '../../../signup/services/auth.service';
 export class CommentListComponent {
   @Input() postId!: string;
   @Output() commentsUpdated = new EventEmitter<number>();
+
+  currentUser = signal<ResponseModel | null>(null);
 
   allComments = signal<CommentDisplay[]>([]);
   comments = signal<CommentDisplay[]>([]);
@@ -22,7 +25,9 @@ export class CommentListComponent {
   hasMoreComments: boolean = true;
 
 
-  constructor(private authService: AuthService, private commentService: CommentService) { }
+  constructor(private authService: AuthService, private commentService: CommentService) {
+    this.currentUser.set(this.authService.currentUser());
+  }
 
   ngOnInit(): void {
     this.loadComments();
@@ -82,7 +87,7 @@ export class CommentListComponent {
   }
 
   addComment(newComment: Comment): void {
-    newComment.authorId = this.authService.currentUser()?.user.id || '';
+    newComment.authorId = this.currentUser()?.user.id || '';
     this.commentService.addComment(newComment).subscribe({
       next: (response: Comment) => {
         const transformedResponse = this.mapToCommentDisplay(response);
@@ -98,7 +103,7 @@ export class CommentListComponent {
   }
 
   addReply(newReply: Comment): void {
-    newReply.authorId = this.authService.currentUser()?.user.id || '';
+    newReply.authorId = this.currentUser()?.user.id || '';
     this.commentService.addComment(newReply).subscribe({
       next: (response: Comment) => {
         const transformedResponse = this.mapToCommentDisplay(response);
@@ -139,9 +144,9 @@ export class CommentListComponent {
     const transformed = {
       id: comment.id || '',
       content: comment.content,
-      authorName: this.authService.currentUser()?.user.username || 'Anonymous',
+      authorName: this.currentUser()?.user.username || 'Anonymous',
       createdAt: new Date(),
-      profilePictureUrl: this.authService.currentUser()?.user.profilePictureUrl,
+      profilePictureUrl: this.currentUser()?.user.profilePictureUrl,
       parentId: comment.parentId,
     };
     return transformed;

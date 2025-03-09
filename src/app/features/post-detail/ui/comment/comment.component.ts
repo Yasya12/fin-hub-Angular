@@ -1,7 +1,8 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
 import { CommentDisplay } from '../../../../core/models/Comment/commentDisplay.model';
 import { Comment } from '../../../../core/models/Comment/comment.model';
 import { AuthService } from '../../../signup/services/auth.service';
+import { ResponseModel } from '../../../signup/models/response.model';
 
 @Component({
   selector: 'app-comment',
@@ -12,7 +13,7 @@ export class CommentComponent {
   @Input() postId!: string;
   @Input() level: number = 0; 
   @Input() selectedCommentId: string | null = null;
-
+  @Input() currentUser = signal<ResponseModel | null>(null);
 
   @Output() deleteComment = new EventEmitter<string>();
   @Output() addReply = new EventEmitter<Comment>();
@@ -22,7 +23,7 @@ export class CommentComponent {
   constructor(private authService: AuthService) {}
 
   isAuthor(): boolean {
-    const currentUser = this.authService.currentUser()?.user;
+    const currentUser = this.currentUser()?.user;
     return currentUser?.username === this.comment.authorName;
   }
 

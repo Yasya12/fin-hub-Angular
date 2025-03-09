@@ -5,7 +5,10 @@
     class="flex flex-row justify-between gap-3 p-2 px-3 bg-white"
   >
     <img
-      [src]="'/assets/images/Sample_User_Icon.png'"
+      [src]="
+        currentUser()?.user?.profilePictureUrl ||
+        '/assets/images/Sample_User_Icon.png'
+      "
       alt="U"
       class="size-11 object-cover rounded-full border border-gray-300 shadow-sm"
     />
@@ -41,9 +44,7 @@
       Post Comment
     </button>
   </form>
-  } 
-  
-  @if(isReplyFormOpen) {
+  } @if(isReplyFormOpen) {
   <form
     (ngSubmit)="onSubmit()"
     class="flex flex-row justify-between gap-3 pr-2 mb-2"
@@ -58,28 +59,26 @@
     />
 
     <button
-    type="submit"
-    [disabled]="!content.trim()"
-    class="flex items-center px-3 rounded-full text-white transition
-      bg-green-500 hover:bg-green-600 
-      disabled:bg-green-500 disabled:opacity-50"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="size-4 mr-2"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
+      type="submit"
+      [disabled]="!content.trim()"
+      class="flex items-center px-3 rounded-full text-white transition bg-green-500 hover:bg-green-600 disabled:bg-green-500 disabled:opacity-50"
     >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M5 13l4 4L19 7"
-      ></path>
-    </svg>
-    Reply
-  </button>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="size-4 mr-2"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7"
+        ></path>
+      </svg>
+      Reply
+    </button>
   </form>
   }
 </div>
