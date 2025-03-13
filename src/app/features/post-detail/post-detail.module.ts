@@ -16,12 +16,12 @@ import { CommentsFilterComponent } from './ui/comments-filter/comments-filter.co
     CommentListComponent,
     CommentFormComponent,
     PostViewComponent,
-    TimeAgoPipe,
     CommentsFilterComponent
   ],
   imports: [
     CommonModule,
-    FormsModule
-  ]
+    FormsModule,
+    TimeAgoPipe
+  ],
 })
 export class PostDetailModule { }

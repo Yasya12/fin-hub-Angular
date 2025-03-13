@@ -19,7 +19,7 @@
           <div>
             <h4 class="font-bold text-lg">{{ post.userName }}</h4>
             <p class="text-sm text-gray-600">
-              {{ post.createdAt | date : "short" }}
+              {{ post.createdAt | timeAgo }}
             </p>
           </div>
         </div>

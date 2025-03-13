@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'timeAgo',
-  pure: false // Робить пайп реактивним до змін
+  pure: false, // Робить пайп реактивним до змін
+  standalone: true
 })
 export class TimeAgoPipe implements PipeTransform {
   transform(value: Date | string | number): string {

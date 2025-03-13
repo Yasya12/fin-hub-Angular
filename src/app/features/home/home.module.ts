@@ -9,6 +9,7 @@ import { CreatePostComponent } from './ui/create-post/create-post.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { PostEditorComponent } from './ui/post-editor/post-editor.component';
+import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
 
 @NgModule({
   declarations: [
@@ -24,8 +25,9 @@ import { PostEditorComponent } from './ui/post-editor/post-editor.component';
     HomeRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    TimeAgoPipe
   ],
-  exports: [PostEditorComponent] 
+  exports: [PostEditorComponent]
 })
 export class HomeModule { }
