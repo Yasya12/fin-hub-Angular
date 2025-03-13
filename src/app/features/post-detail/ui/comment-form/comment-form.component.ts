@@ -10,7 +10,7 @@ export class CommentFormComponent {
   @Input() postId!: string;
   @Input() parentId: string | null = null;
   @Input() isReply: boolean = false;
-  @Input() currentUser = signal<ResponseModel | null>(null);
+  @Input() currentUser = signal<ResponseModel | undefined>(undefined);
   @Output() addComment = new EventEmitter<Comment>();
   @Output() isRepling = new EventEmitter<boolean>();
 

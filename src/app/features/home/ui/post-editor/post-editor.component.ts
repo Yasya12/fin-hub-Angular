@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Inject, Input, Output, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Inject, input, Input, Output, PLATFORM_ID, viewChild, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { PostService } from '../../services/posts.service';
@@ -11,29 +11,32 @@ import Quill from 'quill';
   styleUrls: ['./post-editor.component.css'],
 })
 export class PostEditorComponent {
-  @Input() curretnUser!: ResponseModel | null;
-  @Output() close = new EventEmitter<void>();
-  @Output() contentValue = new EventEmitter<[string, string[]]>();
-  @ViewChild('textInput') textInput!: ElementRef;
+  // Services
+  private readonly postService = inject(PostService);
+  private readonly platformId = inject(PLATFORM_ID);
+
+  // Inputs
+  currentUser = input<ResponseModel>();
+  private quill!: Quill;
+  pendingImages: { file: File; localUrl: string }[] = [];
+
+  // States
   editorForm = new FormGroup({
-    content: new FormControl('') // Initialize with an empty string
+    content: new FormControl('')
   });
 
-
+  // HtmlElements
+  textInput = viewChild<ElementRef>('textInput');
   modules = {
     toolbar: '#quillToolbar' // Attach the toolbar to an external div
   };
 
-  private quill!: Quill;
-  pendingImages: { file: File; localUrl: string }[] = [];
+  @Output() close = new EventEmitter<void>();
+  @Output() contentValue = new EventEmitter<[string, string[]]>();
 
-  constructor(
-    private postService: PostService,
-    @Inject(PLATFORM_ID) private platformId: object
-  ) { }
 
   focusInput() {
-    this.textInput?.nativeElement?.focus();
+    this.textInput()?.nativeElement?.focus();
   }
 
   closeModal() {
@@ -194,7 +197,7 @@ export class PostEditorComponent {
       parentP.appendChild(deleteButton);
     });
   }
-  
+
   private isCursorInsideLink(): boolean {
     const range = this.quill.getSelection();
     if (!range) return false;
@@ -303,9 +306,9 @@ export class PostEditorComponent {
   submitPost() {
     const contentValue = this.editorForm.value.content || '';
 
-     // Extract Base64 images from pendingImages
-     const images = this.pendingImages.map(img => img.localUrl);
+    // Extract Base64 images from pendingImages
+    const images = this.pendingImages.map(img => img.localUrl);
 
-     this.contentValue.emit([contentValue, images]);
+    this.contentValue.emit([contentValue, images]);
   }
 }

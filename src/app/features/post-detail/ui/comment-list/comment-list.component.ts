@@ -1,8 +1,8 @@
 import { Component, Input, signal, Output, EventEmitter } from '@angular/core';
 import { Comment } from '../../../../core/models/Comment/comment.model';
 import { CommentDisplay } from '../../../../core/models/Comment/commentDisplay.model';
-import { CommentService } from '../../../../core/services/comment.service';
-import { AuthService } from '../../../signup/services/auth.service';
+import { CommentService } from '../../services/comment.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { ResponseModel } from '../../../signup/models/response.model';
 
 @Component({
@@ -13,7 +13,7 @@ export class CommentListComponent {
   @Input() postId!: string;
   @Output() commentsUpdated = new EventEmitter<number>();
 
-  currentUser = signal<ResponseModel | null>(null);
+  currentUser = signal<ResponseModel | undefined>(undefined);
 
   allComments = signal<CommentDisplay[]>([]);
   comments = signal<CommentDisplay[]>([]);

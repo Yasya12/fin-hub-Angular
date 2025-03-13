@@ -1,3 +1,12 @@
-<app-create-post [curretnUserEmail]="curretnUserEmail" [curretnUser]="curretnUser" (addPost)="addPost($event)"></app-create-post>
-<app-posts  [newPost]="newPost()"></app-posts>
+<div class="flex h-screen justify-center flex-1 overflow-hidden mt-4 mb-2">
+  <!-- Sidebar -->
+  <app-side-bar class="w-[9rem] shrink-0 sticky"></app-side-bar>
 
+  <!-- Content container -->
+  <div class="w-[38%] ml-5 px-2">
+    <app-posts [currentUser]="curretnUser"></app-posts>
+  </div>
+
+  <!-- Charts view bar -->
+  <app-charts-view class="w-[25rem]"></app-charts-view>
+</div>

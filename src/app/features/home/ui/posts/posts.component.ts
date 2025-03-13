@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, effect, ElementRef, inject, input, OnInit, signal, viewChild } from '@angular/core';
 import { Post } from '../../../../core/models/Post/post.model';
-import { PostService } from "../../../../core/services/post.service";
-import { AuthService } from "../../../signup/services/auth.service";
-import { LikeService } from '../../../../core/services/like.service';
+import { PostService } from "../../../../shared/services/post.service";
+import { LikeService } from '../../../../shared/services/like.service';
 import { Router } from '@angular/router';
+import { ResponseModel } from '../../../signup/models/response.model';
 
 @Component({
   selector: 'app-posts',
@@ -12,16 +12,16 @@ import { Router } from '@angular/router';
 export class PostsComponent implements OnInit, AfterViewInit {
   // Services
   private readonly postService = inject(PostService);
-  private readonly authService = inject(AuthService);
   private readonly likeService = inject(LikeService);
   private readonly router = inject(Router);
 
   // Inputs
-  newPost = input<Post>();
+  currentUser = input<ResponseModel>();
 
   // States
   posts = signal<Post[]>([]);
   loading = signal<boolean>(false);
+  newPost = signal<Post | undefined>(undefined);
   pageNumber = 1;
   pageSize = 5;
   hasMorePosts = true;
@@ -36,13 +36,13 @@ export class PostsComponent implements OnInit, AfterViewInit {
       this.posts.update(posts => [post, ...posts]);
     }
   }, { allowSignalWrites: true });
-  
+
   async loadPosts(): Promise<void> {
     if (!this.hasMorePosts || this.loading()) return;
 
     this.loading.set(true);
 
-    const userId = this.authService.currentUser()?.user.id;
+    const userId = this.currentUser()?.user.id;
 
     const postObservable = userId
       ? this.postService.getPostsWithLikes(userId, this.pageNumber, this.pageSize)
@@ -76,6 +76,10 @@ export class PostsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  addPost(post: Post): void {
+    this.newPost.set(post);
+  }
+
   navigateToPost(postId: string) {
     this.router.navigateByUrl(`/home/post/${postId}`);
   }
@@ -87,7 +91,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
     this.navigateToPost(postId);
   }
 
-   onScroll(event: Event): void {
+  onScroll(event: Event): void {
     const container = this.scrollContainer()?.nativeElement;
 
     if (container.scrollTop + container.clientHeight >= container.scrollHeight - container.scrollHeight * 0.1) {

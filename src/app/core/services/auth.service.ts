@@ -1,16 +1,16 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable, tap } from "rxjs";
-import { Login } from '../models/login.model';
-import { Signup } from '../models/signup.model';
-import { ResponseModel } from '../models/response.model';
-import { environment } from '../../../../../environment';
+import { Login } from '../../features/signup/models/login.model';
+import { Signup } from '../../features/signup/models/signup.model';
+import { ResponseModel } from '../../features/signup/models/response.model';
+import { environment } from '../../../../environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  currentUser = signal<ResponseModel | null>(null);
+  currentUser = signal<ResponseModel | undefined>(undefined);
   private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
@@ -42,7 +42,7 @@ export class AuthService {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     localStorage.removeItem('token_expiration');
-    this.currentUser.set(null);
+    this.currentUser.set(undefined);
   }
 
   googleLogin(tokenRequest: { token: string }): Observable<ResponseModel> {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ValidationError } from '../../../core/models/validation-error.model';
+import { ValidationError } from '../../core/models/validation-error.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,6 @@ export class ErrorHandlerService {
 
     switch (err.status) {
       case 400:
-        // Перевіряємо, чи є конкретне повідомлення про помилку
         if (err.error?.error) {
           return err.error.error;
         }

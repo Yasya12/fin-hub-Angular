@@ -1,10 +1,10 @@
 <div class="p-4 bg-[#ffffff] rounded-xl shadow-lg">
   <div class="flex flex-row">
-    @if(curretnUser)
+    @if(currentUser())
     {
     <img
       [src]="
-        curretnUser.user.profilePictureUrl || '/assets/images/Sample_User_Icon.png'
+        currentUser()?.user?.profilePictureUrl || '/assets/images/Sample_User_Icon.png'
       "
       alt="User Avatar"
       class="w-10 h-10 rounded-full mr-3 shadow-sm"
@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<!-- Модальне вікно -->
+<!-- Modal window -->
 <div
   *ngIf="isModalOpen"
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
@@ -54,7 +54,7 @@
   <app-post-editor
     class="w-[45rem]"
     (close)="closeModal()"
-    [curretnUser]="curretnUser"
+    [currentUser]="currentUser()"
     (contentValue)="handleContentChange($event[0], $event[1])"
   ></app-post-editor>
 </div>

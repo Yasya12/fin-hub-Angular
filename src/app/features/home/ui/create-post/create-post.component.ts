@@ -1,32 +1,29 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, input, Output } from '@angular/core';
 import { CreatePost } from '../../models/create-post';
 import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../signup/models/response.model';
-import TurndownService from 'turndown';
 import { Post } from '../../../../core/models/Post/post.model';
 
 @Component({
   selector: 'app-create-post',
-  templateUrl: './create-post.component.html',
-  styleUrl: './create-post.component.css'
+  templateUrl: './create-post.component.html'
 })
 export class CreatePostComponent {
-  @Input() curretnUserEmail!: string | null;
-  @Input() curretnUser!: ResponseModel | null;
-  @Output() addPost = new EventEmitter<Post>();
+  // Services
+  private readonly postService = inject(PostService);
 
+  // Inputs
+  currentUser = input<ResponseModel>();
+
+  // States
   isModalOpen = false;
   content = '';
-  postData: CreatePost = {
-    content: '',
-    userEmail: ''
-  };
-  private isInsideModal = false;
+  isInsideModal = false;
 
-  constructor(private postService: PostService) { }
+  @Output() addPost = new EventEmitter<Post>();
 
   openModal() {
-    if (!this.curretnUser) {
+    if (!this.currentUser()) {
       alert("You must login!");
       return;
     }
@@ -41,16 +38,14 @@ export class CreatePostComponent {
 
   handleContentChange(content: string, images: string[]) {
     const cleanedContent = this.cleanContent(content);
-
     this.content = cleanedContent; // Ensure the variable is updated correctly
-
     this.submitPost(images);
   }
 
   submitPost(images: string[]) {
     const formData = new FormData();
 
-    formData.append('UserEmail', this.curretnUserEmail!);
+    formData.append('UserEmail', this.currentUser()?.user.email!);
     formData.append('Content', this.content);
 
     // Convert Base64 images to File and append them
@@ -101,11 +96,11 @@ export class CreatePostComponent {
   private mapToPost(createPost: CreatePost): Post {
     const transformed = {
       id: createPost.id!,
-      userName: this.curretnUser?.user.username!,
+      userName: this.currentUser()?.user.username!,
       categoryNames: [],
       content: createPost.content,
       createdAt: new Date(),
-      profilePictureUrl: this.curretnUser?.user.profilePictureUrl!,
+      profilePictureUrl: this.currentUser()?.user.profilePictureUrl!,
       likesCount: 0,
       commentsCount: 0,
       isLiked: false,
@@ -116,14 +111,14 @@ export class CreatePostComponent {
   }
 
   onMouseDown(event: MouseEvent) {
-    // Перевіряємо, чи натискання відбулося всередині модального вікна
+    // Check if the click started inside the modal window
     this.isInsideModal = (event.target as HTMLElement).closest('app-post-editor') !== null;
   }
-
+  
   onMouseUp(event: MouseEvent) {
-    // Якщо клік завершився поза модальним вікном і почався поза ним – закриваємо
+    // If the click ended outside the modal and started outside as well, close the modal
     if (!this.isInsideModal && (event.target as HTMLElement).closest('app-post-editor') === null) {
       this.closeModal();
     }
-  }
+  }  
 }

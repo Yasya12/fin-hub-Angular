@@ -32,11 +32,11 @@
 
   <!-- Form -->
   <form [formGroup]="editorForm" class="flex flex-col">
-    <!-- Автор поста та дата -->
+    <!-- Post author and date -->
     <div class="flex items-center mt-3 px-4">
       <img
         [src]="
-          curretnUser?.user?.profilePictureUrl ||
+          currentUser()?.user?.profilePictureUrl ||
           '/assets/images/Sample_User_Icon.png'
         "
         alt="Author's Profile Picture"
@@ -44,7 +44,7 @@
       />
       <div>
         <h4 class="font-semibold text-gray-800">
-          {{ curretnUser?.user?.username }}
+          {{ currentUser()?.user?.username }}
         </h4>
         <div class="text-white">....</div>
       </div>

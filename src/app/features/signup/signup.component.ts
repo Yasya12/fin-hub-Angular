@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { AuthService } from "./services/auth.service";
-import { ErrorHandlerService } from "./services/error-handler.service";
+import { AuthService } from "../../core/services/auth.service";
+import { ErrorHandlerService } from "../../shared/services/error-handler.service";
 import { GoogleSigninService } from './services/google-signin.service';
 import { Router } from '@angular/router';
 import { Login } from './models/login.model';

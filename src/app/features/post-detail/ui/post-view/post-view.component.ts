@@ -1,8 +1,8 @@
 import { Component, Inject, Input, PLATFORM_ID } from '@angular/core';
 import { SinglePost } from '../../models/single_post.model';
-import { PostService } from '../../../../core/services/post.service';
-import { AuthService } from '../../../signup/services/auth.service';
-import { LikeService } from '../../../../core/services/like.service';
+import { PostService } from '../../../../shared/services/post.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { LikeService } from '../../../../shared/services/like.service';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({

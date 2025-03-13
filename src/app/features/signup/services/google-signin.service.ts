@@ -1,5 +1,5 @@
 import { Injectable, NgZone, signal } from '@angular/core';
-import {AuthService} from "./auth.service";
+import {AuthService} from "../../../core/services/auth.service";
 import { Router } from '@angular/router';
 import { ResponseModel } from '../models/response.model';
 

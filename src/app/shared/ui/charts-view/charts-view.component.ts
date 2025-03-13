@@ -3,7 +3,8 @@ import { Component, ElementRef, ViewChild, AfterViewInit, Renderer2 } from '@ang
 @Component({
   selector: 'app-charts-view',
   templateUrl: './charts-view.component.html',
-  styleUrl: './charts-view.component.css'
+  styleUrl: './charts-view.component.css',
+  standalone: true
 })
 export class ChartsViewComponent implements AfterViewInit {
   @ViewChild('miniWidgetContainer', { static: true }) miniWidgetContainer!: ElementRef;

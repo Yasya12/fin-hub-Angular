@@ -1,13 +1,16 @@
 <section #scrollContainer class="w-full mt-2 h-[85%] overflow-y-scroll">
+  <!-- Creating post -->
+  <app-create-post [currentUser]="currentUser()" (addPost)="addPost($event)"></app-create-post>
+
   <div class="flex flex-col w-full">
-    <!-- Виведення постів після завантаження -->
+    <!-- Display posts after loading -->
     <div class="flex flex-col gap-2 w-full">
-      <!-- Перебір кожного поста -->
+      <!-- Iterate over each post -->
       @for(post of posts(); track post.id) {
       <div
         class="bg-[#ffffff] p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex flex-col"
       >
-        <!-- Інформація про автора -->
+        <!-- Author information -->
         <div class="flex items-center mb-3">
           <img
             [src]="
@@ -28,7 +31,7 @@
           <div class="mb-3" (click)="onLinkClick($event, post.id)">
             <div [innerHTML]="post.content"></div>
           </div>
-          <!-- Перебір зображень -->
+          <!-- Iterate over images -->
           <div *ngIf="post.images && post.images.length > 0" class="mt-3">
             <div *ngFor="let image of post.images">
               <img [src]="image" alt="Post Image" class="w-full" />
@@ -36,11 +39,11 @@
           </div>
         </div>
 
-        <!-- Дії (Лайки, Коментарі) -->
+        <!-- Actions (Likes, Comments) -->
         <div
           class="flex justify-between text-gray-600 text-sm mt-2 border-t pt-2"
         >
-          <!-- Лайки -->
+          <!-- Likes -->
           <button
             (click)="toggleLike(post)"
             class="flex items-center group"
@@ -67,7 +70,7 @@
             Like <span class="ml-2">{{ post.likesCount }}</span>
           </button>
 
-          <!-- Коментарі -->
+          <!-- Comments -->
           <a
             [routerLink]="['post', post.id.toString()]"
             class="flex items-center group hover:text-blue-600"
@@ -93,7 +96,7 @@
       }
     </div>
 
-    <!-- Виведення, якщо немає постів -->
+    <!-- Display if there are no posts -->
     <div
       *ngIf="!loading && (!posts || posts.length === 0)"
       class="text-center animate-fade-in text-gray-500 my-4"

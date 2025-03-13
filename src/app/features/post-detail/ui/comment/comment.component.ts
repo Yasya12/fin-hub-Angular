@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
 import { CommentDisplay } from '../../../../core/models/Comment/commentDisplay.model';
 import { Comment } from '../../../../core/models/Comment/comment.model';
-import { AuthService } from '../../../signup/services/auth.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { ResponseModel } from '../../../signup/models/response.model';
 
 @Component({
@@ -13,7 +13,7 @@ export class CommentComponent {
   @Input() postId!: string;
   @Input() level: number = 0; 
   @Input() selectedCommentId: string | null = null;
-  @Input() currentUser = signal<ResponseModel | null>(null);
+  @Input() currentUser = signal<ResponseModel | undefined>(undefined);
 
   @Output() deleteComment = new EventEmitter<string>();
   @Output() addReply = new EventEmitter<Comment>();

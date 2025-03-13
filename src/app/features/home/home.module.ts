@@ -10,6 +10,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { PostEditorComponent } from './ui/post-editor/post-editor.component';
 import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
+import { SideBarComponent } from '../../shared/ui/side-bar/side-bar.component';
+import { ChartsViewComponent } from '../../shared/ui/charts-view/charts-view.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
     FormsModule,
     ReactiveFormsModule,
     QuillModule.forRoot(),
-    TimeAgoPipe
+    TimeAgoPipe,
+    SideBarComponent,
+    ChartsViewComponent
   ],
   exports: [PostEditorComponent]
 })
