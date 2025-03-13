@@ -11,7 +11,7 @@
       (click)="selectTab(item.key)"
       class="flex flex-col items-center relative pb-3 p-2 px-4 hover:bg-[#e6e6e6] hover:rounded-md transition duration-300"
       [tooltip]="item.key"
-      [tooltipPlacement]="'top'"
+      [placement]="'top'"
     >
       <img
         [src]="
@@ -46,7 +46,7 @@
   <div
     class="relative hover:bg-[#e6e6e6] hover:rounded-md p-1 px-2"
     [tooltip]="fullUser.user.username"
-    [tooltipPlacement]="'top'"
+    [placement]="'top'"
     *ngIf="authService.currentUser() as fullUser"
   >
     <button (click)="toggleDropdown()">
