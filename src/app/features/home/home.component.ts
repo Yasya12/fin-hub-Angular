@@ -10,7 +10,7 @@ import { Post } from '../../core/models/Post/post.model';
 export class HomeComponent implements OnInit {
   curretnUserEmail: string | null = null;
   curretnUser: ResponseModel | null = null;
-  newPost = signal<Post | null>(null);
+  newPost = signal<Post | undefined>(undefined);
 
   constructor(
     private authService: AuthService
