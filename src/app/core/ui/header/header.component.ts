@@ -43,6 +43,9 @@ export class HeaderComponent implements OnInit {
 
     if (tab === 'signup') {
       this.router.navigate(['/signup']);
+    }
+    else if (tab === 'askQuestion') {
+      this.router.navigate(['/under-development']);
     } else {
       const route = this.menuItems.find(item => item.key === tab)?.route || '/home';
       this.router.navigate([route]);
