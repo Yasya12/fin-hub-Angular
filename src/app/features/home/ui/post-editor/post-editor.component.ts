@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, Inject, input, Input, Output, PLATFORM_ID, viewChild, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Inject, input, Input, Output, PLATFORM_ID, viewChild, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { PostService } from '../../services/posts.service';
@@ -10,7 +10,7 @@ import Quill from 'quill';
   templateUrl: './post-editor.component.html',
   styleUrls: ['./post-editor.component.css'],
 })
-export class PostEditorComponent {
+export class PostEditorComponent implements AfterViewInit {
   // Services
   private readonly postService = inject(PostService);
   private readonly platformId = inject(PLATFORM_ID);
@@ -34,9 +34,14 @@ export class PostEditorComponent {
   @Output() close = new EventEmitter<void>();
   @Output() contentValue = new EventEmitter<[string, string[]]>();
 
+  ngAfterViewInit() {
+    setTimeout(() => this.focusInput(), 100);
+  }
 
   focusInput() {
-    this.textInput()?.nativeElement?.focus();
+    if (this.quill) {
+      this.quill.focus();
+    }
   }
 
   closeModal() {
