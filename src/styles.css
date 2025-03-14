@@ -9,7 +9,8 @@
   }
   
   ::-webkit-scrollbar {
-    width: 4px !important;
+    width: 10px !important;
+    background-color: white;
   }
   
   ::-webkit-scrollbar-thumb {
