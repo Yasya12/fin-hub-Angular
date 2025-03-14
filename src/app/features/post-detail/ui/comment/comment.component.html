@@ -89,7 +89,7 @@
   </div>
 
   <!-- Відображення дочірніх коментарів -->
-  <ul *ngIf="comment?.children?.length" class="replies mt-3 space-y-3">
+  <ul *ngIf="comment?.children?.length" class="replies mt-3 space-y-3 list-none">
     <li *ngFor="let child of comment.children">
       <app-comment
         [postId]="postId"

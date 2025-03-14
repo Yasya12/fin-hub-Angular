@@ -18,7 +18,7 @@
   class="bg-white overflow-hidden"
   *ngIf="comments() && comments().length > 0; else noComments"
 >
-  <ul class="divide-y divide-gray-200 border-t border-gray-200 mt-2">
+  <ul class="divide-y divide-gray-200 border-t border-gray-200 mt-2 list-none">
     <!-- Перебір кореневих (основних) коментарів -->
     <li
       *ngFor="let comment of allComments()"
