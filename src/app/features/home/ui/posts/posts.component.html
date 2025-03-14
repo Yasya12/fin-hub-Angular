@@ -12,7 +12,8 @@
         <!-- Iterate over each post -->
         @for(post of posts(); track post.id) {
         <div
-          class="bg-[#ffffff] p-4 rounded-lg transition-all duration-300 flex flex-col"
+          class="bg-[#ffffff] p-4 rounded-lg transition-all duration-300 flex flex-col cursor-pointer"
+          (click)="onLinkClick($event, post.id)"
         >
           <!-- Author information -->
           <div class="flex items-center mb-3">
@@ -32,7 +33,7 @@
           </div>
 
           <div class="cursor-pointer" (click)="navigateToPost(post.id)">
-            <div class="mb-3" (click)="onLinkClick($event, post.id)">
+            <div class="mb-3">
               <div [innerHTML]="post.content"></div>
             </div>
             <!-- Iterate over images -->
@@ -49,7 +50,7 @@
           >
             <!-- Likes -->
             <button
-              (click)="toggleLike(post)"
+              (click)="toggleLike(post); $event.stopPropagation()"
               class="flex items-center group"
               [ngClass]="
                 post.isLiked
