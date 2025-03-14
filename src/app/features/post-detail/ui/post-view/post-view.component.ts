@@ -1,4 +1,4 @@
-import { Component, Inject, Input, PLATFORM_ID } from '@angular/core';
+import { Component, inject, input, PLATFORM_ID, signal } from '@angular/core';
 import { SinglePost } from '../../models/single_post.model';
 import { PostService } from '../../../../shared/services/post.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -11,22 +11,20 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrl: './post-view.component.css'
 })
 export class PostViewComponent {
-  @Input() postId!: string;
-  @Input() commentCount: number = 0;
+  // Services
+  private readonly postService = inject(PostService);
+  private readonly likeService = inject(LikeService);
+  private readonly authService = inject(AuthService);
+  private readonly platformId = inject(PLATFORM_ID);
+
+  // Inputs
+  postId = input<string>();
+  commentCount = input<number>(0);
+
+  // States
+  isLiked = signal<boolean>(false);
   post: SinglePost | null = null;
-  isLiked = false;
   selectedCommentId: string | null = null;
-
-  constructor(
-    private postService: PostService,
-    public authService: AuthService,
-    private likeService: LikeService,
-    @Inject(PLATFORM_ID) private platformId: object
-  ) { }
-
-  ngOnInit(): void {
-    this.loadPost(this.postId);
-  }
 
   private loadPost(postId: string): void {
     this.postService.getPostById(postId).subscribe((data) => {
@@ -42,7 +40,7 @@ export class PostViewComponent {
     const token = this.authService.currentUser()?.token;
     if (token) {
       this.likeService.isPostLiked(postId).subscribe((response: any) => {
-        this.isLiked = response.isLiked;
+        this.isLiked.set(response);
       });
     }
   }
@@ -58,15 +56,16 @@ export class PostViewComponent {
     }
   }
 
-
   toggleLike(): void {
-    if (this.post?.id) {
-      this.likeService.toggleLike(this.post.id).subscribe((response: any) => {
-        this.isLiked = response.success;
-        if (this.post) {
-          this.post.likesCount += this.isLiked ? 1 : -1;
-        }
-      });
-    }
+    if (!this.post?.id) return;
+    this.likeService.toggleLike(this.post.id).subscribe((response: any) => {
+      this.isLiked.set(response);
+      this.post!.likesCount += this.isLiked() ? 1 : -1;
+    });
+  }
+
+  // Lifecycle hooks
+  ngOnInit(): void {
+    this.loadPost(this.postId()!);
   }
 }

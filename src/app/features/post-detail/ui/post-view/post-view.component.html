@@ -1,6 +1,6 @@
-<div class="flex justify-start mt-4">
+<div class="flex justify-start">
   <div *ngIf="post" class="p-4 bg-white w-full">
-    <!-- Автор поста та дата -->
+    <!-- Post author and date -->
     <div class="flex items-center mb-6">
       <img
         [src]="post.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <!-- Категорії поста -->
+    <!-- Post categories -->
     <div class="mb-6">
       <p class="text-gray-600 text-sm">
         {{ post.categoryNames.join(", ") }}
@@ -23,9 +23,9 @@
     </div>
 
     <div class="mb-6">
-      <!-- Контент поста -->
+      <!-- Post content -->
       <div class="text-gray-800 text-lg mb-3" [innerHTML]="post.content"></div>
-      <!-- Перебір зображень -->
+      <!-- Loop through images -->
       <div *ngIf="post.images && post.images.length > 0">
         <div *ngFor="let image of post.images">
           <img [src]="image" alt="Post Image" class="w-full" />
@@ -34,21 +34,19 @@
     </div>
 
     <div class="flex items-center justify-between text-gray-600 text-sm">
-      <!-- Блок лайків -->
-
+      <!-- Like button -->
       <button
         class="flex items-center text-sm text-gray-600 bg-transparent border-none cursor-pointer"
-        [class.liked]="isLiked"
+        [ngClass]="isLiked() ? 'text-green-600' : 'text-gray-600 hover:text-green-600'"
         (click)="toggleLike()"
       >
         Likes {{ post.likesCount }}
       </button>
+      <!-- Comment button -->
       <button
         class="flex items-center text-sm text-gray-600 bg-transparent border-none cursor-pointer"
-        [class.liked]="isLiked"
-        (click)="toggleLike()"
       >
-        Comments {{ commentCount }}
+        Comments {{ commentCount() }}
       </button>
     </div>
   </div>
