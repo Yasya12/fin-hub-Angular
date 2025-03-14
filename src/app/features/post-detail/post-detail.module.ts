@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { PostViewComponent } from './ui/post-view/post-view.component';
 import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
 import { CommentsFilterComponent } from './ui/comments-filter/comments-filter.component';
+import { SideBarComponent } from '../../shared/ui/side-bar/side-bar.component';
+import { ChartsViewComponent } from '../../shared/ui/charts-view/charts-view.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { CommentsFilterComponent } from './ui/comments-filter/comments-filter.co
   imports: [
     CommonModule,
     FormsModule,
-    TimeAgoPipe
+    TimeAgoPipe,
+    SideBarComponent,
+    ChartsViewComponent
   ],
 })
 export class PostDetailModule { }
