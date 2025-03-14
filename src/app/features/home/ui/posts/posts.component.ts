@@ -23,7 +23,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
   loading = signal<boolean>(false);
   newPost = signal<Post | undefined>(undefined);
   pageNumber = 1;
-  pageSize = 5;
+  pageSize = 10;
   hasMorePosts = true;
   lastScrollTop: number = 0;
 
@@ -46,7 +46,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
 
     const postObservable = userId
       ? this.postService.getPostsWithLikes(userId, this.pageNumber, this.pageSize)
-      : this.postService.getPosts();
+      : this.postService.getPosts(this.pageNumber, this.pageSize);
 
     postObservable.subscribe({
       next: (items) => {

@@ -14,13 +14,17 @@ export class PostService {
   
   constructor(private http: HttpClient) { }
 
-  getPosts(): Observable<Post[]> {
-    return this.http.get<PostResponse>(`${this.baseUrl}/post`).pipe(
+  getPosts(pageNumber: number, pageSize: number): Observable<Post[]> {
+    const params = new HttpParams()
+    .set('pageNumber', pageNumber.toString())
+    .set('pageSize', pageSize.toString());
+
+    return this.http.get<PostResponse>(`${this.baseUrl}/post`, { params }).pipe(
       map((response) => response.items)
     );
   }
 
-  getPostsWithLikes(userId: string, pageNumber: number = 1, pageSize: number = 10): Observable<Post[]> {
+  getPostsWithLikes(userId: string, pageNumber: number, pageSize: number): Observable<Post[]> {
     const params = new HttpParams()
       .set('userId', userId)
       .set('pageNumber', pageNumber.toString())
