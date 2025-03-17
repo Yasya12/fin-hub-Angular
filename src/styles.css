@@ -8,17 +8,6 @@
     }
   }
   
-  ::-webkit-scrollbar {
-    width: 10px !important;
-    background-color: white;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2) !important;
-    border-radius: 7px !important;
-  }
-  
-
 .ql-container.ql-snow { border: none !important;}
 
 .text-gray-800 a {
