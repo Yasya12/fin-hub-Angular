@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -7,19 +7,20 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./post-detail.component.css']
 })
 export class PostDetailComponent implements OnInit {
+  // Services
+  private readonly route = inject(ActivatedRoute);
+
+  // States
   postId: string | null = null;
   commentCount = 0;
 
-  constructor(
-    private route: ActivatedRoute
-  ) { }
-
+  // Lifecycle hooks
   ngOnInit(): void {
     const postId = this.route.snapshot.paramMap.get('id');
     this.postId = postId;
   }
 
-  updateCommentCount(newCount: number): void {
-    this.commentCount = newCount; 
+  updateCommentCount(): void {
+    this.commentCount += 1;
   }
 }

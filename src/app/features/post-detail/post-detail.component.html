@@ -1,7 +1,5 @@
 @if (postId) {
-<div
-  class="flex justify-center flex-1 mt-4 mb-2"
->
+<div class="flex justify-center flex-1 mt-4 mb-2">
   <!-- Sidebar -->
   <app-side-bar class="w-[9rem] shrink-0 sticky"></app-side-bar>
 
@@ -16,7 +14,7 @@
       <app-comment-list
         class="w-full"
         [postId]="postId"
-        (commentsUpdated)="updateCommentCount($event)"
+        (commentsUpdated)="updateCommentCount()"
       ></app-comment-list>
     </div>
   </div>
