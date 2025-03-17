@@ -1,4 +1,4 @@
-import { CommentDisplay } from "../../../core/models/Comment/commentDisplay.model";
+import { CommentDisplay } from "./commentDisplay.model";
 
 export interface SinglePost {
     id: string
@@ -8,6 +8,6 @@ export interface SinglePost {
     createdAt: Date;
     profilePictureUrl: string;
     likesCount: number;
-    comments: CommentDisplay[];
+    commentCount: number;
     images?: string[];
   }
