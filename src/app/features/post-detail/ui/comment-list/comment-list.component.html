@@ -1,5 +1,5 @@
 <app-comment-form
-  [postId]="postId"
+  [postId]="postId()!"
   [currentUser]="currentUser"
   (addComment)="addComment($event)"
 ></app-comment-form>
@@ -13,42 +13,24 @@
   ></app-comments-filter>
 </div>
 
-<!-- Відображення кореневих коментарів -->
-<div
-  class="bg-white overflow-hidden"
-  *ngIf="comments() && comments().length > 0; else noComments"
->
+<!-- Displaying root comments -->
+<div class="bg-white overflow-hidden">
   <ul class="divide-y divide-gray-200 border-t border-gray-200 mt-2 list-none">
-    <!-- Перебір кореневих (основних) коментарів -->
-    <li
-      *ngFor="let comment of allComments()"
-      class="pt-2 pl-4 relative"
-      [ngClass]="{ 'bg-gray-100': isNewComment(comment) }"
-    >
-      <app-comment
-        [postId]="postId"
-        [comment]="comment"
-        [selectedCommentId]="selectedCommentId"
-        [currentUser]="currentUser"
-        (deleteComment)="deleteComment($event)"
-        (addReply)="addReply($event)"
-        (toggleMenu)="onChildToggleMenu($event)"
-      ></app-comment>
+    <!-- Loop through root (main) comments -->
+    <li class="pt-2 pl-4 relative">
+      @for(comment of comments(); track comment.id) {
+      <div [ngClass]="{ 'bg-gray-100': isNewComment(comment) }">
+        <app-comment
+          [postId]="postId()!"
+          [comment]="comment"
+          [selectedCommentId]="selectedCommentId"
+          [currentUser]="currentUser()"
+          (deleteComment)="deleteComment($event)"
+          (addReply)="addReply($event)"
+          (toggleMenu)="onChildToggleMenu($event)"
+        ></app-comment>
+      </div>
+      }
     </li>
   </ul>
-
-  <div class="flex justify-center items-center">
-    <button
-      *ngIf="hasMoreComments"
-      class="w-[80%] rounded-full my-4 px-2 py-2 bg-green-500 text-white hover:bg-green-600"
-      (click)="loadMoreComments()"
-    >
-      View more
-    </button>
-  </div>
 </div>
-
-<!-- Шаблон для відсутності коментарів -->
-<ng-template #noComments>
-  <p class="text-gray-600">No comments yet. Be the first to comment!</p>
-</ng-template>
