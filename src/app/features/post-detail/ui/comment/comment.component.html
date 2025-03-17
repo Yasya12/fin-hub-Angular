@@ -1,47 +1,53 @@
-<!-- Контейнер коментаря -->
+<!-- Comment Container -->
 <div
   class="comment relative"
-  [style.marginLeft.px]="level * 20"
-  [ngClass]="{ 'pt-2': level === 0 }"
+  [style.marginLeft.px]="level() * 5"
+  [ngClass]="{ 'pt-2': level() === 0 }"
 >
-  <!-- Контейнер автора -->
+  <!-- Author Container -->
   <div class="flex items-start gap-3">
-    <!-- Фото автора -->
+    <!-- Author's Profile Picture -->
     <img
-      [src]="comment.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
-      alt="{{ comment.authorName }}"
-      [ngClass]="{ 'size-11': level === 0, 'size-9': level > 0 }"
+      [src]="comment()?.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
+      alt="{{ comment()?.authorName }}"
+      [ngClass]="{ 'size-11': level() === 0, 'size-9': level() > 0 }"
       class="object-cover rounded-full"
     />
 
-    <!-- Текстовий блок (автор, дата, коментар) -->
+    <!-- Text Block (Author, Date, Comment) -->
     <div class="flex-1">
       <div class="flex items-center gap-4">
         <h4 class="text-[14px] font-semibold text-gray-800">
-          {{ comment.authorName }}
+          {{ comment()?.authorName }}
         </h4>
         <p class="text-[14px] text-gray-500">
-          {{ comment.createdAt | timeAgo }}
+          {{ comment()!.createdAt | timeAgo }}
         </p>
       </div>
 
-      <!-- Текст коментаря -->
-      <p class="text-gray-700 text-[14px] leading-relaxed">{{ comment.content }}</p>
+      <!-- Comment Text -->
+      <p class="text-gray-700 text-[14px] leading-relaxed">
+        {{ comment()?.content }}
+      </p>
 
-      <!-- Кнопка "Reply" -->
+      <!-- "Reply" Button -->
+      @if(!isReplying && level() < MAX_LEVEL) {
       <button
-        *ngIf="!isReplying"
         (click)="replyToComment()"
         class="text-[14px] hover:bg-[#e6e6e6] px-4 py-1 rounded-full transition"
       >
         Reply
       </button>
+      }
+      @else {
+        <div class="h-4"></div>
+      }
 
-      <!-- Форма для відповіді -->
+      <!-- Reply Form -->
       <div *ngIf="isReplying" class="mt-2">
         <app-comment-form
-          [postId]="postId"
-          [parentId]="comment.id"
+          [postId]="postId()!"
+          [parentId]="comment()!.id"
           [isReply]="isReplying"
           (addComment)="submitReply($event)"
           (isRepling)="checkIfRepling($event)"
@@ -50,7 +56,7 @@
     </div>
   </div>
 
-  <!-- Меню -->
+  <!-- Menu Button -->
   <button (click)="onToggleMenu()" class="absolute top-2 right-2">
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -68,9 +74,9 @@
     </svg>
   </button>
 
-  <!-- Випадаюче меню -->
+  <!-- Dropdown Menu -->
   <div
-    *ngIf="selectedCommentId === comment.id"
+    *ngIf="selectedCommentId === comment()?.id"
     class="absolute right-2 top-10 bg-white border rounded shadow-lg z-10"
   >
     <button
@@ -88,13 +94,16 @@
     </button>
   </div>
 
-  <!-- Відображення дочірніх коментарів -->
-  <ul *ngIf="comment?.children?.length" class="replies mt-3 space-y-3 list-none">
-    <li *ngFor="let child of comment.children">
+  <!-- Display Child Comments -->
+  <ul
+    *ngIf="comment()?.replies?.length"
+    class="replies mt-3 space-y-3 list-none"
+  >
+    <li *ngFor="let child of comment()?.replies">
       <app-comment
-        [postId]="postId"
+        [postId]="postId()"
         [comment]="child"
-        [level]="level + 1"
+        [level]="level() + 1"
         [selectedCommentId]="selectedCommentId"
         (deleteComment)="deleteComment.emit($event)"
         (addReply)="submitReply($event)"
