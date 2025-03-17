@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
-import { Comment } from '../../../../core/models/Comment/comment.model';
+import { Comment } from '../../models/comment.model';
 import { ResponseModel } from '../../../signup/models/response.model';
 
 @Component({
