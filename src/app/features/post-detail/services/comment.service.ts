@@ -1,27 +1,30 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import {Comment} from "../../../core/models/Comment/comment.model";
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Comment } from "../models/comment.model";
 import { Observable } from 'rxjs';
-import { CommentDisplay } from '../../../core/models/Comment/commentDisplay.model';
+import { CommentDisplay } from '../models/commentDisplay.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommentService {
-  constructor(private http: HttpClient) {}
+  // Services
+  private readonly http = inject(HttpClient);
 
-  addComment(comment: Comment) : Observable<Comment> {
+  addComment(comment: Comment): Observable<Comment> {
     return this.http.post<Comment>("http://localhost:8080/api/Comment", comment)
   }
 
   deleteComment(commentId: string) {
     return this.http.delete(`http://localhost:8080/api/Comment/${commentId}`);
-  }  
+  }
 
-  getComments(postId: string): Observable<CommentDisplay[]> {
+  getComments(postId: string, pageNumber: number, pageSize: number): Observable<CommentDisplay[]> {
     const params = new HttpParams()
-      .set('postId', postId);
-      
+      .set('postId', postId)
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
     return this.http.get<CommentDisplay[]>(`http://localhost:8080/api/Comment`, { params });
   }
 }
