@@ -1,4 +1,4 @@
-import { Component, inject, input, PLATFORM_ID, signal } from '@angular/core';
+import { Component, effect, inject, input, PLATFORM_ID, signal } from '@angular/core';
 import { SinglePost } from '../../models/single_post.model';
 import { PostService } from '../../../../shared/services/post.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -25,6 +25,14 @@ export class PostViewComponent {
   isLiked = signal<boolean>(false);
   post: SinglePost | null = null;
   selectedCommentId: string | null = null;
+
+
+  myEffect = effect(() => {
+    this.commentCount();
+    if (this.post)
+      this.post!.commentCount += 1;
+  });
+
 
   private loadPost(postId: string): void {
     this.postService.getPostById(postId).subscribe((data) => {
