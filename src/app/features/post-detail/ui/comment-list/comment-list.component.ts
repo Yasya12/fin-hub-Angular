@@ -1,10 +1,11 @@
-import { Component, signal, Output, EventEmitter, inject, input, OnInit } from '@angular/core';
+import { Component, signal, Output, EventEmitter, inject, input, OnInit, effect, computed } from '@angular/core';
 import { Comment } from '../../models/comment.model';
 import { CommentDisplay } from '../../models/commentDisplay.model';
 import { CommentService } from '../../services/comment.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ResponseModel } from '../../../signup/models/response.model';
 import { ScrollService } from '../../../../shared/services/scroll.service';
+import { CommentFilterService } from '../../services/comment-filter.service';
 
 @Component({
   selector: 'app-comment-list',
@@ -15,6 +16,7 @@ export class CommentListComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly commentService = inject(CommentService);
   private readonly scrollService = inject(ScrollService);
+  private readonly filterService = inject(CommentFilterService);
 
   // Inputs
   postId = input<string>();
@@ -27,13 +29,13 @@ export class CommentListComponent implements OnInit {
   pageSize = 10;
   hasMoreComments = true;
   lastScrollTop: number = 0;
+  selectedFilter = computed(() => this.filterService.getFilter());
 
   @Output() commentsUpdated = new EventEmitter<number>();
 
-   // Lifecycle hooks
-   ngOnInit(): void {
+  // Lifecycle hooks
+  ngOnInit(): void {
     this.currentUser.set(this.authService.currentUser());
-    this.loadComments();
     this.scrollService.scrollContainer$.subscribe(container => {
       if (container) {
         container.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
@@ -41,16 +43,31 @@ export class CommentListComponent implements OnInit {
     });
   }
 
+  myEffect = effect(() => {
+    this.pageNumber = 1;
+    this.hasMoreComments = true;
+
+    this.loadComments(this.selectedFilter());
+  }, { allowSignalWrites: true });
+
+
   //Methods
-  private loadComments(): void {
-    this.commentService.getComments(this.postId()!, this.pageNumber, this.pageSize).subscribe(
+  private loadComments(filter?: string): void {
+    this.commentService.getComments(this.postId()!, this.pageNumber, this.pageSize, this.filterService.getFilter().toString()).subscribe(
       (items) => {
         if (items.length < this.pageSize) {
           this.hasMoreComments = false;
         }
         const processedComments = this.processComments(items);
-        this.getSortedComments();
-        this.comments.set([...this.comments(), ...processedComments]);
+
+        if (this.pageNumber === 1) {
+          this.comments.set(processedComments);
+        } else {
+          const uniqueComments = processedComments.filter(
+            (newComment) => !this.comments().some((existingComment) => existingComment.id === newComment.id)
+          );
+          this.comments.set([...this.comments(), ...uniqueComments]);
+        }
         this.pageNumber++;
       },
       (error) => console.error('Error fetching comments:', error)
@@ -65,12 +82,6 @@ export class CommentListComponent implements OnInit {
     }));
   };
 
-  getSortedComments(): CommentDisplay[] {
-    return [...this.comments()]
-      .filter(comment => comment.parentId === null)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  }
-
   updateComments(filtered: CommentDisplay[]): void {
     this.comments.set(filtered);
   }
@@ -81,8 +92,7 @@ export class CommentListComponent implements OnInit {
     this.commentService.addComment(newComment).subscribe({
       next: (response: Comment) => {
         const transformedResponse = this.mapToCommentDisplay(response);
-        this.comments.set([...this.comments(), transformedResponse]);
-        this.comments.set(this.getSortedComments());
+        this.comments.set([transformedResponse, ...this.comments()]);
         this.commentsUpdated.emit();
       },
       error: (err) => console.error('Error adding comment:', err),
@@ -97,7 +107,7 @@ export class CommentListComponent implements OnInit {
         const transformedResponse = this.mapToCommentDisplay(response);
         if (transformedResponse.parentId) {
           const parent = this.findCommentById(transformedResponse.parentId);
-          
+
           if (parent) {
             parent.replies = [...(parent.replies || []), transformedResponse];
             this.comments.update(existingComments => [...existingComments]);
@@ -154,7 +164,7 @@ export class CommentListComponent implements OnInit {
   onChildToggleMenu(newSelectedId: string | null): void {
     this.selectedCommentId = newSelectedId;
   }
-  
+
   isNewComment(comment: CommentDisplay): boolean {
     const now = new Date();
     const commentDate = new Date(comment.createdAt);
