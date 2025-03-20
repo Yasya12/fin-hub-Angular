@@ -6,6 +6,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { ResponseModel } from '../../../signup/models/response.model';
 import { ScrollService } from '../../../../shared/services/scroll.service';
 import { CommentFilterService } from '../../services/comment-filter.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-comment-list',
@@ -17,6 +18,7 @@ export class CommentListComponent implements OnInit {
   private readonly commentService = inject(CommentService);
   private readonly scrollService = inject(ScrollService);
   private readonly filterService = inject(CommentFilterService);
+  private readonly toastr = inject(ToastrService);
 
   // Inputs
   postId = input<string>();
@@ -87,6 +89,11 @@ export class CommentListComponent implements OnInit {
   }
 
   addComment(newComment: Comment): void {
+    if (!this.currentUser()) {
+      this.toastr.warning('You need to log in to create a comment.', 'Authentication Required');
+      return;
+    }
+
     newComment.authorId = this.currentUser()?.user.id || '';
 
     this.commentService.addComment(newComment).subscribe({
@@ -100,6 +107,11 @@ export class CommentListComponent implements OnInit {
   }
 
   addReply(newReply: Comment): void {
+    if (!this.currentUser()) {
+      this.toastr.warning('You need to log in to create a reply.', 'Authentication Required');
+      return;
+    }    
+
     newReply.authorId = this.currentUser()?.user.id || '';
 
     this.commentService.addComment(newReply).subscribe({

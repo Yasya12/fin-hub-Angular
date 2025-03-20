@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false
 })
 
 export class HeaderComponent implements OnInit {

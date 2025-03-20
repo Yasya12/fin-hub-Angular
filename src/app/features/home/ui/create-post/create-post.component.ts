@@ -3,14 +3,17 @@ import { CreatePost } from '../../models/create-post';
 import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../signup/models/response.model';
 import { Post } from '../../../../core/models/Post/post.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-post',
-  templateUrl: './create-post.component.html'
+  templateUrl: './create-post.component.html',
+  standalone: false
 })
 export class CreatePostComponent {
   // Services
   private readonly postService = inject(PostService);
+  private readonly toastr = inject(ToastrService);
 
   // Inputs
   currentUser = input<ResponseModel>();
@@ -24,9 +27,9 @@ export class CreatePostComponent {
 
   openModal() {
     if (!this.currentUser()) {
-      alert("You must login!");
+      this.toastr.warning('You need to log in to create a post.', 'Authentication Required');
       return;
-    }
+    }    
 
     this.isModalOpen = true;
   }

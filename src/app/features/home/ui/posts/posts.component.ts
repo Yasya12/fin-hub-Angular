@@ -8,6 +8,7 @@ import { ResponseModel } from '../../../signup/models/response.model';
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
+  standalone: false
 })
 export class PostsComponent implements OnInit, AfterViewInit {
   // Services
