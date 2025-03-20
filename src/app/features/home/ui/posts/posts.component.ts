@@ -1,21 +1,22 @@
-import { AfterViewInit, Component, effect, ElementRef, inject, input, OnInit, signal, viewChild } from '@angular/core';
+import { Component, effect, inject, input, OnInit, signal } from '@angular/core';
 import { Post } from '../../../../core/models/Post/post.model';
 import { PostService } from "../../../../shared/services/post.service";
 import { LikeService } from '../../../../shared/services/like.service';
 import { Router } from '@angular/router';
 import { ResponseModel } from '../../../signup/models/response.model';
+import { ScrollService } from '../../../../shared/services/scroll.service';
 
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
   standalone: false
 })
-export class PostsComponent implements OnInit, AfterViewInit {
+export class PostsComponent implements OnInit {
   // Services
   private readonly postService = inject(PostService);
   private readonly likeService = inject(LikeService);
   private readonly router = inject(Router);
-
+  private readonly scrollService = inject(ScrollService);
   // Inputs
   currentUser = input<ResponseModel>();
 
@@ -28,16 +29,25 @@ export class PostsComponent implements OnInit, AfterViewInit {
   hasMorePosts = true;
   lastScrollTop: number = 0;
 
-  // HtmlElements
-  scrollContainer = viewChild<ElementRef>('scrollContainer');
-
   myEffect = effect(() => {
     const post = this.newPost();
     if (post && typeof post === 'object') {
       this.posts.update(posts => [post, ...posts]);
     }
   }, { allowSignalWrites: true });
+  
+  // Lifecycle hooks
+  ngOnInit(): void {
+    this.loadPosts();
+  
+    this.scrollService.scrollContainer$.subscribe(container => {
+      if (container) {
+        container.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
+      }
+    });
+  }
 
+  //Methods
   async loadPosts(): Promise<void> {
     if (!this.hasMorePosts || this.loading()) return;
 
@@ -93,20 +103,10 @@ export class PostsComponent implements OnInit, AfterViewInit {
   }
 
   onScroll(event: Event): void {
-    const container = this.scrollContainer()?.nativeElement;
-
+    if (!this.hasMorePosts) return;
+    const container = (event.target as HTMLElement);
     if (container.scrollTop + container.clientHeight >= container.scrollHeight - container.scrollHeight * 0.1) {
       this.loadPosts();
     }
-  }
-
-  // Lifecycle hooks
-  ngOnInit(): void {
-    this.loadPosts();
-  }
-
-  ngAfterViewInit(): void {
-    const container = this.scrollContainer()?.nativeElement;
-    container.addEventListener('scroll', this.onScroll.bind(this));
   }
 }
