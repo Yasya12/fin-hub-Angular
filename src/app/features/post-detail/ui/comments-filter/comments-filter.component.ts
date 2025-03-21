@@ -49,14 +49,14 @@ export class CommentsFilterComponent {
   }
 
   getSelectedFilterLabel(): string {
-    const selectedValue = this.filterService.getFilter();
+    const selectedValue = this.filterService.selectedFilter();
     const selectedFilter = this.filters.find(filter => filter.value === selectedValue);
     return selectedFilter ? selectedFilter.label : 'Найновіші'; 
   }
   
   applyFilter(event: Event, filter: string): void {
     event.stopPropagation(); // Зупиняємо подію, щоб вона не викликала toggleFilterSwitcher
-    this.filterService.setFilter(filter);
+    this.filterService.selectedFilter.set(filter);
     this.filterSwitcherState.set("collapsed");
   }
 }

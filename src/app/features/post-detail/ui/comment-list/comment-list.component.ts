@@ -1,4 +1,4 @@
-import { Component, signal, Output, EventEmitter, inject, input, OnInit, effect, computed } from '@angular/core';
+import { Component, signal, Output, EventEmitter, inject, input, OnInit, effect, computed, output } from '@angular/core';
 import { Comment } from '../../models/comment.model';
 import { CommentDisplay } from '../../models/commentDisplay.model';
 import { CommentService } from '../../services/comment.service';
@@ -21,7 +21,11 @@ export class CommentListComponent implements OnInit {
   private readonly toastr = inject(ToastrService);
 
   // Inputs
-  postId = input<string>();
+  postId = input.required<string>();
+
+  //Outputs
+  commentsUpdated = output<void>();
+
 
   // States
   currentUser = signal<ResponseModel | undefined>(undefined);
@@ -31,9 +35,6 @@ export class CommentListComponent implements OnInit {
   pageSize = 10;
   hasMoreComments = true;
   lastScrollTop: number = 0;
-  selectedFilter = computed(() => this.filterService.getFilter());
-
-  @Output() commentsUpdated = new EventEmitter<number>();
 
   // Lifecycle hooks
   ngOnInit(): void {
@@ -43,36 +44,32 @@ export class CommentListComponent implements OnInit {
         container.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
       }
     });
+    this.loadComments();
   }
 
-  myEffect = effect(() => {
-    this.pageNumber = 1;
-    this.hasMoreComments = true;
-
-    this.loadComments(this.selectedFilter());
-  }, { allowSignalWrites: true });
-
-
   //Methods
-  private loadComments(filter?: string): void {
-    this.commentService.getComments(this.postId()!, this.pageNumber, this.pageSize, this.filterService.getFilter().toString()).subscribe(
-      (items) => {
-        if (items.length < this.pageSize) {
-          this.hasMoreComments = false;
-        }
-        const processedComments = this.processComments(items);
+  private loadComments(): void {
+    this.commentService.getComments(this.postId(), this.pageNumber, this.pageSize, this.filterService.selectedFilter()).subscribe(
+      {
+        next: (items) => {
+          console.table(items.length);
+          if (items.length < this.pageSize) {
+            this.hasMoreComments = false;
+          }
+          const processedComments = this.processComments(items);
 
-        if (this.pageNumber === 1) {
-          this.comments.set(processedComments);
-        } else {
-          const uniqueComments = processedComments.filter(
-            (newComment) => !this.comments().some((existingComment) => existingComment.id === newComment.id)
-          );
-          this.comments.set([...this.comments(), ...uniqueComments]);
-        }
-        this.pageNumber++;
-      },
-      (error) => console.error('Error fetching comments:', error)
+          if (this.pageNumber === 1) {
+            this.comments.set(processedComments);
+          } else {
+            const uniqueComments = processedComments.filter(
+              (newComment) => !this.comments().some((existingComment) => existingComment.id === newComment.id)
+            );
+            this.comments.set([...this.comments(), ...uniqueComments]);
+          }
+          this.pageNumber++;
+        },
+        error: (error) => console.error('Error fetching comments:', error)
+      }
     );
   }
 
@@ -110,7 +107,7 @@ export class CommentListComponent implements OnInit {
     if (!this.currentUser()) {
       this.toastr.warning('You need to log in to create a reply.', 'Authentication Required');
       return;
-    }    
+    }
 
     newReply.authorId = this.currentUser()?.user.id || '';
 
@@ -128,7 +125,7 @@ export class CommentListComponent implements OnInit {
           this.comments.update(existingComments => [...existingComments, transformedResponse]);
         }
 
-        this.commentsUpdated.emit(this.comments().length);
+        this.commentsUpdated.emit();
       },
       error: (err) => console.error('Error adding reply:', err),
     });
@@ -188,7 +185,7 @@ export class CommentListComponent implements OnInit {
   onScroll(event: Event): void {
     if (!this.hasMoreComments) return;
     const container = (event.target as HTMLElement);
-    if (container.scrollTop + container.clientHeight >= container.scrollHeight - container.scrollHeight * 0.1) {
+    if (container.scrollTop + container.clientHeight >= container.scrollHeight * 0.9) {
       this.loadComments();
     }
   }

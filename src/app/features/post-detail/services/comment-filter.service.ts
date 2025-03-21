@@ -4,14 +4,5 @@ import { Injectable, signal } from '@angular/core';
     providedIn: 'root',
 })
 export class CommentFilterService {
-    private selectedFilter = signal<string>('newest'); // Default filter
-
-    // Getters
-    getFilter() {
-        return this.selectedFilter();
-    }
-    // Setters
-    setFilter(filter: string) {
-        this.selectedFilter.set(filter);
-    }
+    public selectedFilter = signal<string>('newest'); // Default filter
 }

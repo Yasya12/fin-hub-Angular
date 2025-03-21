@@ -34,7 +34,7 @@
         <span>{{ filter.label }}</span>
 
         <!-- Highlight the selected option -->
-        @if (this.filterService.getFilter().toString() === filter.value) {
+        @if (this.filterService.selectedFilter() === filter.value) {
           <div
           class="absolute left-0 top-0 h-full w-[4px] bg-black transition-all duration-300"
         ></div>
