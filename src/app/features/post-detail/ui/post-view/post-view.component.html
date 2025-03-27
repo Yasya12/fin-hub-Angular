@@ -1,53 +1,53 @@
-<div class="flex justify-start">
-  <div *ngIf="post" class="p-4 bg-white w-full rounded-lg">
-    <!-- Post author and date -->
-    <div class="flex items-center mb-6">
-      <img
-        [src]="post.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
-        alt="Author's Profile Picture"
-        class="size-11 object-cover rounded-full mr-4"
-      />
-      <div>
-        <h4 class="text-xl font-semibold text-gray-800">{{ post.userName }}</h4>
-        <p class="text-sm text-gray-500">
-          {{ post.createdAt | timeAgo }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Post categories -->
-    <div class="mb-6">
-      <p class="text-gray-600 text-sm">
-        {{ post.categoryNames.join(", ") }}
+<div *ngIf="post" class="p-4 bg-white w-full rounded-lg">
+  <!-- Post author and date -->
+  <div class="flex items-center mb-6">
+    <img
+      [src]="post.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
+      alt="Author's Profile Picture"
+      class="size-11 object-cover rounded-full mr-4"
+    />
+    <div>
+      <h4 class="text-xl font-semibold text-gray-800">{{ post.userName }}</h4>
+      <p class="text-sm text-gray-500">
+        {{ post.createdAt | timeAgo }}
       </p>
     </div>
+  </div>
 
-    <div class="mb-6">
-      <!-- Post content -->
-      <div class="text-gray-800 text-lg mb-3" [innerHTML]="post.content"></div>
-      <!-- Loop through images -->
-      <div *ngIf="post.images && post.images.length > 0">
-        <div *ngFor="let image of post.images">
-          <img [src]="image" alt="Post Image" class="w-full" />
-        </div>
+  <!-- Post categories -->
+  <div class="mb-6">
+    <p class="text-gray-600 text-sm">
+      {{ post.categoryNames.join(", ") }}
+    </p>
+  </div>
+
+  <div class="mb-6">
+    <!-- Post content -->
+    <div class="text-gray-800 text-lg mb-3" [innerHTML]="post.content"></div>
+    <!-- Loop through images -->
+    <div *ngIf="post.images && post.images.length > 0">
+      <div *ngFor="let image of post.images">
+        <img [src]="image" alt="Post Image" class="w-full" />
       </div>
     </div>
+  </div>
 
-    <div class="flex items-center justify-between text-gray-600 text-sm">
-      <!-- Like button -->
-      <button
-        class="flex items-center text-sm text-gray-600 bg-transparent border-none cursor-pointer"
-        [ngClass]="isLiked() ? 'text-green-600' : 'text-gray-600 hover:text-green-600'"
-        (click)="toggleLike()"
-      >
-        Likes {{ post.likesCount }}
-      </button>
-      <!-- Comment button -->
-      <button
-        class="flex items-center text-sm text-gray-600 bg-transparent border-none cursor-pointer"
-      >
-        Comments {{ post.commentCount }}
-      </button>
-    </div>
+  <div class="flex items-center justify-between text-gray-600 text-sm">
+    <!-- Like button -->
+    <button
+      class="flex items-center text-sm text-gray-600 bg-transparent border-none cursor-pointer"
+      [ngClass]="
+        isLiked() ? 'text-green-600' : 'text-gray-600 hover:text-green-600'
+      "
+      (click)="toggleLike()"
+    >
+      Likes {{ post.likesCount }}
+    </button>
+    <!-- Comment button -->
+    <button
+      class="flex items-center text-sm text-gray-600 bg-transparent border-none cursor-pointer"
+    >
+      Comments {{ post.commentCount }}
+    </button>
   </div>
 </div>

@@ -18,7 +18,7 @@ import { ChartsViewComponent } from '../../shared/ui/charts-view/charts-view.com
     CommentListComponent,
     CommentFormComponent,
     PostViewComponent,
-    CommentsFilterComponent
+    CommentsFilterComponent,
   ],
   imports: [
     CommonModule,
