@@ -5,7 +5,7 @@ import { GoogleSigninService } from './services/google-signin.service';
 import { Router } from '@angular/router';
 import { Login } from './models/login.model';
 import { Signup } from './models/signup.model';
-import { expandElement, fadeOut, slideUpDown } from '../../core/services/animation/signup_animation.service';
+import { expandElement, fadeOut, slideUpDown } from './animations/signup_animation';
 import { NgForm } from '@angular/forms';
 
 @Component({
