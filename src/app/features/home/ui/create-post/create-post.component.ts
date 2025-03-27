@@ -2,13 +2,13 @@ import { Component, EventEmitter, inject, input, Output } from '@angular/core';
 import { CreatePost } from '../../models/create-post';
 import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../signup/models/response.model';
-import { Post } from '../../../../core/models/Post/post.model';
+import { Post } from '../../../../core/models/interfaces/post/post.interface';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-create-post',
   templateUrl: './create-post.component.html',
-  standalone: false
+  standalone: false,
 })
 export class CreatePostComponent {
   // Services
@@ -27,9 +27,12 @@ export class CreatePostComponent {
 
   openModal() {
     if (!this.currentUser()) {
-      this.toastr.warning('You need to log in to create a post.', 'Authentication Required');
+      this.toastr.warning(
+        'You need to log in to create a post.',
+        'Authentication Required'
+      );
       return;
-    }    
+    }
 
     this.isModalOpen = true;
   }
@@ -57,26 +60,24 @@ export class CreatePostComponent {
       formData.append('Images', file);
     });
 
-    this.postService.createPost(formData).subscribe(
-      (data) => {
-        this.closeModal();
-        this.addPost.emit(this.mapToPost(data));
-      }
-    );
+    this.postService.createPost(formData).subscribe((data) => {
+      this.closeModal();
+      this.addPost.emit(this.mapToPost(data));
+    });
   }
 
   cleanContent(content: string): string {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
+    const doc = parser.parseFromString(content, 'text/html');
 
     // Remove all <img> elements
-    doc.querySelectorAll("img").forEach(img => img.remove());
+    doc.querySelectorAll('img').forEach((img) => img.remove());
 
     // Remove all <span> and <button> elements (if unwanted)
-    doc.querySelectorAll("span, button").forEach(element => element.remove());
+    doc.querySelectorAll('span, button').forEach((element) => element.remove());
 
     // Remove inline styles from all elements
-    doc.querySelectorAll('*').forEach(el => el.removeAttribute('style'));
+    doc.querySelectorAll('*').forEach((el) => el.removeAttribute('style'));
 
     // Return cleaned content without any unwanted tags or styles
     return doc.body.innerHTML.trim();
@@ -107,7 +108,7 @@ export class CreatePostComponent {
       likesCount: 0,
       commentsCount: 0,
       isLiked: false,
-      images: createPost.images
+      images: createPost.images,
     };
 
     return transformed;
@@ -115,13 +116,17 @@ export class CreatePostComponent {
 
   onMouseDown(event: MouseEvent) {
     // Check if the click started inside the modal window
-    this.isInsideModal = (event.target as HTMLElement).closest('app-post-editor') !== null;
+    this.isInsideModal =
+      (event.target as HTMLElement).closest('app-post-editor') !== null;
   }
-  
+
   onMouseUp(event: MouseEvent) {
     // If the click ended outside the modal and started outside as well, close the modal
-    if (!this.isInsideModal && (event.target as HTMLElement).closest('app-post-editor') === null) {
+    if (
+      !this.isInsideModal &&
+      (event.target as HTMLElement).closest('app-post-editor') === null
+    ) {
       this.closeModal();
     }
-  }  
+  }
 }

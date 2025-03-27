@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { ToggleLikeResponse } from '../../core/models/Like/toggle-like-response.model';
-import { IsLikedResponse } from '../../core/models/Like/is-liked-response.model';
-import { environment } from '../../../../environment';
+import { ToggleLikeResponse } from '../../core/models/interfaces/like/toggle-like-response.interface';
+import { IsLikedResponse } from '../../core/models/interfaces/like/is-liked-response.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root',

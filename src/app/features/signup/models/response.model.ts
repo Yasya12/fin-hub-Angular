@@ -1,4 +1,4 @@
-import { User } from "../../../core/models/User/user.model.";
+import { User } from '../../../core/models/interfaces/user/user.interface';
 
 export interface ResponseModel {
   user: User;

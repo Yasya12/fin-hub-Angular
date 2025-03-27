@@ -5,7 +5,7 @@ import { ResponseModel } from '../signup/models/response.model';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  standalone: false
+  standalone: false,
 })
 export class HomeComponent implements OnInit {
   // Services

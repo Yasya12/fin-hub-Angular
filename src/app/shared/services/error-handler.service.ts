@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ValidationError } from '../../core/models/validation-error.model';
+import { ValidationError } from '../../core/models/interfaces/validation-error.interface';
 
 @Injectable({
   providedIn: 'root'

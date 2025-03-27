@@ -4,7 +4,7 @@ import { Observable, tap } from "rxjs";
 import { Login } from '../../features/signup/models/login.model';
 import { Signup } from '../../features/signup/models/signup.model';
 import { ResponseModel } from '../../features/signup/models/response.model';
-import { environment } from '../../../../environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

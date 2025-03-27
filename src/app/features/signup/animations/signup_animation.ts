@@ -1,5 +1,6 @@
+// 🚨 WARNING: These animations are ONLY for SignupComponent!
+// Do NOT import this file outside of signup.component.ts
 import { animate, state, style, transition, trigger } from '@angular/animations';
-
 export const expandElement = trigger('expandElement', [
   state('void', style({
     height: '0',
