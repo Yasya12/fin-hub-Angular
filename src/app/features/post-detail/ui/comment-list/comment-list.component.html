@@ -1,8 +1,8 @@
 <div class="bg-white">
   <app-comment-form
     [postId]="postId()!"
-    [currentUser]="currentUser"
-    (addComment)="addComment($event)"
+    [currentUser]="postDetailsStore.getCurrentUser()"
+    (addComment)="handleAddCommentRequest($event)"
   ></app-comment-form>
 
   <div class="relative px-8 py-2 flex items-center flex-row justify-between mb-1">
@@ -15,15 +15,15 @@
     <ul class="divide-y divide-gray-200 border-gray-200 list-none p-0">
       <!-- Loop through root (main) comments -->
       <li class="pt-2 relative">
-        @for(comment of comments(); track comment.id) {
-        <div [ngClass]="{ 'bg-gray-100': isNewComment(comment) }">
+        @for(comment of postDetailsStore.comments(); track comment.id) {
+        <div [ngClass]="{ 'bg-gray-100': postDetailsStore.isNewComment(comment) }">
           <app-comment
             [postId]="postId()!"
             [comment]="comment"
             [selectedCommentId]="selectedCommentId"
-            [currentUser]="currentUser()"
-            (deleteComment)="deleteComment($event)"
-            (addReply)="addReply($event)"
+            [currentUser]="postDetailsStore.getCurrentUser()"
+            (deleteComment)="postDetailsStore.deleteComment($event)"
+            (addReply)="handleAddCommentRequest($event)"
             (toggleMenu)="onChildToggleMenu($event)"
           ></app-comment>
         </div>

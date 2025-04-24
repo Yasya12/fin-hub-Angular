@@ -24,6 +24,13 @@ export const routes: Routes = [
     loadChildren: () => import('./features/post-detail/post-detail.module').then(m => m.PostDetailModule)
   },
   {
+    path: 'messages',
+    loadChildren: () => import('./features/messages/messages.module').then(m => m.MessagesModule)
+  },  {
+    path: 'member',
+    loadChildren: () => import('./features/members/members.module').then(m => m.MembersModule)
+  },
+  {
     path: '**',
     redirectTo: 'home',
   }

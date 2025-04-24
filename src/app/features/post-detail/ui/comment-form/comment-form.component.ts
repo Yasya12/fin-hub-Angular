@@ -1,6 +1,7 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
-import { Comment } from '../../models/comment.model';
-import { ResponseModel } from '../../../signup/models/response.model';
+import { Component, ElementRef, EventEmitter, HostListener, input, Input, Output, signal } from '@angular/core';
+import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
+import { CreateCommentDto } from '../../models/interfaces/create-comment-dto.interface';
+import { User } from '../../../../core/models/interfaces/user/user.interface';
 
 @Component({
   selector: 'app-comment-form',
@@ -8,12 +9,13 @@ import { ResponseModel } from '../../../signup/models/response.model';
 })
 export class CommentFormComponent {
   @Input() postId!: string;
-  @Input() parentId: string | null = null;
+  @Input() parentId: string | undefined;
   @Input() isReply: boolean = false;
-  @Input() currentUser = signal<ResponseModel | undefined>(undefined);
-  @Output() addComment = new EventEmitter<Comment>();
+   currentUser = input<User | undefined>(undefined);
+  @Output() addComment = new EventEmitter<CreateCommentDto>();
   @Output() isRepling = new EventEmitter<boolean>();
 
+  
   isReplyFormOpen: boolean = false;
   content: string = '';
 
@@ -25,14 +27,13 @@ export class CommentFormComponent {
 
   onSubmit(): void {
     if (this.content.trim()) {
-      const comment: Comment = {
+      const commentPayload: CreateCommentDto = {
         postId: this.postId,
         content: this.content.trim(),
         parentId: this.parentId,
-        authorId: ''
       };
 
-      this.addComment.emit(comment);
+      this.addComment.emit(commentPayload);
       this.content = '';
     }
   }

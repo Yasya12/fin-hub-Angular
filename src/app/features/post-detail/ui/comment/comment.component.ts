@@ -1,31 +1,35 @@
-import { Component, EventEmitter, HostListener, input, Input, Output } from '@angular/core';
-import { CommentDisplay } from '../../models/commentDisplay.model';
-import { Comment } from '../../models/comment.model';
-import { ResponseModel } from '../../../signup/models/response.model';
+import { Component, EventEmitter, HostListener, input, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { CommentDisplay } from '../../models/interfaces/comment-display.interface';
+import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
+import { CreateCommentDto } from '../../models/interfaces/create-comment-dto.interface';
+import { User } from '../../../../core/models/interfaces/user/user.interface';
 
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
 })
-export class CommentComponent {
+export class CommentComponent implements OnChanges  {
   // Inputs
   comment = input<CommentDisplay>();
   postId = input<string>();
   level = input<number>(0);
   @Input() selectedCommentId: string | null = null;
-  currentUser = input<ResponseModel | undefined>(undefined);
+  currentUser = input<User | undefined>(undefined);
+  isAuthorValue = false;
 
   // States
   isReplying: boolean = false;
   readonly MAX_LEVEL = 5;
 
   @Output() deleteComment = new EventEmitter<string>();
-  @Output() addReply = new EventEmitter<Comment>();
+  @Output() addReply = new EventEmitter<CreateCommentDto>();
   @Output() toggleMenu = new EventEmitter<string | null>();
 
-  isAuthor(): boolean {
-    const currentUser = this.currentUser()?.user;
-    return currentUser?.username === this.comment()?.authorName;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['comment'] || changes['currentUser']) {
+      this.isAuthorValue =
+      this.currentUser()?.username === this.comment()?.authorName;
+    }
   }
 
   replyToComment(): void {
@@ -36,7 +40,7 @@ export class CommentComponent {
     this.isReplying = false;
   }
 
-  submitReply(reply: Comment): void {
+  submitReply(reply: CreateCommentDto): void {
     if (reply && reply.content.trim()) {
       this.addReply.emit(reply);
       this.isReplying = false;

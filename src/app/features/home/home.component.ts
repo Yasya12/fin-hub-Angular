@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { ResponseModel } from '../signup/models/response.model';
+import { ResponseModel } from '../../shared/models/interfaces/response.model';
 
 @Component({
   selector: 'app-home',

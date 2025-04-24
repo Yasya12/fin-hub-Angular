@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, input, Output } from '@angular/core';
 import { CreatePost } from '../../models/create-post';
 import { PostService } from '../../services/posts.service';
-import { ResponseModel } from '../../../signup/models/response.model';
+import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
 import { Post } from '../../../../core/models/interfaces/post/post.interface';
 import { ToastrService } from 'ngx-toastr';
 

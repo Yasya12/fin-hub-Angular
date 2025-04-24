@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   effect,
   inject,
@@ -10,20 +11,32 @@ import { Post } from '../../../../core/models/interfaces/post/post.interface';
 import { PostService } from '../../../../shared/services/post.service';
 import { LikeService } from '../../../../shared/services/like.service';
 import { Router } from '@angular/router';
-import { ResponseModel } from '../../../signup/models/response.model';
+import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
 import { ScrollService } from '../../../../shared/services/scroll.service';
+import { PostDetailStore } from '../../../post-detail/stores/post-detail/post-detail.store';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
   standalone: false,
+  providers: [PostDetailStore]
 })
 export class PostsComponent implements OnInit {
+  ngAfterViewInit(): void {
+    if (!this.postService.paginatedResult()) {
+      this.loadPosts();
+    }
+  }
   // Services
   private readonly postService = inject(PostService);
   private readonly likeService = inject(LikeService);
   private readonly router = inject(Router);
   private readonly scrollService = inject(ScrollService);
+
+  //Stores
+  posrDetailStore = inject(PostDetailStore); //TODO: write a store for the auth and dont use the post detail store here
+
   // Inputs
   currentUser = input<ResponseModel>();
 
@@ -33,6 +46,8 @@ export class PostsComponent implements OnInit {
   newPost = signal<Post | undefined>(undefined);
   pageNumber = 1;
   pageSize = 10;
+  totalPages = 1; // default until first load
+
   hasMorePosts = true;
   lastScrollTop: number = 0;
 
@@ -50,6 +65,7 @@ export class PostsComponent implements OnInit {
   ngOnInit(): void {
     this.loadPosts();
 
+
     this.scrollService.scrollContainer$.subscribe((container) => {
       if (container) {
         container.nativeElement.addEventListener(
@@ -61,36 +77,33 @@ export class PostsComponent implements OnInit {
   }
 
   //Methods
-  async loadPosts(): Promise<void> {
-    if (!this.hasMorePosts || this.loading()) return;
+  async loadPosts() {
+    if (!this.hasMorePosts || this.loading()) {
+      return;
+    };
 
     this.loading.set(true);
 
-    const userId = this.currentUser()?.user.id;
+    const currentUserId = this.posrDetailStore.getCurrentUserId();
 
-    const postObservable = userId
-      ? this.postService.getPostsWithLikes(
-          userId,
-          this.pageNumber,
-          this.pageSize
-        )
-      : this.postService.getPosts(this.pageNumber, this.pageSize);
+    if (currentUserId) {
+      await firstValueFrom(this.postService.getPostsWithLikes(this.pageNumber, this.pageSize));
+    } else {
+      await firstValueFrom(this.postService.getPosts(this.pageNumber, this.pageSize));
+    }
+    const paginatedResult = this.postService.paginatedResult();
+    this.totalPages = Number(paginatedResult?.pagination?.totalPages ?? 1);
 
-    postObservable.subscribe({
-      next: (items) => {
-        if (items.length < this.pageSize) {
-          this.hasMorePosts = false;
-        }
-        this.posts.update((posts) => [...posts, ...items]);
+    if (!paginatedResult || !paginatedResult.items) return;
 
-        this.loading.set(false);
-        this.pageNumber++;
-      },
-      error: () => {
-        this.loading.set(false);
-      },
-    });
+    if (paginatedResult.items.length < this.pageSize) {
+      this.hasMorePosts = false;
+    }
+
+    this.posts.update((posts) => [...posts, ...paginatedResult.items!]);
+    this.loading.set(false);
   }
+
 
   toggleLike(post: Post): void {
     this.likeService.toggleLike(post.id).subscribe(() => {
@@ -98,10 +111,10 @@ export class PostsComponent implements OnInit {
         posts.map((p) =>
           p.id === post.id
             ? {
-                ...p,
-                isLiked: !p.isLiked,
-                likesCount: p.isLiked ? p.likesCount - 1 : p.likesCount + 1,
-              }
+              ...p,
+              isLiked: !p.isLiked,
+              likesCount: p.isLiked ? p.likesCount - 1 : p.likesCount + 1,
+            }
             : p
         )
       );
@@ -130,7 +143,12 @@ export class PostsComponent implements OnInit {
       container.scrollTop + container.clientHeight >=
       container.scrollHeight - container.scrollHeight * 0.1
     ) {
-      this.loadPosts();
+      if (this.pageNumber < this.totalPages) {
+        this.pageNumber++;
+        this.loadPosts();
+      } else {
+        this.hasMorePosts = false;
+      }
     }
   }
 }

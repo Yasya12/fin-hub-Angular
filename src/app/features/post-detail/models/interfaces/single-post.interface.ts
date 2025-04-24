@@ -1,4 +1,4 @@
-import { CommentDisplay } from "./commentDisplay.model";
+import { CommentDisplay } from "./comment-display.interface";
 
 export interface SinglePost {
     id: string

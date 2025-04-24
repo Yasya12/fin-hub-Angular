@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Comment } from "../models/comment.model";
 import { Observable } from 'rxjs';
-import { CommentDisplay } from '../models/commentDisplay.model';
+import { CommentDisplay } from '../models/interfaces/comment-display.interface';
+import { CreateCommentDto } from '../models/interfaces/create-comment-dto.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +11,8 @@ export class CommentService {
   // Services
   private readonly http = inject(HttpClient);
 
-  addComment(comment: Comment): Observable<Comment> {
-    return this.http.post<Comment>("http://localhost:8080/api/Comment", comment)
+  addComment(comment: CreateCommentDto): Observable<CommentDisplay> {
+    return this.http.post<CommentDisplay>("http://localhost:8080/api/Comment", comment)
   }
 
   deleteComment(commentId: string) {

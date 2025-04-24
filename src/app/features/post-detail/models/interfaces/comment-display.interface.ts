@@ -5,5 +5,5 @@ export interface CommentDisplay {
     createdAt: Date; 
     profilePictureUrl?: string
     parentId?: string | null;
-    replies ?: CommentDisplay[];  
+    replies?: CommentDisplay[];  
 }

@@ -41,10 +41,10 @@ export class HeaderComponent implements OnInit {
       route: '/under-development',
     },
     {
-      key: 'answer',
+      key: 'messages',
       icon: 'answer_icon',
       chosenIcon: 'chosen_answer_icon',
-      route: '/under-development',
+      route: '/messages',
     },
     {
       key: 'hubs',
@@ -83,6 +83,7 @@ export class HeaderComponent implements OnInit {
     } else {
       const route =
         this.menuItems.find((item) => item.key === tab)?.route || '/home';
+        console.log(route);
       this.router.navigate([route]);
     }
   }

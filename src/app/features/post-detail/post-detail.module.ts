@@ -10,6 +10,7 @@ import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
 import { CommentsFilterComponent } from './ui/comments-filter/comments-filter.component';
 import { SideBarComponent } from '../../shared/ui/side-bar/side-bar.component';
 import { ChartsViewComponent } from '../../shared/ui/charts-view/charts-view.component';
+import { PostDetailStore } from './stores/post-detail/post-detail.store';
 
 @NgModule({
   declarations: [

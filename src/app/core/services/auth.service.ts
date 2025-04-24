@@ -1,10 +1,11 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, tap } from "rxjs";
 import { Login } from '../../features/signup/models/login.model';
 import { Signup } from '../../features/signup/models/signup.model';
-import { ResponseModel } from '../../features/signup/models/response.model';
+import { ResponseModel } from '../../shared/models/interfaces/response.model';
 import { environment } from '../../../environments/environment';
+import { User } from '../models/interfaces/user/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,12 @@ export class AuthService {
   private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
+
+  getMember() {
+    return this.http.get<User>(`${this.baseUrl}/user/by-email`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${this.currentUser()?.token}`)
+    });
+  }
 
   handleAuthResponse(response: ResponseModel): void {
     if (response) {
@@ -52,7 +59,7 @@ export class AuthService {
   startLogoutTimer() {
     const expiration = localStorage.getItem('token_expiration');
     if (!expiration) return;
-  
+
     const timeLeft = +expiration - Date.now();
     if (timeLeft > 0) {
       setTimeout(() => this.logout(), timeLeft);
@@ -60,18 +67,18 @@ export class AuthService {
       this.logout();
     }
   }
-  
+
   checkTokenExpiration(): void {
     if (typeof window !== 'undefined' && window.localStorage) {
       const expiration = localStorage.getItem('token_expiration');
       const token = localStorage.getItem('token');
-  
+
       if (!token || !expiration) {
         // No token or expiration found, logout
         this.logout();
         return;
       }
-  
+
       const timeLeft = +expiration - Date.now();
       if (timeLeft <= 0) {
         // Token expired, logout

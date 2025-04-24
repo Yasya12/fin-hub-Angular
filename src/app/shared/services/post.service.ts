@@ -1,42 +1,73 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { Observable, map, tap } from 'rxjs';
 import { Post } from '../../core/models/interfaces/post/post.interface';
-import { SinglePost } from '../../features/post-detail/models/single_post.model';
+import { SinglePost } from '../../features/post-detail/models/interfaces/single-post.interface';
 import { PostResponse } from '../../core/models/interfaces/post/post_response.interface';
 import { environment } from '../../../environments/environment';
+import { PaginatedResult } from '../models/interfaces/pagination.model';
+import { response } from 'express';
+import { AuthService } from '../../core/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostService {
+  //Services
+  private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
+
+  //States
   private baseUrl = environment.apiUrl;
+  paginatedResult = signal<PaginatedResult<Post[]> | undefined>(undefined);
 
-  constructor(private http: HttpClient) {}
-
-  getPosts(pageNumber: number, pageSize: number): Observable<Post[]> {
+  getPosts(pageNumber: number, pageSize: number): Observable<HttpResponse<Post>> {
     const params = new HttpParams()
-      .set('pageNumber', pageNumber.toString())
-      .set('pageSize', pageSize.toString());
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
 
     return this.http
-      .get<PostResponse>(`${this.baseUrl}/post`, { params })
-      .pipe(map((response) => response.items));
+      .get<Post>(`${this.baseUrl}/post`, {
+        observe: 'response', params, headers: { 'Cache-Control': 'no-cache' },
+        transferCache: { includeHeaders: ['Pagination'] }
+      }).pipe(
+        tap(response => {
+          const paginationHeader = response.headers.get('Pagination');
+          this.paginatedResult.set({
+            items: response.body ? (Array.isArray(response.body) ? response.body : [response.body]) : [],
+            pagination: JSON.parse(paginationHeader!),
+          });
+        }
+        )
+      )
   }
 
   getPostsWithLikes(
-    userId: string,
     pageNumber: number,
     pageSize: number
-  ): Observable<Post[]> {
+  ): Observable<HttpResponse<Post>> {
     const params = new HttpParams()
-      .set('userId', userId)
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
 
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`)
+      .set('Cache-Control', 'no-cache');
+
+
     return this.http
-      .get<PostResponse>(`${this.baseUrl}/post/with-likes`, { params })
-      .pipe(map((response) => response.items));
+      .get<Post>(`${this.baseUrl}/post/with-likes`, {
+        observe: 'response', params, headers, transferCache: { includeHeaders: ['Pagination'] }
+      }).pipe(
+        tap(response => {
+          const paginationHeader = response.headers.get('Pagination');
+          this.paginatedResult.set({
+            items: response.body ? (Array.isArray(response.body) ? response.body : [response.body]) : [],
+            pagination: JSON.parse(paginationHeader!),
+          });
+        }
+        )
+      )
   }
 
   getPostById(id: string): Observable<SinglePost> {

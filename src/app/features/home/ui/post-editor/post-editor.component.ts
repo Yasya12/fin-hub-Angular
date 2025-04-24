@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Inject, inp
 import { FormControl, FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { PostService } from '../../services/posts.service';
-import { ResponseModel } from '../../../signup/models/response.model';
+import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
 import Quill from 'quill';
 
 @Component({

@@ -1,8 +1,5 @@
-import { Component, effect, inject, input, PLATFORM_ID, signal } from '@angular/core';
-import { SinglePost } from '../../models/single_post.model';
-import { PostService } from '../../../../shared/services/post.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { LikeService } from '../../../../shared/services/like.service';
+import { Component, inject, input, OnInit, output, PLATFORM_ID } from '@angular/core';
+import { SinglePost } from '../../models/interfaces/single-post.interface';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
@@ -10,47 +7,23 @@ import { isPlatformBrowser } from '@angular/common';
   templateUrl: './post-view.component.html',
   styleUrl: './post-view.component.css'
 })
-export class PostViewComponent {
+export class PostViewComponent implements OnInit {
   // Services
-  private readonly postService = inject(PostService);
-  private readonly likeService = inject(LikeService);
-  private readonly authService = inject(AuthService);
   private readonly platformId = inject(PLATFORM_ID);
 
-  // Inputs
-  postId = input<string>();
-  commentCount = input<number>(0);
+  // Inputs 
+  post = input<SinglePost>();
+  isLiked = input.required<boolean>();
 
-  // States
-  isLiked = signal<boolean>(false);
-  post: SinglePost | null = null;
-  selectedCommentId: string | null = null;
+  // Outputs
+  toggleLike = output<void>();
 
-
-  myEffect = effect(() => {
-    this.commentCount();
-    if (this.post)
-      this.post!.commentCount += 1;
-  });
-
-
-  private loadPost(postId: string): void {
-    this.postService.getPostById(postId).subscribe((data) => {
-      this.post = {
-        ...data
-      };
-      this.checkIfLiked(postId);
-      this.makeLinksClickable();
-    });
+  onToggleLike() {
+    this.toggleLike.emit();
   }
-
-  private checkIfLiked(postId: string): void {
-    const token = this.authService.currentUser()?.token;
-    if (token) {
-      this.likeService.isPostLiked(postId).subscribe((response: any) => {
-        this.isLiked.set(response);
-      });
-    }
+  // Lifecycle hooks
+  ngOnInit(): void {
+    this.makeLinksClickable();
   }
 
   private makeLinksClickable() {
@@ -62,18 +35,5 @@ export class PostViewComponent {
         });
       }, 1);
     }
-  }
-
-  toggleLike(): void {
-    if (!this.post?.id) return;
-    this.likeService.toggleLike(this.post.id).subscribe((response: any) => {
-      this.isLiked.set(response);
-      this.post!.likesCount += this.isLiked() ? 1 : -1;
-    });
-  }
-
-  // Lifecycle hooks
-  ngOnInit(): void {
-    this.loadPost(this.postId()!);
   }
 }
