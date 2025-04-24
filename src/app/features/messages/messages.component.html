@@ -1,0 +1,3 @@
+@for (message of messageService.paginatedResult()?.items; track message.id) {
+    <p>{{message.content}}</p>
+}
