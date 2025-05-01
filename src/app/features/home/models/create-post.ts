@@ -1,5 +1,6 @@
 export interface CreatePost {
-    userEmail: string;
-    title?: string;
-    content: string;
-  }
+  id?: string;
+  userEmail: string;
+  content: string;
+  images?: string[];
+}

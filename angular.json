@@ -37,7 +37,9 @@
               }
             ],
             "styles": [
+              "node_modules/ngx-spinner/animations/square-jelly-box.css",
               "src/styles.css"
+
             ],
             "scripts": [],
             "server": "src/main.server.ts",
@@ -100,12 +102,16 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "quill/dist/quill.snow.css"
             ],
             "scripts": []
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "304ecabd-6f33-4a22-9a11-3a6fc6e1e91e"
   }
 }

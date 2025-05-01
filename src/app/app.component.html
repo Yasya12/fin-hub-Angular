@@ -1,1 +1,15 @@
-<router-outlet></router-outlet>
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading...</p></ngx-spinner
+>
+
+<div class="mr-1 h-screen flex flex-col">
+  <app-header class="shrink-0 sticky top-0 z-10"></app-header>
+  <div #scrollContainer class="flex-1 overflow-y-auto">
+    <router-outlet></router-outlet>
+  </div>
+</div>

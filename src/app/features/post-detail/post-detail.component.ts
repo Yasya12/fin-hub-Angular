@@ -1,20 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { CreateCommentDto } from './models/interfaces/create-comment-dto.interface';
+import { PostDetailStore } from './stores/post-detail/post-detail.store';
 
 @Component({
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',
-  styleUrls: ['./post-detail.component.css']
+  styleUrls: ['./post-detail.component.css'],
+  providers: [PostDetailStore]
 })
-export class PostDetailComponent implements OnInit {
-  postId: string | null = null;
+export class PostDetailComponent {
+  postDetailStore = inject(PostDetailStore);
 
-  constructor(
-    private route: ActivatedRoute
-  ) { }
+  currentUserId: string | undefined = this.postDetailStore.getCurrentUserId();
 
-  ngOnInit(): void {
-    const postId = this.route.snapshot.paramMap.get('id');
-    this.postId = postId;
+  handleAddCommentRequest(commentPayload: CreateCommentDto) {
+    if (!this.currentUserId) {
+      this.postDetailStore.displayCreateCommentAuthWarning();
+      return;
+    }
+
+    commentPayload.authorId = this.currentUserId
+
+    this.postDetailStore.addCommentToPost(commentPayload);
   }
 }

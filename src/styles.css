@@ -1,6 +1,8 @@
+@import 'ngx-toastr/toastr';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 /* You can add global styles to this file, and also import other style files */
 @layer base {
     body {
@@ -8,3 +10,36 @@
     }
   }
   
+.ql-container.ql-snow { border: none !important;}
+
+.text-gray-800 a {
+  @apply text-blue-600 underline;
+}
+
+h1 {
+  @apply text-3xl;
+}
+
+ol {
+  list-style: decimal;
+  margin-left: 20px;
+  padding-left: 20px;
+}
+
+ul {
+  list-style: disc; 
+  margin-left: 20px;
+  padding-left: 20px;
+}
+
+li {
+  padding-left: 5px;
+}
+
+blockquote {
+  border-left: 4px solid #e5e7eb; 
+  padding-left: 16px; 
+  font-style: italic; 
+  color: #4b5563; 
+  margin: 8px 0;
+}

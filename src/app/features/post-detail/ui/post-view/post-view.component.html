@@ -1,67 +1,55 @@
-<div class="flex justify-start">
-  <div
-    *ngIf="post"
-    class="mt-4 bg-white rounded-lg shadow-lg w-4/5 max-w-4xl"
-  >
-    <!-- Заголовок поста -->
-    <h2 class="text-4xl font-bold text-gray-900 mb-6">{{ post.title }}</h2>
-
-    <!-- Автор поста та дата -->
-    <div class="flex items-center mb-6">
-      <img
-        [src]="post.profilePictureUrl|| '/assets/images/Sample_User_Icon.png'"
-        alt="Author's Profile Picture"
-        class="w-12 h-12 object-cover rounded-full mr-4"
-      />
-      <div>
-        <h4 class="text-xl font-semibold text-gray-800">{{ post.userName }}</h4>
-        <p class="text-sm text-gray-500">
-          {{ post.createdAt | date : "medium" }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Категорії поста -->
-    <div class="mb-6">
-      <p class="text-sm font-semibold text-gray-600">Categories</p>
-      <p class="text-gray-600 text-sm">
-        {{ post.categoryNames.join(", ") }}
+@if(this.post()) {
+<div *ngIf="post()" class="p-4 bg-white w-full rounded-t-lg">
+  <!-- post() author and date -->
+  <div class="flex items-center mb-6">
+    <img
+      [src]="post()!.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
+      alt="Author's Profile Picture"
+      class="size-11 object-cover rounded-full mr-4"
+    />
+    <div>
+      <h4 class="text-xl font-semibold text-gray-800">{{ post()!.userName }}</h4>
+      <p class="text-sm text-gray-500">
+        {{ post()!.createdAt | timeAgo }}
       </p>
     </div>
+  </div>
 
-    <!-- Контент поста -->
-    <p class="text-gray-800 text-lg mb-6">{{ post.content }}</p>
+  <!-- post() categories -->
+  <div class="mb-6">
+    <p class="text-gray-600 text-sm">
+      {{ post()!.categoryNames.join(", ") }}
+    </p>
+  </div>
 
-    <div
-      class="flex items-center justify-between text-gray-600 text-sm mt-4 mb-4 border-t pt-4"
-    >
-      <!-- Блок лайків -->
-      <div class="flex items-center">
-        <button
-          class="flex items-center text-sm text-gray-600 bg-transparent border-none cursor-pointer"
-          [class.liked]="isLiked"
-          (click)="toggleLike()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="feather feather-credit-card"
-          >
-            <path
-              d="M22 12V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6"
-            ></path>
-            <rect x="2" y="10" width="20" height="4" rx="1" ry="1"></rect>
-          </svg>
-          Likes {{ post.likesCount }}
-        </button>
+  <div class="mb-6">
+    <!-- post() content -->
+    <div class="text-gray-800 text-lg mb-3" [innerHTML]="post()!.content"></div>
+    <!-- Loop through images -->
+    <div *ngIf="post()!.images && post()!.images!.length > 0">
+      <div *ngFor="let image of post()!.images">
+        <img [src]="image" alt="post() Image" class="w-full" />
       </div>
     </div>
   </div>
+
+  <div class="flex items-center justify-between text-gray-600 text-sm">
+    <!-- Like button -->
+    <button
+      class="flex items-center text-sm text-gray-600 bg-transparent border-none cursor-pointer"
+      [ngClass]="
+        isLiked() ? 'text-green-600' : 'text-gray-600 hover:text-green-600'
+      "
+      (click)="onToggleLike()"
+    >
+      Likes {{ post()!.likesCount }}
+    </button>
+    <!-- Comment button -->
+    <button
+      class="flex items-center text-sm text-gray-600 bg-transparent border-none cursor-pointer"
+    >
+      Comments {{ post()!.commentCount }}
+    </button>
+  </div>
 </div>
+}

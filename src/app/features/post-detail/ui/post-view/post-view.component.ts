@@ -1,55 +1,39 @@
-import { Component, Input } from '@angular/core';
-import { SinglePost } from '../../../../core/models/Post/single_post.model';
-import { PostService } from '../../../../core/services/post.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { LikeService } from '../../../../core/services/like.service';
+import { Component, inject, input, OnInit, output, PLATFORM_ID } from '@angular/core';
+import { SinglePost } from '../../models/interfaces/single-post.interface';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-post-view',
   templateUrl: './post-view.component.html',
   styleUrl: './post-view.component.css'
 })
-export class PostViewComponent {
-  @Input() postId!: string;
-  post: SinglePost | null = null;
-  isLiked = false;
-  selectedCommentId: string | null = null;
+export class PostViewComponent implements OnInit {
+  // Services
+  private readonly platformId = inject(PLATFORM_ID);
 
-  constructor(
-    private postService: PostService,
-    public authService: AuthService,
-    private likeService: LikeService
-  ) { }
+  // Inputs 
+  post = input<SinglePost>();
+  isLiked = input.required<boolean>();
 
+  // Outputs
+  toggleLike = output<void>();
+
+  onToggleLike() {
+    this.toggleLike.emit();
+  }
+  // Lifecycle hooks
   ngOnInit(): void {
-    console.log("postid - " + this.postId)
-    this.loadPost(this.postId);
+    this.makeLinksClickable();
   }
 
-  private loadPost(postId: string): void {
-    this.postService.getPostById(postId).subscribe((data) => {
-      this.post = data;
-      this.checkIfLiked(postId);
-    });
-  }
-
-  private checkIfLiked(postId: string): void {
-    const token = this.authService.currentUser()?.token;
-    if (token) {
-      this.likeService.isPostLiked(postId).subscribe((response: any) => {
-        this.isLiked = response.isLiked;
-      });
-    }
-  }
-
-  toggleLike(): void {
-    if (this.post?.id) {
-      this.likeService.toggleLike(this.post.id).subscribe((response: any) => {
-        this.isLiked = response.success;
-        if (this.post) {
-          this.post.likesCount += this.isLiked ? 1 : -1;
-        }
-      });
+  private makeLinksClickable() {
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        document.querySelectorAll('a').forEach((link) => {
+          link.setAttribute('target', '_blank');
+          link.setAttribute('rel', 'noopener noreferrer');
+        });
+      }, 1);
     }
   }
 }

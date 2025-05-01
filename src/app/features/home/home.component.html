@@ -1,3 +1,12 @@
-<app-create-post [curretnUserEmail]="curretnUserEmail"></app-create-post>
-<app-posts></app-posts>
+<div class="flex h-[calc(100vh-6rem)] justify-center flex-1 mt-4 mb-2">
+  <!-- Sidebar -->
+  <app-side-bar class="w-[9rem] shrink-0 fixed left-[24rem]"></app-side-bar>
 
+  <!-- Content container -->
+  <div class="w-[38%] mr-14">
+    <app-posts [currentUser]="curretnUser"></app-posts>
+  </div>
+
+  <!-- Charts view bar -->
+  <app-charts-view class="w-[25rem] shrink-0 fixed right-[14rem]"></app-charts-view>
+</div>

@@ -1,13 +1,17 @@
-<div class="flex flex-row justify-center items-center gap-8 py-2 bg-[#ffffff]">
+<div
+  class="flex flex-row justify-center items-center gap-4 pt-2 pb-1 bg-[#ffffff]"
+>
   <a routerLink="/home">
     <img src="/assets/images/logo-finhub.png" alt="logo FinHub" class="w-32" />
   </a>
 
-  <div class="flex flex-row gap-8">
+  <div class="flex flex-row">
     <button
       *ngFor="let item of menuItems"
       (click)="selectTab(item.key)"
-      class="flex flex-col items-center"
+      class="flex flex-col items-center relative pb-3 p-2 px-4 hover:bg-[#e6e6e6] hover:rounded-md transition duration-300"
+      [tooltip]="item.key"
+      [placement]="'top'"
     >
       <img
         [src]="
@@ -18,9 +22,10 @@
         [alt]="item.key + ' Icon'"
         class="size-7 mb-1"
       />
+      <!-- Green underline -->
       <div
         *ngIf="selectedTab() === item.key"
-        class="w-5 h-1 bg-green-600 rounded-full mt-1"
+        class="absolute bottom-[-5px] w-6 h-1 bg-green-600 rounded-full"
       ></div>
     </button>
   </div>
@@ -28,34 +33,42 @@
   <input
     type="text"
     placeholder="Пошук на FinHub..."
-    class="w-1/5 px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-none"
+    class="w-1/5 px-2 py-1 border border-gray-300 focus:outline-none focus:ring-2 hover:border-2 hover:border-green-600 rounded-md"
   />
 
+  @if(!authService.currentUser()) {
   <button
-    *ngIf="!authService.currentUser()"
-    class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition"
-    routerLink="/signup"
-    (click)="selectTab('login')"
+    class="px-4 py-1 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition"
+    (click)="selectTab('signup')"
   >
-    Login
-  </button>
-
-  <div class="relative" *ngIf="authService.currentUser() as fullUser">
-    <button (click)="toggleDropdown(); selectTab('login')">
+    Login / Signup</button
+  >} @else {
+  <div
+    class="relative hover:bg-[#e6e6e6] hover:rounded-md p-1 px-2"
+    [tooltip]="fullUser.user.username"
+    [placement]="'top'"
+    *ngIf="authService.currentUser() as fullUser"
+  >
+    <button (click)="toggleDropdown()">
       <img
-        [src]="fullUser.user.profilePictureUrl"
+        [src]="
+          this.authStore.currentUser()?.profilePictureUrl ||
+          '/assets/images/Sample_User_Icon.png'
+        "
         alt="User Icon"
         class="size-10 rounded-full"
       />
     </button>
 
     <div
+      #dropdownMenu
       *ngIf="isDropdownOpen"
       class="absolute right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg w-48 z-50"
     >
       <a
-        href="#"
-        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        routerLink="/member/edit"
+        class="block px-4 py-1 text-sm text-gray-700 hover:bg-gray-100"
+        (click)="selectTab('edit-member')"
         >Edit Profile</a
       >
       <div class="border-t border-gray-200"></div>
@@ -67,9 +80,12 @@
       >
     </div>
   </div>
+  }
 
   <button
-    class="px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition"
+    style="cursor: pointer"
+    class="px-4 py-1 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition"
+    (click)="selectTab('askQuestion')"
   >
     Додати питання
   </button>

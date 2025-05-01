@@ -1,19 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { FullUser } from '../../core/models/User/full_user.model';
+import { ResponseModel } from '../../shared/models/interfaces/response.model';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
+  standalone: false,
 })
 export class HomeComponent implements OnInit {
-  curretnUserEmail: string |null = null;
+  // Services
+  private readonly authService = inject(AuthService);
 
-  constructor(
-    private authService: AuthService
-  ) { }
+  // States
+  curretnUser: ResponseModel | undefined = undefined;
 
+  // Lifecycle hooks
   ngOnInit(): void {
-    this.curretnUserEmail = this.authService.currentUser()?.user.email ?? null;
+    this.curretnUser = this.authService.currentUser();
   }
 }

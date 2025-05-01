@@ -6,20 +6,32 @@ import { PostsComponent } from './ui/posts/posts.component';
 import { HeroSectionComponent } from './ui/hero-section/hero-section.component';
 import { NgOptimizedImage } from '@angular/common';
 import { CreatePostComponent } from './ui/create-post/create-post.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
+import { PostEditorComponent } from './ui/post-editor/post-editor.component';
+import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
+import { SideBarComponent } from '../../shared/ui/side-bar/side-bar.component';
+import { ChartsViewComponent } from '../../shared/ui/charts-view/charts-view.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     PostsComponent,
     HeroSectionComponent,
-    CreatePostComponent
+    CreatePostComponent,
+    PostEditorComponent
   ],
   imports: [
     CommonModule,
     NgOptimizedImage,
     HomeRoutingModule,
-    FormsModule
-  ]
+    FormsModule,
+    ReactiveFormsModule,
+    QuillModule.forRoot(),
+    TimeAgoPipe,
+    SideBarComponent,
+    ChartsViewComponent
+  ],
+  exports: [PostEditorComponent]
 })
 export class HomeModule { }
