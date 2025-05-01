@@ -38,13 +38,9 @@ export const PostDetailStore = signalStore(
     withFilterFeature(),
     withMethods((store, authService = inject(AuthService), toastr = inject(ToastrService), commentService = inject(CommentService), likeService = inject(LikeService)) => ({
         getComments(postId: string): void {
-            console.log("Pagenumber ", store.pageNumber())
-            console.log("Pagesize ", store.pageSize())
             commentService.getComments(postId, store.pageNumber(), store.pageSize(), store.selectedFilter()).subscribe({
                 next: (newComments) => {
-                    //console.log('Fetched comments: ', newComments.length);
                     if (newComments.length < store.pageSize()) {
-                        console.warn('No more comments to load.');
                         patchState(store, { hasMoreComments: false })
                     }
                     patchState(store, { comments: [...store.comments(), ...newComments] })
@@ -57,14 +53,10 @@ export const PostDetailStore = signalStore(
         },
         setFilterForComments(filter: string)
         {
-            //console.log('Setting filter:', filter);
             store.setFilter(filter);
             patchState(store, { comments: [] });
             patchState(store, { pageNumber: 1 });
             patchState(store, { hasMoreComments: true })
-            //console.log('Filter set:', store.selectedFilter());
-            // console.log('Page number:', store.pageNumber());
-            // console.log('Page size:', store.pageSize());
             this.getComments(store.postId()!);
 
         },
@@ -77,7 +69,6 @@ export const PostDetailStore = signalStore(
         },
         getCurrentUserId(): string | undefined {
             if (!this.checkUserAuthentification()) {
-                console.warn('User is not logged in. You won’t get the current user\'s ID');
                 return;
             }
 
@@ -85,7 +76,6 @@ export const PostDetailStore = signalStore(
         },
         getCurrentUser(): User | undefined {
             if (!this.checkUserAuthentification()) {
-                console.warn('User is not logged in. You won’t get the current user\'s ID');
                 return;
             }
 

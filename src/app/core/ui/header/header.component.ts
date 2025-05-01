@@ -1,17 +1,18 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   effect,
   ElementRef,
   HostListener,
+  inject,
   OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { User } from '../../models/interfaces/user/user.interface';
-import { FullUser } from '../../models/interfaces/user/full_user.interface';
-import { Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { AuthStore } from '../../stores/auth-store';
 
 @Component({
   selector: 'app-header',
@@ -19,8 +20,14 @@ import { Router } from '@angular/router';
   styleUrl: './header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
+  providers: [AuthStore]
 })
 export class HeaderComponent implements OnInit {
+  //TODO: clean the code in the component
+  //Stores
+  authStore = inject(AuthStore);
+
+  //States
   isDropdownOpen = false;
   selectedTab = signal<string>(
     typeof window !== 'undefined'
@@ -61,16 +68,31 @@ export class HeaderComponent implements OnInit {
   ];
   @ViewChild('dropdownMenu') dropdownMenu: ElementRef | undefined;
 
-  constructor(protected authService: AuthService, private router: Router) {
+  constructor(protected authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.isDropdownOpen = false;
+      }
+      if (event instanceof NavigationEnd) {  // This will run after navigation has completed
+        if (event.urlAfterRedirects === '/home') {
+          this.selectTab('home');
+        }
+      }
+    });
+
     effect(() => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('selectedTab', this.selectedTab());
       }
     });
+
+    effect(() => {
+      this.authStore.setCurrentUserState();
+    });
   }
 
   ngOnInit(): void {
-    this.setCurrentUser();
+    this.authService.setCurerntUser(); //so when i refresh i will see the loged user, because without it i wont\
   }
 
   selectTab(tab: string) {
@@ -80,30 +102,18 @@ export class HeaderComponent implements OnInit {
       this.router.navigate(['/signup']);
     } else if (tab === 'askQuestion') {
       this.router.navigate(['/under-development']);
+    } else if (tab === 'edit-member') {
+      this.router.navigate(['/member/edit']);
     } else {
       const route =
         this.menuItems.find((item) => item.key === tab)?.route || '/home';
-        console.log(route);
       this.router.navigate([route]);
     }
   }
-
-  setCurrentUser() {
-    if (typeof window === 'undefined' || !window.localStorage) {
-      return;
-    }
-
-    const userString = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-
-    if (userString && token) {
-      const user: User = JSON.parse(userString);
-      const fullUser: FullUser = { user, token };
-      this.authService.currentUser.set(fullUser);
-    }
-  }
+  
 
   logout() {
+    this.selectedTab.set('home');
     this.authService.logout();
   }
 

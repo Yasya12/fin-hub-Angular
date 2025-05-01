@@ -47,7 +47,6 @@ export class SignupComponent implements AfterViewInit {
     }
     this.authService.login(this.loginInfo).subscribe({
       next: () => {
-        localStorage.setItem('selectedTab', 'home');
         this.router.navigate(['/home']);
       },
       error: (err) => {

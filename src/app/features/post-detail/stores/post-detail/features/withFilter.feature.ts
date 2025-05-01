@@ -21,7 +21,6 @@ export function withFilterFeature() {
         withMethods((store) => ({
             setFilter(filter: string) {
                 patchState(store, { selectedFilter: filter });
-                console.log('Selected filter:', filter);
             },
             getSelectedFilterLabel(): string {
                 const selectedFilter = store.filters().find(f => f.value === store.selectedFilter());

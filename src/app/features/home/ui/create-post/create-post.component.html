@@ -4,7 +4,7 @@
     {
     <img
       [src]="
-        currentUser()?.user?.profilePictureUrl || '/assets/images/Sample_User_Icon.png'
+        this.authStore.currentUser()?.profilePictureUrl || '/assets/images/Sample_User_Icon.png'
       "
       alt="User Avatar"
       class="w-10 h-10 rounded-full mr-3"

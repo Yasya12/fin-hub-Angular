@@ -52,7 +52,7 @@
     <button (click)="toggleDropdown()">
       <img
         [src]="
-          fullUser.user.profilePictureUrl ||
+          this.authStore.currentUser()?.profilePictureUrl ||
           '/assets/images/Sample_User_Icon.png'
         "
         alt="User Icon"
@@ -68,6 +68,7 @@
       <a
         routerLink="/member/edit"
         class="block px-4 py-1 text-sm text-gray-700 hover:bg-gray-100"
+        (click)="selectTab('edit-member')"
         >Edit Profile</a
       >
       <div class="border-t border-gray-200"></div>

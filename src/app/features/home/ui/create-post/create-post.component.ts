@@ -4,13 +4,18 @@ import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
 import { Post } from '../../../../core/models/interfaces/post/post.interface';
 import { ToastrService } from 'ngx-toastr';
+import { AuthStore } from '../../../../core/stores/auth-store';
 
 @Component({
   selector: 'app-create-post',
   templateUrl: './create-post.component.html',
   standalone: false,
+  providers: [AuthStore]
 })
 export class CreatePostComponent {
+  //Stores
+  authStore = inject(AuthStore);
+
   // Services
   private readonly postService = inject(PostService);
   private readonly toastr = inject(ToastrService);

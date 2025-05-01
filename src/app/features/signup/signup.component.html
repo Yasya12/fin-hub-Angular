@@ -20,6 +20,7 @@
           name="email"
           type="email"
           placeholder="Email"
+          autocomplete="email"
           [(ngModel)]="loginInfo.email"
           required
           class="w-[80%] flex justify-center p-2 my-5 mx-auto border-none outline-none rounded-md"
@@ -28,6 +29,7 @@
           id="password"
           name="password"
           type="password"
+          autocomplete="current-password"
           placeholder="Password"
           [(ngModel)]="loginInfo.password"
           required
@@ -94,6 +96,7 @@
           <input
             type="text"
             name="username"
+            autocomplete="username"
             [(ngModel)]="signupData.username"
             placeholder="User Name"
             required
@@ -102,6 +105,7 @@
           <input
             type="email"
             name="email"
+            autocomplete="email"
             [(ngModel)]="signupData.email"
             placeholder="Email"
             required
@@ -111,6 +115,7 @@
             type="password"
             name="password"
             [(ngModel)]="signupData.password"
+            autocomplete="current-password"
             placeholder="Password"
             required
             class="w-full p-3 mb-4 bg-gray-100 rounded-md border-none outline-none"
