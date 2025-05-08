@@ -40,7 +40,10 @@
     </div>
 
     @if (messagesLoaded && (!messageService.paginatedResult()?.items?.length)) {
-    <h3>No message</h3>
+      <div class="flex flex-col items-center justify-start h-screen pt-48">
+        <h1 class="text-3xl font-bold mb-2">📭 No Messages 📭</h1>
+        <p class="text-lg">It looks a bit quiet here. Start a conversation!</p>
+      </div>
     } @else {
 
     <!-- Message Table -->
@@ -50,11 +53,10 @@
           <tr>
             <th class="px-4 py-3 font-medium">Message</th>
             <th class="px-4 py-3 font-medium">From</th>
-            @if(container == "Outbox")
-            {
-              <th class="px-4 py-3 font-medium">Sent</th>
+            @if(container == "Outbox") {
+            <th class="px-4 py-3 font-medium">Sent</th>
             } @else {
-              <th class="px-4 py-3 font-medium">Received</th>
+            <th class="px-4 py-3 font-medium">Received</th>
             }
             <th class="px-4 py-3 font-medium">Actions</th>
           </tr>
@@ -67,7 +69,9 @@
             routerLink="{{ getRoute(message) }}"
             [queryParams]="{ tab: 'messages' }"
           >
-            <td class="px-4 py-3 min-w-[40ch] max-w-[40ch] break-words whitespace-normal">
+            <td
+              class="px-4 py-3 min-w-[40ch] max-w-[40ch] break-words whitespace-normal"
+            >
               {{ message.content }}
             </td>
             <td class="px-4 py-3 flex items-center gap-3">
@@ -83,9 +87,7 @@
                 class="w-10 h-10 rounded-full object-cover"
               />
               <span>{{
-                isOutbox
-                  ? message.recipientUserName
-                  : message.senderUserName
+                isOutbox ? message.recipientUserName : message.senderUserName
               }}</span>
             </td>
             <td class="px-4 py-3">{{ message.messageSent | timeAgo }}</td>
