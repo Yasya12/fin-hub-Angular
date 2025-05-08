@@ -1,0 +1,12 @@
+/* In your global styles.css or component style */
+.scrollable::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollable::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+  .scrollable::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  

@@ -43,7 +43,9 @@ export class MemberEditComponent implements OnInit {
     const user = this.authService.currentUser()?.user;
     if (!user) return;
     this.authService.getMember().subscribe({
-      next: (u: User) => this.user.set(u)
+      next: (u: User) => {
+        this.user.set(u);
+      }
     })
   }
 

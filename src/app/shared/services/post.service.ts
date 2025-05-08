@@ -1,12 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Post } from '../../core/models/interfaces/post/post.interface';
 import { SinglePost } from '../../features/post-detail/models/interfaces/single-post.interface';
-import { PostResponse } from '../../core/models/interfaces/post/post_response.interface';
 import { environment } from '../../../environments/environment';
 import { PaginatedResult } from '../models/interfaces/pagination.model';
-import { response } from 'express';
 import { AuthService } from '../../core/services/auth.service';
 
 @Injectable({

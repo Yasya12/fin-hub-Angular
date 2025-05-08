@@ -1,3 +1,170 @@
-@for (message of messageService.paginatedResult()?.items; track message.id) {
-    <p>{{message.content}}</p>
-}
+<div class="p-4 flex justify-center">
+  <div class="w-full max-w-7xl">
+    <!-- Tabs -->
+    <div class="flex space-x-2 mb-4">
+      <button
+        class="px-4 py-2 rounded font-semibold"
+        [ngClass]="
+          container === 'Unread'
+            ? 'bg-green-600 text-white'
+            : 'bg-green-100 text-green-800'
+        "
+        (click)="setContainer('Unread')"
+      >
+        Unread
+      </button>
+
+      <button
+        class="px-4 py-2 rounded font-semibold"
+        [ngClass]="
+          container === 'Inbox'
+            ? 'bg-green-600 text-white'
+            : 'bg-green-100 text-green-800'
+        "
+        (click)="setContainer('Inbox')"
+      >
+        Inbox
+      </button>
+
+      <button
+        class="px-4 py-2 rounded font-semibold"
+        [ngClass]="
+          container === 'Outbox'
+            ? 'bg-green-600 text-white'
+            : 'bg-green-100 text-green-800'
+        "
+        (click)="setContainer('Outbox')"
+      >
+        Outbox
+      </button>
+    </div>
+
+    @if (messagesLoaded && (!messageService.paginatedResult()?.items?.length)) {
+    <h3>No message</h3>
+    } @else {
+
+    <!-- Message Table -->
+    <div class="bg-white shadow rounded-lg overflow-x-auto">
+      <table class="w-full text-sm text-left text-gray-700">
+        <thead class="bg-green-100 text-green-900">
+          <tr>
+            <th class="px-4 py-3 font-medium">Message</th>
+            <th class="px-4 py-3 font-medium">From</th>
+            @if(container == "Outbox")
+            {
+              <th class="px-4 py-3 font-medium">Sent</th>
+            } @else {
+              <th class="px-4 py-3 font-medium">Received</th>
+            }
+            <th class="px-4 py-3 font-medium">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (message of messageService.paginatedResult()?.items; track
+          message.id) {
+          <tr
+            class="border-t"
+            routerLink="{{ getRoute(message) }}"
+            [queryParams]="{ tab: 'messages' }"
+          >
+            <td class="px-4 py-3 min-w-[40ch] max-w-[40ch] break-words whitespace-normal">
+              {{ message.content }}
+            </td>
+            <td class="px-4 py-3 flex items-center gap-3">
+              <img
+                [src]="
+                  isOutbox
+                    ? message.recipientUPhotoUrl ||
+                      '/assets/images/Sample_User_Icon.png'
+                    : message.senderUPhotoUrl ||
+                      '/assets/images/Sample_User_Icon.png'
+                "
+                alt="avatar"
+                class="w-10 h-10 rounded-full object-cover"
+              />
+              <span>{{
+                isOutbox
+                  ? message.recipientUserName
+                  : message.senderUserName
+              }}</span>
+            </td>
+            <td class="px-4 py-3">{{ message.messageSent | timeAgo }}</td>
+            <td class="px-4 py-3" (click)="$event.stopPropagation()">
+              <button
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                (click)="deleteMessage(message.id)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-center items-center gap-2">
+      <!-- Перехід до першої сторінки -->
+      <button
+        class="text-green-700 hover:underline disabled:opacity-50 border border-gray-400 px-2 py-1"
+        (click)="pageChanged(1)"
+        [disabled]="pageNumber === 1"
+      >
+        &laquo;
+      </button>
+
+      <!-- Кнопка попередньої сторінки -->
+      <button
+        class="text-green-700 hover:underline disabled:opacity-50"
+        (click)="previousPage()"
+        [disabled]="pageNumber === 1"
+      >
+        Prev
+      </button>
+
+      <!-- Динамічні сторінки -->
+      <ng-container *ngFor="let page of getPages()">
+        <button
+          class="px-3 py-1 rounded"
+          [ngClass]="
+            page === pageNumber
+              ? 'bg-green-600 text-white'
+              : 'text-green-700 hover:underline'
+          "
+          (click)="pageChanged(page)"
+        >
+          {{ page }}
+        </button>
+      </ng-container>
+
+      <!-- Кнопка наступної сторінки -->
+      <button
+        class="text-green-700 hover:underline disabled:opacity-50"
+        (click)="nextPage()"
+        [disabled]="
+          pageNumber ===
+          messageService.paginatedResult()?.pagination?.totalPages
+        "
+      >
+        Next
+      </button>
+
+      <!-- Перехід до останньої сторінки -->
+      <button
+        class="text-green-700 hover:underline disabled:opacity-50 border border-gray-400 px-2 py-1"
+        (click)="
+          pageChanged(messageService.paginatedResult()!.pagination!.totalPages)
+        "
+        [disabled]="
+          pageNumber ===
+          messageService.paginatedResult()?.pagination?.totalPages
+        "
+      >
+        &raquo;
+      </button>
+    </div>
+
+    }
+  </div>
+</div>

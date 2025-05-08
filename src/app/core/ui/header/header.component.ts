@@ -13,6 +13,7 @@ import {
 import { AuthService } from '../../services/auth.service';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AuthStore } from '../../stores/auth-store';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-header',
@@ -27,8 +28,12 @@ export class HeaderComponent implements OnInit {
   //Stores
   authStore = inject(AuthStore);
 
+  //Services
+  toastr = inject(ToastrService)
+
   //States
   isDropdownOpen = false;
+  isLoggedIn = signal<boolean>(false);
   selectedTab = signal<string>(
     typeof window !== 'undefined'
       ? localStorage.getItem('selectedTab') || 'home'
@@ -68,7 +73,7 @@ export class HeaderComponent implements OnInit {
   ];
   @ViewChild('dropdownMenu') dropdownMenu: ElementRef | undefined;
 
-  constructor(protected authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {
+  constructor(protected authService: AuthService, private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         this.isDropdownOpen = false;
@@ -87,12 +92,13 @@ export class HeaderComponent implements OnInit {
     });
 
     effect(() => {
-      this.authStore.setCurrentUserState();
+      this.authStore.setCurrentUserState(); 
     });
   }
 
   ngOnInit(): void {
     this.authService.setCurerntUser(); //so when i refresh i will see the loged user, because without it i wont\
+
   }
 
   selectTab(tab: string) {
@@ -100,6 +106,10 @@ export class HeaderComponent implements OnInit {
 
     if (tab === 'signup') {
       this.router.navigate(['/signup']);
+    } else if (tab === 'messages' && !this.authService.currentUser()) {
+      this.toastr.warning("You need to be logged in to access the messages")
+      this.router.navigate(['/signup']);
+      return;
     } else if (tab === 'askQuestion') {
       this.router.navigate(['/under-development']);
     } else if (tab === 'edit-member') {
@@ -110,7 +120,7 @@ export class HeaderComponent implements OnInit {
       this.router.navigate([route]);
     }
   }
-  
+
 
   logout() {
     this.selectedTab.set('home');

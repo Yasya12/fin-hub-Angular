@@ -5,10 +5,12 @@ import { AuthService } from "../services/auth.service";
 
 type AuthStore = {
     currentUser: User | undefined;
+    token: string | undefined;
 }
 
 const initialState: AuthStore = {
     currentUser: undefined,
+    token: undefined,
 
 }
 
@@ -33,11 +35,19 @@ export const AuthStore = signalStore(
                 },
                 error: (error) => console.error('Error fetching user:', error)
             })
-        }
+        },
+        setToken() {
+            if (!this.checkUserAuthentification()) {
+                return;
+            }
+
+            patchState(store, { token: authService.currentUser()?.token })
+        },
     })),
     withHooks({
         onInit(store) {
             store.setCurrentUserState();
+            store.setToken();
         }
     })
 )

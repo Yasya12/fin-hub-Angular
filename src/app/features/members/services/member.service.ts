@@ -16,6 +16,10 @@ export class MemberService {
     //States
     private baseUrl = environment.apiUrl;
 
+    getUserByUsername(username: string): Observable<User> {
+        return this.http.get<User>(`${this.baseUrl}/user/by-username/${username}`);
+    }
+
     updateMember(user: User) {
         return this.http.put<User>(`${this.baseUrl}/user`, user, {
             headers: new HttpHeaders().set('Authorization', `Bearer ${this.authService.currentUser()?.token}`)
@@ -29,7 +33,7 @@ export class MemberService {
         });
     }
 
-    deletePhoto(){
+    deletePhoto() {
         return this.http.delete(`${this.baseUrl}/user/delete-photo`, {
             headers: new HttpHeaders().set('Authorization', `Bearer ${this.authService.currentUser()?.token}`)
         });

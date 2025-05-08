@@ -15,6 +15,7 @@ export class AuthService {
   //TODO: clean the code in the service and dont user the current user here 
   currentUser = signal<ResponseModel | undefined>(undefined);
   private baseUrl = environment.apiUrl;
+  private _isLoaded = signal(false);
 
   constructor(private http: HttpClient) { }
 
@@ -22,6 +23,10 @@ export class AuthService {
     return this.http.get<User>(`${this.baseUrl}/user/by-email`, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${this.currentUser()?.token}`)
     });
+  }
+
+  isAuthLoaded() {
+    return this._isLoaded();
   }
 
   setCurerntUser(): void {
@@ -36,6 +41,7 @@ export class AuthService {
       const user: User = JSON.parse(userString);
       const fullUser: FullUser = { user, token };
       this.currentUser.set(fullUser);
+      this._isLoaded.set(true);
     }
   }
 
@@ -67,6 +73,7 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('token_expiration');
     this.currentUser.set(undefined);
+    this._isLoaded.set(true);
   }
 
   googleLogin(tokenRequest: { token: string }): Observable<ResponseModel> {

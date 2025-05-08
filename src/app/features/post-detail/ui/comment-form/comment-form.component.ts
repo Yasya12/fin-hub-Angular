@@ -1,5 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, input, Input, Output, signal } from '@angular/core';
-import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
+import { Component, ElementRef, EventEmitter, HostListener, inject, input, Input, Output } from '@angular/core';
 import { CreateCommentDto } from '../../models/interfaces/create-comment-dto.interface';
 import { User } from '../../../../core/models/interfaces/user/user.interface';
 
@@ -8,23 +7,29 @@ import { User } from '../../../../core/models/interfaces/user/user.interface';
   templateUrl: './comment-form.component.html',
 })
 export class CommentFormComponent {
+  //Services
+  private elementRef = inject(ElementRef);
+
+  //Inputs
+  currentUser = input<User | undefined>(undefined);
   @Input() postId!: string;
   @Input() parentId: string | undefined;
   @Input() isReply: boolean = false;
-   currentUser = input<User | undefined>(undefined);
+
+  //Outputs
   @Output() addComment = new EventEmitter<CreateCommentDto>();
   @Output() isRepling = new EventEmitter<boolean>();
 
-  
+  //States
   isReplyFormOpen: boolean = false;
   content: string = '';
 
-  constructor(private elementRef: ElementRef) { }
-
+  //hooks
   ngOnInit() {
     this.isReplyFormOpen = this.isReply;
   }
 
+  //methods
   onSubmit(): void {
     if (this.content.trim()) {
       const commentPayload: CreateCommentDto = {

@@ -99,6 +99,8 @@ export const PostDetailStore = signalStore(
         addCommentToPost(newComment: CreateCommentDto) {
             store.addComment(newComment).subscribe({
                 next: (response) => {
+                    response.profilePictureUrl = this.getCurrentUser()?.profilePictureUrl;
+                    
                     if (response.parentId) {
                         const parent = this.findCommentById(response.parentId);
 

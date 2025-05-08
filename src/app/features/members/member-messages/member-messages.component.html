@@ -1,0 +1,99 @@
+<div
+  #scrollContainer
+  (scroll)="onScroll()"
+  class="scrollable flex flex-col h-full px-4 space-y-2 overflow-y-auto"
+  style="min-height: 200px; max-height: 71vh"
+>
+  @for (group of groupMessages; track group.date) {
+  <!-- Centered Date Label -->
+  <div class="flex justify-center">
+    <span class="bg-gray-300 text-xs text-gray-700 px-3 py-1 rounded-full">
+      {{ group.date | date : "d MMMM" }}
+    </span>
+  </div>
+  <!-- Display chat messages -->
+  @for (message of group.messages; track message.id) {
+  <div
+    class="flex"
+    [ngClass]="{
+      'justify-end': message.senderUserName !== username(),
+      'justify-start': message.senderUserName === username()
+    }"
+  >
+    <!-- If the message is from others, show avatar on left -->
+    @if(message.senderUserName === username()){
+    <div class="flex items-end space-x-4">
+      <img
+        [src]="message.senderUPhotoUrl"
+        alt="{{ message.senderUserName }}"
+        class="w-10 h-10 rounded-full object-cover"
+      />
+      <div class="">
+        <div
+          class="relative bg-gray-200 text-gray-800 px-3 py-2 rounded-lg max-w-xs md:max-w-md w-fit mr-24"
+        >
+          <div class="flex justify-between items-end gap-2">
+            <div class="break-words leading-snug text-justify">
+              {{ message.content }}
+            </div>
+            <span class="text-xs text-gray-500 whitespace-nowrap">
+              {{ message.messageSent | date : "HH:mm" }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- If the message is from current user, show avatar on right -->
+    @if(message.senderUserName !== username()){
+    <div class="flex items-end flex-row-reverse">
+      <img
+        [src]="message.senderUPhotoUrl"
+        alt="{{ message.senderUserName }}"
+        class="w-10 h-10 rounded-full object-cover ml-4"
+      />
+      <div class="text-right ml-24">
+        <div
+          class="relative bg-green-100 text-green-800 px-3 py-2 rounded-lg inline-block"
+        >
+          <div class="flex justify-between items-end gap-2">
+            <div class="break-words leading-snug text-justify">
+              {{ message.content }}
+            </div>
+            <span class="text-xs text-gray-500 whitespace-nowrap">
+              {{ message.messageSent | date : "HH:mm" }}
+            </span>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          @if(!message.dateRead && message.senderUserName !== username()){
+          <span class="text-xs text-gray-500">unread</span>
+          } @if(message.dateRead && message.senderUserName !== username()){
+          <span class="text-xs text-green-500">read</span>
+          }
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  } }
+</div>
+<!-- Message input box -->
+<div class="flex items-center space-x-4 mt-4">
+  <input
+    type="text"
+    placeholder="Type your message"
+    class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+    [(ngModel)]="messageContent"
+    (keydown)="onKeyDown($event)"
+  />
+  <button
+    class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none disabled:bg-gray-400"
+    (click)="sendMessage()"
+    [disabled]="!messageContent"
+  >
+    Send
+  </button>
+</div>

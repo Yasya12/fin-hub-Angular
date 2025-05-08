@@ -26,7 +26,8 @@ export const routes: Routes = [
   {
     path: 'messages',
     loadChildren: () => import('./features/messages/messages.module').then(m => m.MessagesModule)
-  },  {
+  },
+  {
     path: 'member',
     loadChildren: () => import('./features/members/members.module').then(m => m.MembersModule)
   },
