@@ -32,6 +32,10 @@ export const routes: Routes = [
     loadChildren: () => import('./features/members/members.module').then(m => m.MembersModule)
   },
   {
+    path: 'hubs',
+    loadChildren: () => import('./features/hubs/hubs.module').then(m => m.HubsModule)
+  },
+  {
     path: '**',
     redirectTo: 'home',
   }

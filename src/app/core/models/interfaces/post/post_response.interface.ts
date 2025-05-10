@@ -1,4 +1,4 @@
-import { Post } from './post.interface';
+import { Post } from '../../../../features/home/models/post.interface';
 
 export interface PostResponse {
   items: Post[];

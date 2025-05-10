@@ -1,12 +1,14 @@
 <section class="w-full h-full">
   <div class="pr-2">
     <!-- Creating post -->
-    <app-create-post
-      [currentUser]="currentUser()"
+      <app-create-post
+      [currentUser]="curretnUser"
+      [hubId]="hubId()"
       (addPost)="addPost($event)"
     ></app-create-post>
 
     <div class="flex flex-col w-full">
+      @if(posts().length > 0) {
       <!-- Display posts after loading -->
       <div class="flex flex-col gap-2 w-full">
         <!-- Iterate over each post -->
@@ -110,14 +112,11 @@
         </div>
         }
       </div>
-
-      <!-- Display if there are no posts -->
-      <div
-        *ngIf="!loading && (!posts || posts.length === 0)"
-        class="text-center animate-fade-in text-gray-500 my-4"
-      >
+      } @else {
+      <div class="text-center animate-fade-in text-gray-500 my-4">
         No posts available.
       </div>
+      }
     </div>
   </div>
 </section>

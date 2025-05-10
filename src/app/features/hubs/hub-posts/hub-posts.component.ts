@@ -1,55 +1,46 @@
-import {
-  AfterViewInit,
-  Component,
-  effect,
-  inject,
-  input,
-  OnInit,
-  signal,
-} from '@angular/core';
-import { Post } from '../../models/post.interface';
-import { PostService } from '../../../../shared/services/post.service';
-import { LikeService } from '../../../../shared/services/like.service';
-import { Router } from '@angular/router';
-import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
-import { ScrollService } from '../../../../shared/services/scroll.service';
-import { PostDetailStore } from '../../../post-detail/stores/post-detail/post-detail.store';
+import { Component, effect, inject, input, signal } from '@angular/core';
+import { PostService } from '../../../shared/services/post.service';
 import { firstValueFrom } from 'rxjs';
+import { Post } from '../../home/models/post.interface';
+import { PostDetailStore } from '../../post-detail/stores/post-detail/post-detail.store';
+import { LikeService } from '../../../shared/services/like.service';
+import { ScrollService } from '../../../shared/services/scroll.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { ResponseModel } from '../../../shared/models/interfaces/response.model';
 
 @Component({
-  selector: 'app-posts',
-  templateUrl: './posts.component.html',
-  standalone: false,
+  selector: 'app-hub-posts',
+  templateUrl: './hub-posts.component.html',
+  styleUrl: './hub-posts.component.css',
   providers: [PostDetailStore]
 })
-export class PostsComponent implements OnInit {
-  ngAfterViewInit(): void {
-    if (!this.postService.paginatedResult()) {
-      this.loadPosts();
-    }
-  }
+export class HubPostsComponent {
   // Services
   private readonly postService = inject(PostService);
   private readonly likeService = inject(LikeService);
   private readonly router = inject(Router);
   private readonly scrollService = inject(ScrollService);
+  private readonly authService = inject(AuthService);
+  
 
   //Stores
-  posrDetailStore = inject(PostDetailStore); //TODO: write a store for the auth and dont use the post detail store here
+  //posrDetailStore = inject(PostDetailStore); //TODO: write a store for the auth and dont use the post detail store here
 
   // Inputs
-  currentUser = input<ResponseModel>();
+  curretnUser: ResponseModel | undefined = undefined;
+  hubId = input.required<string>();//
 
   // States
-  posts = signal<Post[]>([]);
-  loading = signal<boolean>(false);
+  posts = signal<Post[]>([]); //
+  loading = signal<boolean>(false); //
   newPost = signal<Post | undefined>(undefined);
-  pageNumber = 1;
-  pageSize = 10;
+  pageNumber = 1; //
+  pageSize = 10; //
   totalPages = 1; // default until first load
 
-  hasMorePosts = true;
-  lastScrollTop: number = 0;
+  hasMorePosts = true; //
+  //lastScrollTop: number = 0;
 
   myEffect = effect(
     () => {
@@ -63,6 +54,8 @@ export class PostsComponent implements OnInit {
 
   // Lifecycle hooks
   ngOnInit(): void {
+    this.curretnUser = this.authService.currentUser();
+    
     this.loadPosts();
 
 
@@ -75,6 +68,12 @@ export class PostsComponent implements OnInit {
       }
     });
   }
+  
+  ngAfterViewInit(): void {
+    if (!this.postService.paginatedHubResult()) {
+      this.loadPosts();
+    }
+  }
 
   //Methods
   async loadPosts() {
@@ -84,14 +83,14 @@ export class PostsComponent implements OnInit {
 
     this.loading.set(true);
 
-    const currentUserId = this.posrDetailStore.getCurrentUserId();
+    const currentUserId = this.authService.currentUser()?.user.id;
 
     if (currentUserId) {
-      await firstValueFrom(this.postService.getPostsWithLikes(this.pageNumber, this.pageSize));
+      await firstValueFrom(this.postService.getHubPostsWithLikes(this.pageNumber, this.pageSize, this.hubId()!.toString()));
     } else {
-      await firstValueFrom(this.postService.getPosts(this.pageNumber, this.pageSize));
+      await firstValueFrom(this.postService.getHubPosts(this.pageNumber, this.pageSize, this.hubId()!.toString()));
     }
-    const paginatedResult = this.postService.paginatedResult();
+    const paginatedResult = this.postService.paginatedHubResult();
     this.totalPages = Number(paginatedResult?.pagination?.totalPages ?? 1);
 
     if (!paginatedResult || !paginatedResult.items) return;
@@ -103,7 +102,6 @@ export class PostsComponent implements OnInit {
     this.posts.update((posts) => [...posts, ...paginatedResult.items!]);
     this.loading.set(false);
   }
-
 
   toggleLike(post: Post): void {
     this.likeService.toggleLike(post.id).subscribe(() => {

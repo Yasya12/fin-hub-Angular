@@ -4,10 +4,10 @@
     <div>Crete Hub</div>
   </div>
   <div
-    *ngFor="let category of categories"
+    *ngFor="let hub of hubs()"
     class="flex items-center gap-4 mb-3 cursor-pointer break-words whitespace-normal hover:bg-[#f0f0f0] px-2 p-2"
   >
     <img [src]="'/assets/images/hubs.png'" alt="Hab Img" class="size-6" />
-    <div>{{ category }}</div>
+    <div>{{ hub.name }}</div>
   </div>
 </div>

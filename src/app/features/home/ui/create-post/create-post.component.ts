@@ -2,7 +2,7 @@ import { Component, EventEmitter, inject, input, Output } from '@angular/core';
 import { CreatePost } from '../../models/create-post';
 import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
-import { Post } from '../../../../core/models/interfaces/post/post.interface';
+import { Post } from '../../models/post.interface';
 import { ToastrService } from 'ngx-toastr';
 import { AuthStore } from '../../../../core/stores/auth-store';
 
@@ -22,6 +22,7 @@ export class CreatePostComponent {
 
   // Inputs
   currentUser = input<ResponseModel>();
+  hubId = input<string>();
 
   // States
   isModalOpen = false;
@@ -58,6 +59,11 @@ export class CreatePostComponent {
 
     formData.append('UserEmail', this.currentUser()?.user.email!);
     formData.append('Content', this.content);
+    const hubIdValue = this.hubId?.();
+
+  if (hubIdValue) {
+    formData.append('HubId', hubIdValue.toString());
+  }
 
     // Convert Base64 images to File and append them
     images.forEach((base64Image, index) => {
@@ -114,6 +120,7 @@ export class CreatePostComponent {
       commentsCount: 0,
       isLiked: false,
       images: createPost.images,
+      hubId: this.hubId ? this.hubId.toString() : undefined
     };
 
     return transformed;

@@ -9,4 +9,5 @@ export interface Post {
     commentsCount: number;
     isLiked?: boolean; 
     images?: string[];
+    hubId?: string;
   }

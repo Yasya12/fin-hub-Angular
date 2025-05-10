@@ -1,0 +1,33 @@
+<div *ngIf="hub() as hub">
+  <!-- Background Section -->
+  <div
+    class="relative w-full h-96 bg-cover bg-center flex items-end"
+    [style.backgroundImage]="
+      'url(' + (hub.backgroundPhotoUrl || '/assets/images/hero-back.jpg') + ')'
+    "
+  >
+    <!-- Dark overlay for readability -->
+    <div class="absolute inset-0 bg-black opacity-50"></div>
+
+    <!-- Hub Info -->
+    <div class="relative z-10 w-full">
+      <div class="max-w-3xl mx-auto px-6 py-8">
+        <img
+          [src]="hub.mainPhotoUrl || '/assets/images/1.jpg'"
+          alt="Hub Logo"
+          class="size-24 rounded-2xl border-2 border-white shadow-lg"
+        />
+        <div class="pt-2">
+          <h1 class="text-3xl font-bold text-white">{{ hub.name }}</h1>
+          <p class="text-white mt-1">{{ hub.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Posts Section -->
+  <div class="px-6 max-w-3xl mx-auto mt-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-4">Hub Posts</h2>
+    <app-hub-posts [hubId]="hub!.id"></app-hub-posts>
+  </div>
+</div>

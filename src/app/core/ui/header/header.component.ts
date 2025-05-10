@@ -62,7 +62,7 @@ export class HeaderComponent implements OnInit {
       key: 'hubs',
       icon: 'hubs_icon',
       chosenIcon: 'chosen_hubs_icon',
-      route: '/under-development',
+      route: '/hubs',
     },
     {
       key: 'notifications',

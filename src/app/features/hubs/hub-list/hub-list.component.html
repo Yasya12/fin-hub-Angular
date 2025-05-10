@@ -1,0 +1,75 @@
+<div class="p-6 text-gray-900 flex justify-center min-h-screen">
+  <div class="">
+    <!-- Header -->
+    <div class="flex justify-start items-start mb-6 bg-[#f0f0f0] border p-4">
+      <div>
+        <h2 class="text-2xl font-bold">Welcome to Hubs!</h2>
+        <p class="text-sm text-gray-700">
+          Follow Hubs to explore your interests on FinHub.
+        </p>
+        <div class="flex space-x-3 mt-3">
+          <button
+            class="px-4 py-2 border border-green-600 text-green-700 rounded-full transition duration-300 ease-in-out hover:bg-green-600 hover:text-white"
+          >
+            + Create a Hub
+          </button>
+          @if(hubs().length > 0) {
+          <button
+            class="px-4 py-2 border border-green-600 text-green-700 rounded-full transition duration-300 ease-in-out hover:bg-green-600 hover:text-white"
+          >
+            + Discover Hub
+          </button>
+          }
+        </div>
+      </div>
+    </div>
+    @if(hubs().length > 0) {
+    <!-- Discover Hubs -->
+    <div>
+      <h3 class="text-xl font-semibold mb-4">Discover Hubs</h3>
+      <div class="flex flex-wrap gap-4 justify-between max-w-[880px]">
+        <ng-container *ngFor="let hub of hubs()">
+          <div
+            class="bg-[#f0f0f0] rounded-lg overflow-hidden shadow hover:shadow-lg transition w-52"
+            (click)="hub && navigateToHub(hub.id)"
+          >
+            <div class="relative">
+              <img
+                [src]="hub.backgroundPhotoUrl || '/assets/images/hero-back.jpg'"
+                alt="{{ hub.name }}"
+                class="w-full h-20 object-cover"
+              />
+              <div class="absolute inset-x-0 top-[53px] flex justify-center">
+                <img
+                  [src]="hub.mainPhotoUrl || '/assets/images/1.jpg'"
+                  alt="{{ hub.name }}"
+                  class="w-12 h-12 rounded-lg border-2 border-black"
+                />
+              </div>
+            </div>
+            <div
+              class="p-8 pb-16 px-8 flex flex-col justify-center items-center text-center"
+            >
+              <div>
+                <h4 class="font-bold text-gray-900 text-sm mb-1">
+                  {{ hub.name }}
+                </h4>
+              </div>
+              <div class="text-xs text-gray-600 line-clamp-3">
+                {{ hub.description }}
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    } @else {
+    <div class="flex flex-col items-center pt-32">
+      <h1>🚧 No Hubs Yet 🚧</h1>
+      <p>Be the first one to create!</p>
+    </div>
+
+    }
+  </div>
+</div>

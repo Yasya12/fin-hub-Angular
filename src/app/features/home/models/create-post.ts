@@ -3,4 +3,5 @@ export interface CreatePost {
   userEmail: string;
   content: string;
   images?: string[];
+  hubId?: string
 }

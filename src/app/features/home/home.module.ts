@@ -12,6 +12,7 @@ import { PostEditorComponent } from './ui/post-editor/post-editor.component';
 import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
 import { SideBarComponent } from '../../shared/ui/side-bar/side-bar.component';
 import { ChartsViewComponent } from '../../shared/ui/charts-view/charts-view.component';
+import { FormattedDatePipe } from '../../shared/pipes/FormattedDatePipe';
 
 @NgModule({
   declarations: [
@@ -29,9 +30,10 @@ import { ChartsViewComponent } from '../../shared/ui/charts-view/charts-view.com
     ReactiveFormsModule,
     QuillModule.forRoot(),
     TimeAgoPipe,
+    FormattedDatePipe,
     SideBarComponent,
     ChartsViewComponent
   ],
-  exports: [PostEditorComponent]
+  exports: [PostEditorComponent, CreatePostComponent]
 })
 export class HomeModule { }
