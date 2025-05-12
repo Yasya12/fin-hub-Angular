@@ -7,6 +7,8 @@ import { HubPostsComponent } from './hub-posts/hub-posts.component';
 import { FormattedDatePipe } from '../../shared/pipes/FormattedDatePipe';
 import { CreatePostComponent } from '../home/ui/create-post/create-post.component';
 import { HomeModule } from '../home/home.module';
+import { HubPeopleComponent } from './hub-people/hub-people.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -14,13 +16,15 @@ import { HomeModule } from '../home/home.module';
   declarations: [
     HubListComponent,
     HubDetailComponent,
-    HubPostsComponent
+    HubPostsComponent,
+    HubPeopleComponent
   ],
   imports: [
     CommonModule,
     HubsRoutingModule,
     FormattedDatePipe,
-    HomeModule
+    HomeModule,
+    FormsModule
   ]
 })
 export class HubsModule { }

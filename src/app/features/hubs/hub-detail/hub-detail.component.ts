@@ -2,6 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { Hub } from '../models/hub.interface';
 import { ActivatedRoute } from '@angular/router';
 import { HubService } from '../services/hub.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { User } from '../../../core/models/interfaces/user/user.interface';
 
 @Component({
   selector: 'app-hub-detail',
@@ -12,20 +14,35 @@ export class HubDetailComponent implements OnInit {
   //Services
   private hubService = inject(HubService);
   private readonly route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
 
   //States
   hub = signal<Hub | undefined>(undefined);
+  hubId: string | null = null;
+  selectedTab: string = 'posts';
+  userCanWritePost: boolean = false;
+  currentUser: User | undefined
 
   //hooks
   ngOnInit(): void {
+    this.currentUser = this.authService.currentUser()?.user;
+    
+    this.route.queryParams.subscribe(params => {
+      const tab = params['tab'];
+      if (tab) {
+        this.selectTab(tab);
+      }
+    });
+
     this.loadHubId();
   }
 
   //methods
   loadHubId() {
-    const hubId = this.route.snapshot.paramMap.get('id');
-    if (hubId) {
-      this.loadHub(hubId);
+    this.hubId = this.route.snapshot.paramMap.get('id');
+    if (this.hubId) {
+      this.loadHub(this.hubId);
+      this.checkIfUserCanWritePost(this.hubId);
     }
   }
 
@@ -33,5 +50,15 @@ export class HubDetailComponent implements OnInit {
     this.hubService.getHubById(hubId).subscribe((hub) => {
       this.hub.set(hub);
     });
+  }
+
+  checkIfUserCanWritePost(hubId: string) {
+    this.hubService.checkIfUserCanWritePost(hubId).subscribe((result) => {
+      this.userCanWritePost = result;
+    });
+  }
+
+  selectTab(tab: string) {
+    this.selectedTab = tab;
   }
 }

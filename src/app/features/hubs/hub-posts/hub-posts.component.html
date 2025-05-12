@@ -1,11 +1,14 @@
 <section class="w-full h-full">
+  <h2 class="text-xl font-bold my-4">Hub Posts</h2>
   <div class="pr-2">
+    @if(userCanWritePost()) {
     <!-- Creating post -->
-      <app-create-post
+    <app-create-post
       [currentUser]="curretnUser"
       [hubId]="hubId()"
       (addPost)="addPost($event)"
     ></app-create-post>
+    }
 
     <div class="flex flex-col w-full">
       @if(posts().length > 0) {

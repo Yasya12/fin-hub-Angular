@@ -1,0 +1,92 @@
+<div class="flex justify-center items-center">
+  <div class="w-full max-w-3xl p-4">
+    <h2 class="text-xl font-bold mb-4">People</h2>
+    <div
+      class="bg-green-600 text-center p-2 rounded mb-4"
+      (click)="openModal()"
+    >
+      <div class="text-white">Want to be a contributor? Apply here</div>
+    </div>
+
+    @for (role of groupedMembers.keys(); track $index) {
+    <div class="mb-4 bg-[#f0f0f0] p-4">
+      <h3 class="text-lg font-semibold">{{ role }}</h3>
+
+      @for (user of groupedMembers.get(role); track $index) {
+      <hr class="my-4 border-gray-400" />
+      <div class="mt-2 rounded-lg flex items-center">
+        <img
+          [src]=" user.profilePictureUrl || 
+           '/assets/images/Sample_User_Icon.png'
+          "
+          alt="Avatar"
+          class="w-12 h-12 rounded-full mr-4"
+        />
+        <div>
+          <span class="font-semibold">{{ user.username }}</span>
+          <span class="text-gray-400">, {{ user.bio ? user.bio : user.description }}</span>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  *ngIf="isModalOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white rounded-md p-6 w-[32rem]"
+    (click)="stopPropagation($event)"
+  >
+    <h3 class="text-xl font-bold mb-4">Request to become a contributor</h3>
+    
+    <!-- Trustworthiness Text Area -->
+    <p class="mb-2">Why should people trust you?</p>
+    <textarea
+      class="w-full h-20 p-2 border rounded mb-1"
+      placeholder="Provide a brief reason (around 20 words)..."
+      [(ngModel)]="trustReason"
+      (input)="updateWordCount('trust')"
+      maxlength="110"
+    ></textarea>
+    <div class="text-sm text-gray-500 mb-4">
+      {{ trustWordCount }} words
+    </div>
+
+    <!-- Contribution Reason Text Area -->
+    <p class="mb-2">Why do you want to become a member?</p>
+    <textarea
+      class="w-full h-32 p-2 border rounded mb-1"
+      placeholder="Write something (around 500 words)..."
+      [(ngModel)]="memberReason"
+      (input)="updateWordCount('contribution')"
+      maxlength="2500"
+    ></textarea>
+    <div class="text-sm text-gray-500 mb-4">
+      {{ contributionWordCount }} words
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end">
+      <button
+        class="mr-2 px-4 py-2 rounded text-gray-600"
+        (click)="closeModal()"
+      >
+        Cancel
+      </button>
+      <button
+        class="px-4 py-2 bg-blue-600 text-white rounded"
+        (click)="submitRequest()"
+        [disabled]="trustWordCount > 30 || contributionWordCount > 500"
+      >
+        Submit Request
+      </button>
+    </div>
+  </div>
+</div>
+

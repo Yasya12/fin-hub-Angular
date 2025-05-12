@@ -31,7 +31,8 @@
         <ng-container *ngFor="let hub of hubs()">
           <div
             class="bg-[#f0f0f0] rounded-lg overflow-hidden shadow hover:shadow-lg transition w-52"
-            (click)="hub && navigateToHub(hub.id)"
+            [routerLink]="['/hubs', hub.id]"
+            [queryParams]="{ tab: 'posts' }"
           >
             <div class="relative">
               <img

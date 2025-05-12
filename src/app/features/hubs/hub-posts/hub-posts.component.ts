@@ -30,6 +30,7 @@ export class HubPostsComponent {
   // Inputs
   curretnUser: ResponseModel | undefined = undefined;
   hubId = input.required<string>();//
+  userCanWritePost = input.required<boolean>();
 
   // States
   posts = signal<Post[]>([]); //
@@ -54,6 +55,8 @@ export class HubPostsComponent {
 
   // Lifecycle hooks
   ngOnInit(): void {
+
+    console.log(this.userCanWritePost())
     this.curretnUser = this.authService.currentUser();
     
     this.loadPosts();
