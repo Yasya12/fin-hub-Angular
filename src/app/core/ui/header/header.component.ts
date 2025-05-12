@@ -68,7 +68,7 @@ export class HeaderComponent implements OnInit {
       key: 'notifications',
       icon: 'notifications_icon',
       chosenIcon: 'chosen_notifications_icon',
-      route: '/under-development',
+      route: '/notifications',
     },
   ];
   @ViewChild('dropdownMenu') dropdownMenu: ElementRef | undefined;

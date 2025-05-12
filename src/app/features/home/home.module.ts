@@ -13,6 +13,7 @@ import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
 import { SideBarComponent } from '../../shared/ui/side-bar/side-bar.component';
 import { ChartsViewComponent } from '../../shared/ui/charts-view/charts-view.component';
 import { FormattedDatePipe } from '../../shared/pipes/FormattedDatePipe';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,9 @@ import { FormattedDatePipe } from '../../shared/pipes/FormattedDatePipe';
     TimeAgoPipe,
     FormattedDatePipe,
     SideBarComponent,
-    ChartsViewComponent
+    ChartsViewComponent,
+
+    TooltipModule.forRoot()
   ],
   exports: [PostEditorComponent, CreatePostComponent]
 })

@@ -34,6 +34,9 @@ export const routes: Routes = [
   {
     path: 'hubs',
     loadChildren: () => import('./features/hubs/hubs.module').then(m => m.HubsModule)
+  },{
+    path: 'notifications',
+    loadChildren: () => import('./features/notifications/notifications.module').then(m => m.NotificationsModule)
   },
   {
     path: '**',

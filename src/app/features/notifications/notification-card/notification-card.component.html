@@ -1,0 +1,78 @@
+<div
+  class="bg-gray-100 p-4 rounded-lg shadow mb-4 cursor-pointer"
+  [ngClass]="{
+    'bg-gray-200': !notification().isRead,
+    'bg-white': notification().isRead
+  }"
+  (click)="navigateTo(notification())"
+>
+  <div class="flex items-start space-x-4">
+    <img
+      [src]="
+        notification().triggeredUserPhotoUrl ||
+        '/assets/images/Sample_User_Icon.png'
+      "
+      alt="{{ notification().username }}"
+      class="size-12 rounded-full"
+    />
+    <div class="flex-1">
+      <div class="flex justify-between items-center">
+        <p class="text-gray-700 font-semibold">
+          {{ notification().username }}
+        </p>
+        <span
+          class="text-xs text-white py-1 px-2 rounded-full"
+          [ngClass]="{
+            'bg-gray-500': notification().type === 'like',
+            'bg-green-500': notification().type === 'follow',
+            'bg-yellow-500': notification().type === 'request'
+          }"
+        >
+          {{ notification().type | titlecase }}
+        </span>
+      </div>
+      <p class="text-sm text-gray-400">
+        {{ notification().createdAt | timeAgo }}
+      </p>
+      <p class="mt-1">{{ notification().content }}</p>
+    </div>
+  </div>
+
+  <!-- Delete and Approve/Deny buttons -->
+  <div class="flex justify-between items-center mt-4 px-1">
+    <!-- Approve/Deny buttons for request type -->
+    <div *ngIf="notification().type === 'request'" class="flex space-x-2">
+      <button
+        *ngIf="notification().requestStatus == 'Pending'"
+        class="text-white border bg-green-500 border-gray-300 rounded px-3 py-1 hover:bg-green-600 transition"
+        (click)="onApprove(notification().requestId, $event)"
+      >
+        Approve
+      </button>
+      <button
+        *ngIf="notification().requestStatus == 'Pending'"
+        class="text-white border bg-yellow-500 border-gray-300 rounded px-3 py-1 hover:bg-yellow-600 transition"
+        (click)="onDeny(notification().requestId, $event)"
+      >
+        Deny
+      </button>
+      <!-- Display status after approval/denial -->
+      <p
+        *ngIf="notification().requestStatus !== 'Pending'"
+        class="text-gray-600 font-semibold"
+      >
+        {{ notification().requestStatus }}
+      </p>
+    </div>
+
+    <div></div>
+
+    <!-- Delete button -->
+    <button
+      class="w-8 h-8 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full hover:bg-gray-400 transition"
+      (click)="onDelete(notification().id, $event)"
+    >
+      🗑️
+    </button>
+  </div>
+</div>

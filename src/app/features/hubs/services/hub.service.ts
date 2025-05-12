@@ -39,10 +39,17 @@ export class HubService {
     }
 
     requestJoinHub(request: CreateHubJoinRequestDto): Observable<{ message: string }> {
-    const headers = new HttpHeaders()
-        .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
 
-    return this.http.post<{ message: string }>(`${this.baseUrl}/hub/request-join`, request, { headers });
-}
+        return this.http.post<{ message: string }>(`${this.baseUrl}/hub/request-join`, request, { headers });
+    }
+
+    createhub(formData: FormData): Observable<Hub>  {
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+
+        return this.http.post<Hub>(`${this.baseUrl}/hub/create`, formData, { headers });
+    }
 
 }

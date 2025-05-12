@@ -11,20 +11,23 @@
     @for (role of groupedMembers.keys(); track $index) {
     <div class="mb-4 bg-[#f0f0f0] p-4">
       <h3 class="text-lg font-semibold">{{ role }}</h3>
+      <hr class="my-4 border-gray-400" />
 
       @for (user of groupedMembers.get(role); track $index) {
-      <hr class="my-4 border-gray-400" />
+
       <div class="mt-2 rounded-lg flex items-center">
         <img
-          [src]=" user.profilePictureUrl || 
-           '/assets/images/Sample_User_Icon.png'
+          [src]="
+            user.profilePictureUrl || '/assets/images/Sample_User_Icon.png'
           "
           alt="Avatar"
           class="w-12 h-12 rounded-full mr-4"
         />
         <div>
           <span class="font-semibold">{{ user.username }}</span>
-          <span class="text-gray-400">, {{ user.bio ? user.bio : user.description }}</span>
+          <span class="text-gray-400"
+            >, {{ user.bio ? user.bio : user.description }}</span
+          >
         </div>
       </div>
       }
@@ -44,7 +47,7 @@
     (click)="stopPropagation($event)"
   >
     <h3 class="text-xl font-bold mb-4">Request to become a contributor</h3>
-    
+
     <!-- Trustworthiness Text Area -->
     <p class="mb-2">Why should people trust you?</p>
     <textarea
@@ -54,9 +57,7 @@
       (input)="updateWordCount('trust')"
       maxlength="110"
     ></textarea>
-    <div class="text-sm text-gray-500 mb-4">
-      {{ trustWordCount }} words
-    </div>
+    <div class="text-sm text-gray-500 mb-4">{{ trustWordCount }} words</div>
 
     <!-- Contribution Reason Text Area -->
     <p class="mb-2">Why do you want to become a member?</p>
@@ -89,4 +90,3 @@
     </div>
   </div>
 </div>
-

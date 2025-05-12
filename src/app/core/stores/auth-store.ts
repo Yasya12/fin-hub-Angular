@@ -43,6 +43,13 @@ export const AuthStore = signalStore(
 
             patchState(store, { token: authService.currentUser()?.token })
         },
+        getCurrentUser(): User | undefined {
+            if (!this.checkUserAuthentification()) {
+                return;
+            }
+
+            return authService.currentUser()?.user;
+        },
     })),
     withHooks({
         onInit(store) {

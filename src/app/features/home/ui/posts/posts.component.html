@@ -23,21 +23,29 @@
               "
               alt="Author Avatar"
               class="w-10 h-10 rounded-full mr-3"
+              [tooltip]="tooltipProfile"
+              (click)="goToUserProfile($event, post.userName)"
             />
             <div>
-              <h4 class="font-bold text-lg">{{ post.userName }}</h4>
+              <h4
+                class="font-bold text-lg"
+                [tooltip]="tooltipProfile"
+                (click)="goToUserProfile($event, post.userName)"
+              >
+                {{ post.userName }}
+              </h4>
               <p class="text-sm text-gray-600">
                 {{ post.createdAt | formattedDate }}
               </p>
             </div>
           </div>
 
-          @if(post.categoryNames.length > 0){
+          @if(post.hubName){
           <div class="flex flex-wrap gap-2 mb-2">
             <span
               class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full"
             >
-              {{ post.categoryNames }}
+              {{ post.hubName }}
             </span>
           </div>
           }

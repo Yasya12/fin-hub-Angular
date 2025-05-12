@@ -6,6 +6,7 @@ import {
   input,
   OnInit,
   signal,
+  TemplateRef,
 } from '@angular/core';
 import { Post } from '../../models/post.interface';
 import { PostService } from '../../../../shared/services/post.service';
@@ -19,10 +20,12 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
+  styleUrl: './posts.component.css',
   standalone: false,
   providers: [PostDetailStore]
 })
 export class PostsComponent implements OnInit {
+  View: string | TemplateRef<unknown> | undefined;
   ngAfterViewInit(): void {
     if (!this.postService.paginatedResult()) {
       this.loadPosts();
@@ -39,6 +42,9 @@ export class PostsComponent implements OnInit {
 
   // Inputs
   currentUser = input<ResponseModel>();
+
+  tooltipProfile: string = 'View Profile';
+  tooltipPost: string = 'Go to Post';
 
   // States
   posts = signal<Post[]>([]);
@@ -77,6 +83,12 @@ export class PostsComponent implements OnInit {
   }
 
   //Methods
+  goToUserProfile(event: Event, userName: string): void {
+    // Зупиняємо спливання події на контейнер
+    event.stopPropagation();
+    this.router.navigate(['/member', userName]);
+  }
+
   async loadPosts() {
     if (!this.hasMorePosts || this.loading()) {
       return;
