@@ -62,16 +62,50 @@
       >
         Posts
       </button>
+
+      @if(isAdmin) {
+      <button
+        (click)="selectTab('requests')"
+        [ngClass]="{
+          'border-b-2 border-green-600 text-green-600 font-medium':
+            selectedTab === 'requests',
+          'text-gray-600 hover:text-green-600': selectedTab !== 'requests'
+        }"
+        class="px-4 py-2 transition duration-150"
+      >
+        Requests
+      </button>
+
+      <button
+        (click)="selectTab('edit')"
+        [ngClass]="{
+          'border-b-2 border-green-600 text-green-600 font-medium':
+            selectedTab === 'edit',
+          'text-gray-600 hover:text-green-600': selectedTab !== 'edit'
+        }"
+        class="px-4 py-2 transition duration-150"
+      >
+        Edit Hub
+      </button>
+
+      }
     </div>
 
     @if (selectedTab === 'about') {
-    <app-hub-people [hubId]="hub!.id" [currentUser]="currentUser"></app-hub-people>
+    <app-hub-people
+      [hubId]="hub!.id"
+      [currentUser]="currentUser"
+    ></app-hub-people>
     } @else if (selectedTab === 'posts') {
-
     <app-hub-posts
       [hubId]="hub!.id"
       [userCanWritePost]="userCanWritePost"
     ></app-hub-posts>
+    } @else if (selectedTab === 'edit') {
+    <app-hub-edit [hub]="hub"></app-hub-edit>
     }
   </div>
+  @if (selectedTab === 'requests') {
+  <app-hub-join-request [hubId]="hub.id"></app-hub-join-request>
+  }
 </div>

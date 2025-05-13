@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { AuthStore } from '../../stores/auth-store';
 import { ToastrService } from 'ngx-toastr';
+import { NotificationService } from '../../../features/notifications/services/notification.service';
 
 @Component({
   selector: 'app-header',
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit {
 
   //Services
   toastr = inject(ToastrService)
+  notificationService = inject(NotificationService)
 
   //States
   isDropdownOpen = false;
@@ -39,6 +41,8 @@ export class HeaderComponent implements OnInit {
       ? localStorage.getItem('selectedTab') || 'home'
       : 'home'
   );
+  hasUnreadNotifications = signal<boolean>(false);
+
   menuItems = [
     {
       key: 'home',
@@ -86,18 +90,28 @@ export class HeaderComponent implements OnInit {
     });
 
     effect(() => {
+      const unreadCount = this.notificationService.unreadCount();
+      this.hasUnreadNotifications.set(unreadCount > 0);
+    }, { allowSignalWrites: true });
+
+
+
+    effect(() => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('selectedTab', this.selectedTab());
       }
     });
 
     effect(() => {
-      this.authStore.setCurrentUserState(); 
+      this.authStore.setCurrentUserState();
     });
   }
+  
 
   ngOnInit(): void {
     this.authService.setCurerntUser(); //so when i refresh i will see the loged user, because without it i wont\
+
+    this.notificationService.getAllNotificationsForUser();
 
   }
 

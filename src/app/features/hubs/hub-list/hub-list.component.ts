@@ -108,17 +108,52 @@ export class HubListComponent implements OnInit {
     this.errors = { name: '', description: '' };
   }
 
-  onMainPhotoChange(event: Event) {
+  // onMainPhotoChange(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files) {
+  //     this.mainPhoto = input.files[0];
+  //   }
+  // }
+
+  // onBackgroundPhotoChange(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files) {
+  //     this.backgroundPhoto = input.files[0];
+  //   }
+  // }
+
+  mainPhotoPreview?: string;
+
+  onMainPhotoSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       this.mainPhoto = input.files[0];
     }
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.mainPhotoPreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
-  onBackgroundPhotoChange(event: Event) {
+  backgroundPhotoPreview?: string;
+
+  onBackgroundPhotoSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       this.backgroundPhoto = input.files[0];
+    }
+
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.backgroundPhotoPreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
     }
   }
 

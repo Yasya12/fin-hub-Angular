@@ -22,11 +22,12 @@ export class HubDetailComponent implements OnInit {
   selectedTab: string = 'posts';
   userCanWritePost: boolean = false;
   currentUser: User | undefined
+  isAdmin: boolean = false;
 
   //hooks
   ngOnInit(): void {
     this.currentUser = this.authService.currentUser()?.user;
-    
+
     this.route.queryParams.subscribe(params => {
       const tab = params['tab'];
       if (tab) {
@@ -37,12 +38,13 @@ export class HubDetailComponent implements OnInit {
     this.loadHubId();
   }
 
-  //methods
+
   loadHubId() {
     this.hubId = this.route.snapshot.paramMap.get('id');
     if (this.hubId) {
       this.loadHub(this.hubId);
       this.checkIfUserCanWritePost(this.hubId);
+      this.isUserAdmin(this.hubId);
     }
   }
 
@@ -55,6 +57,12 @@ export class HubDetailComponent implements OnInit {
   checkIfUserCanWritePost(hubId: string) {
     this.hubService.checkIfUserCanWritePost(hubId).subscribe((result) => {
       this.userCanWritePost = result;
+    });
+  }
+
+  isUserAdmin(hubId: string) {
+    this.hubService.isAdmin(hubId).subscribe((result) => {
+      this.isAdmin = result;
     });
   }
 

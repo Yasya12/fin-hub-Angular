@@ -76,7 +76,7 @@ export class NotificationListComponent implements OnInit {
   }
 
   onMarkAsRead(notificationId: string) {
-    this.notificationService.markNotificationRead(notificationId).subscribe();
+    this.notificationService.markNotificationRead(notificationId);
   }
 
   onDeleteNotification(notificationId: string) {

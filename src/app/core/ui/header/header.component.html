@@ -7,6 +7,7 @@
     <img src="/assets/images/logo-finhub.png" alt="logo FinHub" class="w-32" />
   </a>
 
+ <!-- Navigation Menu -->
   <div class="flex flex-row">
     <button
       *ngFor="let item of menuItems"
@@ -15,6 +16,7 @@
       [tooltip]="item.key"
       [placement]="'top'"
     >
+      <!-- Menu Icon -->
       <img
         [src]="
           '/assets/images/' +
@@ -24,7 +26,14 @@
         [alt]="item.key + ' Icon'"
         class="size-7 mb-1"
       />
-      <!-- Green underline -->
+
+      <!-- Notification Dot -->
+      <span *ngIf="item.key === 'notifications' && hasUnreadNotifications()" 
+      class="notification-dot custom-dot absolute top-0 right-0 bg-red-500 w-2 h-2 rounded-full">
+</span>
+
+
+      <!-- Green underline for active tab -->
       <div
         *ngIf="selectedTab() === item.key"
         class="absolute bottom-[-5px] w-6 h-1 bg-green-600 rounded-full"

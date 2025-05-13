@@ -1,0 +1,125 @@
+@if(requests.length === 0) {
+<div class="text-center animate-fade-in text-gray-500 my-4">
+  No requests.
+</div>
+} @else{
+
+<div class="flex justify-center">
+  <div class="w-full max-w-6xl">
+    <h2 class="text-xl font-bold my-4 text-center">Join Requests</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse bg-white shadow rounded-xl">
+        <thead class="bg-gray-100 font-semibold text-gray-800">
+          <tr>
+            <th class="p-2 border text-left">Username</th>
+            <th class="p-2 border text-left">Description</th>
+            <th class="p-2 border text-left">Content</th>
+            <th class="p-2 border text-left">Status</th>
+            <th class="p-2 border text-left">Date</th>
+            <th class="p-2 border text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let request of requests"
+            class="border-b hover:bg-gray-50"
+          >
+            <td class="p-2 border">{{ request.senderUsername }}</td>
+
+            <td class="p-2 border max-w-xs truncate">
+              <ng-container
+                *ngIf="request.description!.length > 30; else shortContent"
+              >
+                <span>{{ request.description | slice : 0 : 30 }}...</span>
+                <button
+                  (click)="openModal(request.description!.valueOf())"
+                  class="text-green-600 underline text-sm ml-1"
+                >
+                  View
+                </button>
+              </ng-container>
+              <ng-template #shortContent>
+                <span>{{ request.description || "N/A" }}</span>
+              </ng-template>
+            </td>
+
+            <td class="p-2 border max-w-xs truncate">
+              <ng-container
+                *ngIf="request.content!.length > 20; else shortContent"
+              >
+                <span>{{ request.content | slice : 0 : 20 }}...</span>
+                <button
+                  (click)="openModal(request.content)"
+                  class="text-green-600 underline text-sm ml-1"
+                >
+                  View
+                </button>
+              </ng-container>
+              <ng-template #shortContent>
+                <span>{{ request.content || "N/A" }}</span>
+              </ng-template>
+            </td>
+
+            <td class="p-2 border">
+              <span
+                class="px-2 py-1 text-xs font-medium rounded-full"
+                [ngClass]="{
+                  'bg-green-100 text-green-800': request.status === 'Approved',
+                  'bg-red-100 text-red-800': request.status === 'Denied',
+                  'bg-yellow-100 text-yellow-800': request.status === 'Pending'
+                }"
+              >
+                {{ request.status }}
+              </span>
+            </td>
+            <td class="p-2 border">
+              {{ request.requestedAt | formattedDate }}
+            </td>
+            <td class="p-2 border text-center">
+              <div class="flex justify-center space-x-2">
+                <button
+                  *ngIf="request.status === 'Pending'"
+                  class="flex items-center gap-1 text-white bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition"
+                  (click)="approveRequest(request)"
+                >
+                  Approve
+                </button>
+                <button
+                  *ngIf="request.status === 'Pending'"
+                  class="flex items-center gap-1 text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition"
+                  (click)="denyRequest(request)"
+                >
+                  Deny
+                </button>
+                <p *ngIf="request.status !== 'Pending'" class="text-gray-600">
+                  {{ request.status }}
+                </p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+}
+<div
+  *ngIf="showModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white p-6 rounded shadow max-w-lg w-full">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold">Full Content</h3>
+    </div>
+    <p class="text-gray-800 whitespace-pre-wrap">{{ modalContent?.trim() }}</p>
+    <div class="text-right mt-4">
+      <button
+        (click)="closeModal()"
+        class="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>

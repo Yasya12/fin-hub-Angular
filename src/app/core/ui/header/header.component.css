@@ -6,3 +6,28 @@
     margin-top: 12px !important;
     border-radius: 16px !important;  
   }
+
+  .header-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.header-nav li {
+  position: relative;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 0;
+  right: 0px;
+  background-color: red;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+
+.custom-dot {
+  transform: translateX(-6px); /* Змістити вліво на 4 пікселі */
+}
+

@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { computed, effect, inject, Injectable, signal } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "../../../../../environment";
 import { AuthService } from "../../../core/services/auth.service";
@@ -10,6 +10,21 @@ export class NotificationService {
     private http = inject(HttpClient);
     private authService = inject(AuthService);
     private baseUrl = environment.apiUrl;
+
+    // Сигнал для зберігання сповіщень
+    notifications = signal<NotificationDto[]>([]);
+    unreadCount = computed(() => this.notifications().filter(n => !n.isRead).length);
+
+    constructor() {
+        this.loadNotifications();
+    }
+
+    loadNotifications(): void {
+        this.authService.setCurerntUser();
+        this.getAllNotificationsForUser().subscribe((data) => {
+            this.notifications.set(data);
+        });
+    }
 
     getAllNotificationsForUser(): Observable<NotificationDto[]> {
         const headers = new HttpHeaders()
@@ -43,8 +58,15 @@ export class NotificationService {
             `${this.baseUrl}/notification/${notiId}/mark-read`,
             null,
             { headers }
-        );
+        ).subscribe(() => {
+            // Оновлюємо локальний список сповіщень
+            const updatedNotifications = this.notifications().map(noti =>
+                noti.id === notiId ? { ...noti, isRead: true } : noti
+            );
+            this.notifications.set(updatedNotifications);
+        });
     }
+
 
     deleteNotification(notiId: string) {
         const headers = new HttpHeaders()
@@ -54,21 +76,5 @@ export class NotificationService {
             `${this.baseUrl}/notification/${notiId}`,
             { headers }
         );
-    }
-
-
-    //its need to be in hub service
-    approveRequest(notificationId: string) {
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
-
-        return this.http.put(`${this.baseUrl}/hub/approve-request/${notificationId}`, {}, { headers });
-    }
-
-    denyRequest(notificationId: string) {
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
-
-        return this.http.put(`${this.baseUrl}/hub/deny-request/${notificationId}`, {}, { headers });
     }
 }

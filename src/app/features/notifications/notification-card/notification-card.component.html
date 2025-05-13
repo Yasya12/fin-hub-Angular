@@ -39,34 +39,7 @@
   </div>
 
   <!-- Delete and Approve/Deny buttons -->
-  <div class="flex justify-between items-center mt-4 px-1">
-    <!-- Approve/Deny buttons for request type -->
-    <div *ngIf="notification().type === 'request'" class="flex space-x-2">
-      <button
-        *ngIf="notification().requestStatus == 'Pending'"
-        class="text-white border bg-green-500 border-gray-300 rounded px-3 py-1 hover:bg-green-600 transition"
-        (click)="onApprove(notification().requestId, $event)"
-      >
-        Approve
-      </button>
-      <button
-        *ngIf="notification().requestStatus == 'Pending'"
-        class="text-white border bg-yellow-500 border-gray-300 rounded px-3 py-1 hover:bg-yellow-600 transition"
-        (click)="onDeny(notification().requestId, $event)"
-      >
-        Deny
-      </button>
-      <!-- Display status after approval/denial -->
-      <p
-        *ngIf="notification().requestStatus !== 'Pending'"
-        class="text-gray-600 font-semibold"
-      >
-        {{ notification().requestStatus }}
-      </p>
-    </div>
-
-    <div></div>
-
+  <div class="flex justify-end items-center mt-4 px-1">
     <!-- Delete button -->
     <button
       class="w-8 h-8 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full hover:bg-gray-400 transition"

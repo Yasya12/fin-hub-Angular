@@ -1,6 +1,7 @@
 <div class="flex justify-center items-center">
   <div class="w-full max-w-3xl p-4">
     <h2 class="text-xl font-bold mb-4">People</h2>
+
     <div
       class="bg-green-600 text-center p-2 rounded mb-4"
       (click)="openModal()"
@@ -8,31 +9,68 @@
       <div class="text-white">Want to be a contributor? Apply here</div>
     </div>
 
-    @for (role of groupedMembers.keys(); track $index) {
-    <div class="mb-4 bg-[#f0f0f0] p-4">
-      <h3 class="text-lg font-semibold">{{ role }}</h3>
+    <div
+      *ngFor="let group of groupedMembers; let i = index"
+      class="mb-4 bg-[#f0f0f0] p-4"
+    >
+      <h3 class="text-lg font-semibold">{{ group.role }}</h3>
       <hr class="my-4 border-gray-400" />
 
-      @for (user of groupedMembers.get(role); track $index) {
-
-      <div class="mt-2 rounded-lg flex items-center">
-        <img
-          [src]="
-            user.profilePictureUrl || '/assets/images/Sample_User_Icon.png'
-          "
-          alt="Avatar"
-          class="w-12 h-12 rounded-full mr-4"
-        />
-        <div>
-          <span class="font-semibold">{{ user.username }}</span>
-          <span class="text-gray-400"
-            >, {{ user.bio ? user.bio : user.description }}</span
-          >
+      <div
+        *ngFor="let member of group.members; let j = index"
+        class="mt-2 rounded-lg flex items-center justify-between"
+      >
+        <div class="flex items-center">
+          <img
+            [src]="
+              member.profilePictureUrl || '/assets/images/Sample_User_Icon.png'
+            "
+            alt="Avatar"
+            class="w-12 h-12 rounded-full mr-4"
+          />
+          <div>
+            <span class="font-semibold">{{ member.username }}</span>
+            <span class="text-gray-400"
+              >, {{ member.bio ? member.bio : member.description }}</span
+            >
+          </div>
         </div>
+
+        <!-- Іконка видалення для адміністраторів (крім адміністратора) -->
+        <button
+          *ngIf="member.role !== 'Admin'"
+          (click)="confirmDelete(member)"
+          class="text-red-600 hover:text-red-800 p-1"
+        >
+          🗑️
+        </button>
       </div>
-      }
     </div>
-    }
+  </div>
+
+  <!-- Модальне вікно підтвердження -->
+  <div
+    *ngIf="showConfirmModal"
+    class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50"
+  >
+    <div class="bg-white rounded-lg p-6 max-w-sm">
+      <h3 class="text-xl font-semibold mb-4">Confirm Deletion</h3>
+      <p>Are you sure you want to delete {{ userToDelete?.username }}?</p>
+      <div class="flex justify-end gap-2 mt-4">
+        <button
+          (click)="deleteUser()"
+          class="bg-red-600 text-white py-1 px-3 rounded"
+        >
+          Delete
+        </button>
+        <button
+          (click)="closeConfirmModal()"
+          class="bg-gray-300 text-gray-800 py-1 px-3 rounded"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 

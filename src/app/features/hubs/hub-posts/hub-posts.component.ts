@@ -22,10 +22,6 @@ export class HubPostsComponent {
   private readonly router = inject(Router);
   private readonly scrollService = inject(ScrollService);
   private readonly authService = inject(AuthService);
-  
-
-  //Stores
-  //posrDetailStore = inject(PostDetailStore); //TODO: write a store for the auth and dont use the post detail store here
 
   // Inputs
   curretnUser: ResponseModel | undefined = undefined;
@@ -33,15 +29,14 @@ export class HubPostsComponent {
   userCanWritePost = input.required<boolean>();
 
   // States
-  posts = signal<Post[]>([]); //
-  loading = signal<boolean>(false); //
+  posts = signal<Post[]>([]); 
+  loading = signal<boolean>(false); 
   newPost = signal<Post | undefined>(undefined);
-  pageNumber = 1; //
-  pageSize = 10; //
-  totalPages = 1; // default until first load
+  pageNumber = 1; 
+  pageSize = 10;
+  totalPages = 1;
 
-  hasMorePosts = true; //
-  //lastScrollTop: number = 0;
+  hasMorePosts = true;
 
   myEffect = effect(
     () => {
@@ -55,8 +50,6 @@ export class HubPostsComponent {
 
   // Lifecycle hooks
   ngOnInit(): void {
-
-    console.log(this.userCanWritePost())
     this.curretnUser = this.authService.currentUser();
     
     this.loadPosts();
