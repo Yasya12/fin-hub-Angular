@@ -4,6 +4,7 @@ import { CoreModule } from './core/core.module';
 import { AuthService } from './core/services/auth.service';
 import { ScrollService } from './shared/services/scroll.service';
 import { NgxSpinnerComponent } from 'ngx-spinner';
+import { NewsComponent } from './shared/ui/news/news.component';
 
 @Component({
   selector: 'app-root',

@@ -3,9 +3,9 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/comm
 import { Observable, tap } from 'rxjs';
 import { Post } from '../../features/home/models/post.interface';
 import { SinglePost } from '../../features/post-detail/models/interfaces/single-post.interface';
-import { environment } from '../../../environments/environment';
 import { PaginatedResult } from '../models/interfaces/pagination.model';
 import { AuthService } from '../../core/services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
