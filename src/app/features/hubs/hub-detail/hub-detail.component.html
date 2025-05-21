@@ -27,9 +27,14 @@
 
         <!-- Right: Follow Button (Aligned with Description) -->
         <button
-          class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition self-end"
+          [ngClass]="{
+            'text-red-50 bg-green-600 hover:bg-green-700 ': !isFollowing,
+            'bg-red-600 text-white hover:bg-red-700': isFollowing
+          }"
+          class="py-2 px-4 rounded-lg transition self-end"
+          (click)="toggleFollow(hub)"
         >
-          Follow Hub
+          {{ isFollowing ? "Unfollow" : "Follow" }}
         </button>
       </div>
     </div>

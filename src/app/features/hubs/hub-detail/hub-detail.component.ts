@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { HubService } from '../services/hub.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/interfaces/user/user.interface';
+import { FollowingService } from '../../followings/services/following.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-hub-detail',
@@ -15,6 +17,8 @@ export class HubDetailComponent implements OnInit {
   private hubService = inject(HubService);
   private readonly route = inject(ActivatedRoute);
   private authService = inject(AuthService);
+  followingService = inject(FollowingService);
+  toastr = inject(ToastrService);
 
   //States
   hub = signal<Hub | undefined>(undefined);
@@ -23,6 +27,8 @@ export class HubDetailComponent implements OnInit {
   userCanWritePost: boolean = false;
   currentUser: User | undefined
   isAdmin: boolean = false;
+
+  isFollowing = false;
 
   //hooks
   ngOnInit(): void {
@@ -36,6 +42,14 @@ export class HubDetailComponent implements OnInit {
     });
 
     this.loadHubId();
+    this.isFollowingHub();
+  }
+
+  isFollowingHub() {
+    if (this.hubId) {
+      this.followingService.isFollowingHub(this.hubId).subscribe((result) =>
+        this.isFollowing = result);
+    }
   }
 
 
@@ -68,5 +82,22 @@ export class HubDetailComponent implements OnInit {
 
   selectTab(tab: string) {
     this.selectedTab = tab;
+  }
+
+
+  toggleFollow(hub: Hub): void {
+    //this.authService.setCurerntUser();
+    this.isFollowing = this.isFollowing ? false : true;
+
+    if (this.isFollowing) {
+      this.followingService.followHub(hub.id).subscribe(() => {
+        this.toastr.success(`Now you are following ${hub.name}`);
+      })
+    } else {
+      this.followingService.unfollow(hub.id).subscribe(() => {
+        this.toastr.error(`You unfollowd ${hub.name}`)
+      })
+
+    }
   }
 }

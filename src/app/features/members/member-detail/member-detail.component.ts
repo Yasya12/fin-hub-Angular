@@ -4,6 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { MessageService } from '../../messages/services/message.service';
 import { Message } from '../../messages/models/message.model';
 import { firstValueFrom } from 'rxjs';
+import { Follow } from '../../followings/models/follow.interface';
+import { FollowingService } from '../../followings/services/following.service';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -13,7 +17,10 @@ import { firstValueFrom } from 'rxjs';
 export class MemberDetailComponent implements OnInit {
   //Services
   private messageService = inject(MessageService)
+  followingService = inject(FollowingService);
+   toastr = inject(ToastrService);
   private route = inject(ActivatedRoute);
+  authService = inject(AuthService)
 
   //States
   user: User = {} as User;
@@ -24,6 +31,7 @@ export class MemberDetailComponent implements OnInit {
   pageSize = 20;
   hasMoreMessages = true;
   totalPages = 1;
+  isFollowing = false;
 
   ngOnInit(): void {
     this.route.data.subscribe({
@@ -49,10 +57,10 @@ export class MemberDetailComponent implements OnInit {
   }
 
   onLoadMoreMessages() {
-    this.pageNumber++; 
-    this.loadMessages(); 
+    this.pageNumber++;
+    this.loadMessages();
   }
-  
+
   async loadMessages() {
     if (!this.hasMoreMessages) {
       return;
@@ -70,5 +78,21 @@ export class MemberDetailComponent implements OnInit {
     }
 
     this.newMessages = paginatedResult.items!;
+  }
+
+  toggleFollow(user: User): void {
+    //this.authService.setCurerntUser();
+    this.isFollowing = this.isFollowing ? false : true;
+
+    if (this.isFollowing) {
+      this.followingService.followUser(user.id).subscribe(() => {
+        this.toastr.success(`Now you are following ${user.username}`);
+      })
+    } else {
+      this.followingService.unfollow(user.id).subscribe(() => {
+        this.toastr.error(`You unfollowd ${user.username}`)
+      })
+
+    }
   }
 }

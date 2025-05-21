@@ -67,6 +67,42 @@ export class PostsComponent implements OnInit {
     { allowSignalWrites: true }
   );
 
+  //
+  showModal: boolean = false;
+  hoveredUser: string = '';
+  modalPosition = { top: 0, left: 0 };
+
+ showUserModal(userName: string, container: HTMLElement): void {
+  this.hoveredUser = userName;
+  this.showModal = true;
+
+  const rect = container.getBoundingClientRect();
+
+  this.modalPosition = {
+    top: rect.top + window.scrollY + rect.height + 5,
+    left: rect.left + window.scrollX,
+  };
+}
+
+
+  hideUserModal() {
+    this.showModal = false;
+    this.hoveredUser = '';
+  }
+
+  goToUserProfile(event: Event, userName: string): void {
+    // Зупиняємо спливання події на контейнер
+    event.stopPropagation();
+    this.router.navigate(['/member', userName]);
+  }
+
+  navigateToPost(postId: string) {
+    this.router.navigateByUrl(`/home/post/${postId}`);
+  }
+
+
+  //
+
   // Lifecycle hooks
   ngOnInit(): void {
     this.loadPosts();
@@ -83,11 +119,7 @@ export class PostsComponent implements OnInit {
   }
 
   //Methods
-  goToUserProfile(event: Event, userName: string): void {
-    // Зупиняємо спливання події на контейнер
-    event.stopPropagation();
-    this.router.navigate(['/member', userName]);
-  }
+  
 
   async loadPosts() {
     if (!this.hasMorePosts || this.loading()) {
@@ -137,9 +169,7 @@ export class PostsComponent implements OnInit {
     this.newPost.set(post);
   }
 
-  navigateToPost(postId: string) {
-    this.router.navigateByUrl(`/home/post/${postId}`);
-  }
+  
 
   // Event handlers
   onLinkClick(event: Event, postId: string) {

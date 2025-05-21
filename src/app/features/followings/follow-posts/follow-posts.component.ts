@@ -1,41 +1,36 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
-import { PostService } from '../../../shared/services/post.service';
 import { firstValueFrom } from 'rxjs';
-import { Post } from '../../home/models/post.interface';
-import { PostDetailStore } from '../../post-detail/stores/post-detail/post-detail.store';
+import { User } from '../../../core/models/interfaces/user/user.interface';
 import { LikeService } from '../../../shared/services/like.service';
 import { ScrollService } from '../../../shared/services/scroll.service';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { Post } from '../../home/models/post.interface';
+import { PostService } from '../../../shared/services/post.service';
 import { ResponseModel } from '../../../shared/models/interfaces/response.model';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-hub-posts',
-  templateUrl: './hub-posts.component.html',
-  styleUrl: './hub-posts.component.css',
-  providers: [PostDetailStore]
+  selector: 'app-follow-posts',
+  templateUrl: './follow-posts.component.html',
+  styleUrl: './follow-posts.component.css'
 })
-export class HubPostsComponent {
+export class FollowPostsComponent {
   // Services
   private readonly postService = inject(PostService);
   private readonly likeService = inject(LikeService);
   private readonly router = inject(Router);
   private readonly scrollService = inject(ScrollService);
-  private readonly authService = inject(AuthService);
 
   // Inputs
-  curretnUser: ResponseModel | undefined = undefined;
-  hubId = input.required<string>();//
-  userCanWritePost = input.required<boolean>();
+  curretnUserResponse = input.required<ResponseModel | undefined>();
+  currentUser = input.required<User | undefined>();
 
   // States
-  posts = signal<Post[]>([]); 
-  loading = signal<boolean>(false); 
+  posts = signal<Post[]>([]);
+  loading = signal<boolean>(false);
   newPost = signal<Post | undefined>(undefined);
-  pageNumber = 1; 
+  pageNumber = 1;
   pageSize = 10;
   totalPages = 1;
-
   hasMorePosts = true;
 
   myEffect = effect(
@@ -50,8 +45,8 @@ export class HubPostsComponent {
 
   // Lifecycle hooks
   ngOnInit(): void {
-    this.curretnUser = this.authService.currentUser();
-    
+    //this.curretnUser = this.authService.currentUser();
+
     this.loadPosts();
 
 
@@ -64,9 +59,9 @@ export class HubPostsComponent {
       }
     });
   }
-  
+
   ngAfterViewInit(): void {
-    if (!this.postService.paginatedFollowResult()) {
+    if (!this.postService.paginatedHubResult()) {
       this.loadPosts();
     }
   }
@@ -79,13 +74,8 @@ export class HubPostsComponent {
 
     this.loading.set(true);
 
-    const currentUserId = this.authService.currentUser()?.user.id;
+    await firstValueFrom(this.postService.getFollowingPostsWithLikes(this.pageNumber, this.pageSize));
 
-    if (currentUserId) {
-      await firstValueFrom(this.postService.getHubPostsWithLikes(this.pageNumber, this.pageSize, this.hubId()!.toString()));
-    } else {
-      await firstValueFrom(this.postService.getHubPosts(this.pageNumber, this.pageSize, this.hubId()!.toString()));
-    }
     const paginatedResult = this.postService.paginatedFollowResult();
     this.totalPages = Number(paginatedResult?.pagination?.totalPages ?? 1);
 
@@ -131,7 +121,7 @@ export class HubPostsComponent {
   }
 
   onScroll(event: Event): void {
-    if (!this.hasMorePosts) return;
+    if (!this.hasMorePosts) { return; }
     const container = event.target as HTMLElement;
     if (
       container.scrollTop + container.clientHeight >=

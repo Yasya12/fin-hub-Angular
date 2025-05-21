@@ -71,7 +71,7 @@ export class HeaderComponent implements OnInit {
       name: 'Контакти',
       icon: '',
       chosenIcon: '',
-      route: '/contactus',
+      route: '/contactus'
     },
   ];
   @ViewChild('dropdownMenu') dropdownMenu: ElementRef | undefined;

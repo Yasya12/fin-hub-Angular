@@ -6,6 +6,7 @@ import { Message } from '../models/message.model';
 import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { isPlatformBrowser } from '@angular/common';
+import { ChatUserDto } from '../models/chatUser.model';
 
 @Injectable({
     providedIn: 'root',
@@ -26,7 +27,7 @@ export class MessageService {
             .set('pageNumber', pageNumber)
             .set('pageSize', pageSize)
             .set('username', username)
-            .set('Container', container); 
+            .set('Container', container);
 
         const headers = new HttpHeaders()
             .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`)
@@ -104,6 +105,27 @@ export class MessageService {
                 console.error('Error deleting message:', error);
                 return throwError(() => error);
             })
+        );
+    }
+
+    getUsersChat(): Observable<ChatUserDto[]> {
+        if (!this.authService.currentUser()?.token) {
+            return of([]);
+        }
+
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+
+        return this.http.get<ChatUserDto[]>(`${this.baseUrl}/message/chat-users`, { headers });
+    }
+
+    markMessagesAsRead(senderUsername: string): Observable<void> {
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+
+        return this.http.post<void>(
+            `${this.baseUrl}/message/mark-as-read/${senderUsername}`,
+            {}, { headers }
         );
     }
 }
