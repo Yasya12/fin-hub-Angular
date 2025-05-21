@@ -14,6 +14,7 @@ import { SideBarComponent } from '../../shared/ui/side-bar/side-bar.component';
 import { ChartsViewComponent } from '../../shared/ui/charts-view/charts-view.component';
 import { FormattedDatePipe } from '../../shared/pipes/FormattedDatePipe';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NewsComponent } from '../../shared/ui/news/news.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     FormattedDatePipe,
     SideBarComponent,
     ChartsViewComponent,
-
+    NewsComponent,
     TooltipModule.forRoot()
   ],
   exports: [PostEditorComponent, CreatePostComponent]

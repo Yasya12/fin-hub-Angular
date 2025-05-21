@@ -1,16 +1,19 @@
-@import 'ngx-toastr/toastr';
+@import "ngx-toastr/toastr";
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* You can add global styles to this file, and also import other style files */
-@layer base {
-    body {
-      @apply bg-white ;
-    }
-  }
-  
-.ql-container.ql-snow { border: none !important;}
+
+* {
+  @apply font-source;
+}
+
+.ql-container.ql-snow {
+  border: none !important;
+}
 
 .text-gray-800 a {
   @apply text-blue-600 underline;
@@ -27,7 +30,7 @@ ol {
 }
 
 ul {
-  list-style: disc; 
+  list-style: disc;
   margin-left: 20px;
   padding-left: 20px;
 }
@@ -37,9 +40,9 @@ li {
 }
 
 blockquote {
-  border-left: 4px solid #e5e7eb; 
-  padding-left: 16px; 
-  font-style: italic; 
-  color: #4b5563; 
+  border-left: 4px solid #e5e7eb;
+  padding-left: 16px;
+  font-style: italic;
+  color: #4b5563;
   margin: 8px 0;
 }

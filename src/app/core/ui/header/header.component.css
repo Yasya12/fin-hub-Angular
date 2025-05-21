@@ -1,21 +1,11 @@
-::ng-deep .tooltip-inner {
+/* ::ng-deep .tooltip-inner {
     background-color: #333 !important; 
     color: #fff !important;  
     font-size: 14px !important;  
     padding: 8px 12px !important;  
     margin-top: 12px !important;
     border-radius: 16px !important;  
-  }
-
-  .header-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-}
-
-.header-nav li {
-  position: relative;
-}
+  } */
 
 .notification-dot {
   position: absolute;
@@ -30,4 +20,3 @@
 .custom-dot {
   transform: translateX(-6px); /* Змістити вліво на 4 пікселі */
 }
-

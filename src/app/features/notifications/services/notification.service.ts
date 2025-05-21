@@ -1,9 +1,12 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { computed, effect, inject, Injectable, signal } from "@angular/core";
+
 import { Observable, of } from "rxjs";
 import { environment } from "../../../../../environment";
+
 import { AuthService } from "../../../core/services/auth.service";
 import { NotificationDto } from "../models/notificationDto.model";
+import { environment } from "../../../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {

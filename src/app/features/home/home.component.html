@@ -1,12 +1,21 @@
-<div class="flex h-[calc(100vh-6rem)] justify-center flex-1 mt-4 mb-2">
-  <!-- Sidebar -->
-  <app-side-bar class="w-[9rem] shrink-0 fixed left-[24rem]"></app-side-bar>
-
+<div class="flex justify-center h-full">
   <!-- Content container -->
-  <div class="w-[38%] mr-14">
+  @if(true) {
+  <div class="grow">
     <app-posts [currentUser]="curretnUser"></app-posts>
   </div>
+  }
 
-  <!-- Charts view bar -->
-  <app-charts-view class="w-[25rem] shrink-0 fixed right-[13rem]"></app-charts-view>
+  <!-- News view bar -->
+  <div
+    class="grow-0 shrink-0 basis-[320px] flex flex-col border-x-2 border-gray-300 h-full"
+  >
+    <span class="font-medium text-lg px-4 py-2">Останні новини</span>
+
+    <div
+      class="relative w-full h-[710px] border-b-2 border-gray-300 overflow-hidden"
+    >
+      <app-news class="absolute -top-[56px] left-0"></app-news>
+    </div>
+  </div>
 </div>

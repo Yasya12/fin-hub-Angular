@@ -2,11 +2,11 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from "@angular/comm
 import { inject, Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { Hub } from "../models/hub.interface";
-import { environment } from "../../../../../environment";
 import { AuthService } from "../../../core/services/auth.service";
 import { HubMemberDto } from "../models/hubMemberDto";
 import { CreateHubJoinRequestDto } from "../models/createHubJoinRequestDto";
 import { HubJoinRequest } from "../models/hubJoinRequestDto";
+import { environment } from "../../../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class HubService {

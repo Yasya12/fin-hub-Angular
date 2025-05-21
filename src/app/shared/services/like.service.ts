@@ -13,7 +13,13 @@ export class LikeService {
     private readonly http = inject(HttpClient);
 
     //States
-    private baseUrl = environment.apiUrl;
+    private _baseUrl = environment.apiUrl;
+    public get baseUrl() {
+        return this._baseUrl;
+    }
+    public set baseUrl(value) {
+        this._baseUrl = value;
+    }
 
     private getToken(): string {
         const token = localStorage.getItem('token');
