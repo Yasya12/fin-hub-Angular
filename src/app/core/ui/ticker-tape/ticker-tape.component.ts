@@ -36,7 +36,7 @@ export class TickerTapeComponent implements AfterViewInit {
         isTransparent: false,
         displayMode: 'regular',
         colorTheme: 'white',
-        locale: 'en', // або 'uk'
+        locale: 'uk', // або 'uk'
       });
 
       this.tickerTapeContainer.nativeElement.appendChild(script);
