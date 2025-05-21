@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { computed, effect, inject, Injectable, signal } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { environment } from "../../../../../environment";
 import { AuthService } from "../../../core/services/auth.service";
 import { NotificationDto } from "../models/notificationDto.model";
@@ -20,6 +20,10 @@ export class NotificationService {
     }
 
     loadNotifications(): void {
+        if (!this.authService.currentUser()?.token) {
+            return;
+        }
+
         this.authService.setCurerntUser();
         this.getAllNotificationsForUser().subscribe((data) => {
             this.notifications.set(data);

@@ -1,15 +1,12 @@
 <div class="flex justify-center items-center">
   <section class="w-full max-w-3xl h-full">
-    <h2 class="text-lg font-bold my-4">Hub Posts</h2>
+    <h2 class="text-lg font-bold my-4">Following Posts</h2>
     <div class="pr-2">
-      @if(userCanWritePost()) {
       <!-- Creating post -->
       <app-create-post
-        [currentUser]="curretnUser"
-        [hubId]="hubId()"
+        [currentUser]="curretnUserResponse()"
         (addPost)="addPost($event)"
       ></app-create-post>
-      }
 
       <div class="flex flex-col w-full">
         @if(posts().length > 0) {

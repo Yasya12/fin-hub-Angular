@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
       key: 'following',
       icon: 'following_icon',
       chosenIcon: 'chosen_following_icon',
-      route: '/under-development',
+      route: '/followings',
     },
     {
       key: 'messages',
@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit {
       key: 'hubs',
       icon: 'hubs_icon',
       chosenIcon: 'chosen_hubs_icon',
-      route: '/hubs',
+      route: '/messages/chats',
     },
     {
       key: 'notifications',

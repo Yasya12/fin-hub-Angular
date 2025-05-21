@@ -14,8 +14,6 @@ export class HubPeopleComponent implements OnInit {
   //Services
   private hubService = inject(HubService);
   private cd = inject(ChangeDetectorRef);
-
-
   toastr = inject(ToastrService)
 
   //States

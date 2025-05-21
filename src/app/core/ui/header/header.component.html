@@ -1,13 +1,13 @@
-@let user = authService.currentUser(); 
-@let isLoaded = authService.isAuthLoaded();
+@let user = authService.currentUser(); @let isLoaded =
+authService.isAuthLoaded();
 <div
-  class="flex flex-row justify-center items-center gap-4 pt-2 pb-1 bg-[#ffffff]"
+  class="flex flex-row justify-center items-center gap-6 pt-2 pb-1 bg-[#ffffff]"
 >
   <a routerLink="/home">
     <img src="/assets/images/logo-finhub.png" alt="logo FinHub" class="w-32" />
   </a>
 
- <!-- Navigation Menu -->
+  <!-- Navigation Menu -->
   <div class="flex flex-row">
     <button
       *ngFor="let item of menuItems"
@@ -28,10 +28,11 @@
       />
 
       <!-- Notification Dot -->
-      <span *ngIf="item.key === 'notifications' && hasUnreadNotifications()" 
-      class="notification-dot custom-dot absolute top-0 right-0 bg-red-500 w-2 h-2 rounded-full">
-</span>
-
+      <span
+        *ngIf="item.key === 'notifications' && hasUnreadNotifications()"
+        class="notification-dot custom-dot absolute top-0 right-0 bg-red-500 w-2 h-2 rounded-full"
+      >
+      </span>
 
       <!-- Green underline for active tab -->
       <div
@@ -48,9 +49,8 @@
   />
 
   @if (!isLoaded) {
-    <!-- показати loader або нічого не рендерити -->
-  } 
-  @else if(!user) {
+  <!-- показати loader або нічого не рендерити -->
+  } @else if(!user) {
   <button
     class="px-4 py-1 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition"
     (click)="selectTab('signup')"
@@ -70,7 +70,7 @@
           '/assets/images/Sample_User_Icon.png'
         "
         alt="User Icon"
-        class="size-10 rounded-full"
+        class="size-10 rounded-full border border-green-600"
       />
     </button>
 
@@ -95,12 +95,4 @@
     </div>
   </div>
   }
-
-  <button
-    style="cursor: pointer"
-    class="px-4 py-1 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition"
-    (click)="selectTab('askQuestion')"
-  >
-    Додати питання
-  </button>
 </div>

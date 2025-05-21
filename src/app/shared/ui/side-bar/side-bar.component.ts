@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { Hub } from '../../../features/hubs/models/hub.interface';
 import { HubService } from '../../../features/hubs/services/hub.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-side-bar',
@@ -11,19 +13,9 @@ import { HubService } from '../../../features/hubs/services/hub.service';
   imports: [CommonModule]
 })
 export class SideBarComponent {
-
-  categories = [
-    "Health",
-    "Computer Science",
-    "Marketing",
-    "Finance",
-    "Philosophy",
-    "Economics",
-    "Fashion and Style",
-    "Science"
-  ];
   //Services
   private hubService = inject(HubService);
+    private readonly router = inject(Router);
 
   //States
   hubs = signal<Hub[]>([]);
@@ -34,9 +26,13 @@ export class SideBarComponent {
   }
 
   //Methods
-  loadHubs() {
+   loadHubs() {
     this.hubService.getHubs().subscribe({
-      next: (hubs) => this.hubs.set(hubs)
+      next: (hubs) => this.hubs.set(hubs.slice(0, 8)) 
     });
+  }
+
+  navigateToHub(hubId: string) {
+    this.router.navigateByUrl(`/hubs/${hubId}`);
   }
 }

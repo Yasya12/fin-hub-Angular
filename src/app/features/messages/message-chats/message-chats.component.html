@@ -1,0 +1,23 @@
+<div class="flex flex-row items-center justify-center mt-4">
+  <div class="border w-[17%] h-[70vh] self-start bg-yellow-400"></div>
+  <div class="grow max-w-xl h-[90vh]">
+    <div
+      class="h-[5vh] bg-gray-100 flex items-center justify-between px-4 rounded-t-lg border-b shadow-sm text-gray-700 font-medium"
+    >
+      {{ username }}
+    </div>
+
+    <div class="px-2 pb-2 flex-1 border-x border-gray-200">
+      <app-message-chat
+        [username]="username"
+        [newMessages]="newMessages"
+        (loadMoreMessages)="onLoadMoreMessages()"
+      ></app-message-chat>
+    </div>
+  </div>
+  <div class="w-[17%] h-[90vh] self-start border-r border-t">
+    <app-message-chat-list
+      (selectChat)="onChatSelected($event)"
+    ></app-message-chat-list>
+  </div>
+</div>

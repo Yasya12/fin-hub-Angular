@@ -20,6 +20,9 @@ import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
     MembersRoutingModule,
     FormsModule,
     TimeAgoPipe
+  ],
+  exports: [
+    MemberMessagesComponent
   ]
 })
 export class MembersModule { }

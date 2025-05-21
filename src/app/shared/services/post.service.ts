@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { Post } from '../../features/home/models/post.interface';
 import { SinglePost } from '../../features/post-detail/models/interfaces/single-post.interface';
 import { environment } from '../../../environments/environment';
@@ -19,6 +19,7 @@ export class PostService {
   private baseUrl = environment.apiUrl;
   paginatedResult = signal<PaginatedResult<Post[]> | undefined>(undefined);
   paginatedHubResult = signal<PaginatedResult<Post[]> | undefined>(undefined);
+  paginatedFollowResult = signal<PaginatedResult<Post[]> | undefined>(undefined);
 
   getPosts(pageNumber: number, pageSize: number): Observable<HttpResponse<Post>> {
     const params = new HttpParams()
@@ -113,6 +114,33 @@ export class PostService {
         tap(response => {
           const paginationHeader = response.headers.get('Pagination');
           this.paginatedHubResult.set({
+            items: response.body ? (Array.isArray(response.body) ? response.body : [response.body]) : [],
+            pagination: JSON.parse(paginationHeader!),
+          });
+        }
+        )
+      )
+  }
+
+  getFollowingPostsWithLikes(pageNumber: number, pageSize: number): Observable<HttpResponse<Post>> {
+    if (!this.authService.currentUser()?.token) {
+            return of(new HttpResponse<Post>({ status: 401 }));
+        }
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`)
+      .set('Cache-Control', 'no-cache');
+
+    return this.http
+      .get<Post>(`${this.baseUrl}/post/following-posts-with-likes`, {
+        observe: 'response', params, headers, transferCache: { includeHeaders: ['Pagination'] }
+      }).pipe(
+        tap(response => {
+          const paginationHeader = response.headers.get('Pagination');
+          this.paginatedFollowResult.set({
             items: response.body ? (Array.isArray(response.body) ? response.body : [response.body]) : [],
             pagination: JSON.parse(paginationHeader!),
           });
