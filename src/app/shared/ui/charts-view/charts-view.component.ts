@@ -42,6 +42,7 @@ export class ChartsViewComponent implements AfterViewInit {
               { s: 'NASDAQ:AMZN' },
               { s: 'NYSE:KO' },
               { s: 'NYSE:UBER' },
+              { s: ''}
             ],
           },
         ],
@@ -53,7 +54,7 @@ export class ChartsViewComponent implements AfterViewInit {
         showSymbolLogo: true,
         belowLineFillColorGrowing: 'rgba(102, 204, 102, 0.12)',
         symbolActiveColor: 'rgba(101, 101, 101, 0.14)',
-        height: 800,
+        height: 810,
         locale: 'en',
         showFloatingTooltip: true,
       });

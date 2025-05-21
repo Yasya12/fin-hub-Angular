@@ -35,13 +35,34 @@
         class="py-3.5 pr-4 pl-5 text-gray-600 flex items-center cursor-pointer w-full"
         (click)="openModal()"
       >
-        What do you want to share?
+        Про що хочеш розповісти?
       </div>
       <button
-        class="ml-auto flex flex-row items-center cursor-pointer justify-center transition-all duration-75 ease-linear hover:bg-teal-500 hover:text-white px-11 rounded"
+        class="ml-auto flex flex-row items-center gap-1 cursor-pointer justify-center transition-all duration-75 ease-linear hover:bg-teal-500 hover:text-white px-11 rounded"
         (click)="openModal()"
       >
         <svg
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.0"
+          viewBox="0 0 512.000000 512.000000"
+          preserveAspectRatio="xMidYMid meet"
+          class="w-5 h-5"
+        >
+          <g
+            transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+            fill="currentColor"
+            stroke="none"
+          >
+            <path
+              d="M4055 4894 c-47 -15 -101 -67 -861 -827 -534 -535 -817 -825 -828 -849 -15 -33 -16 -77 -14 -386 l3 -349 25 -36 c14 -21 43 -50 64 -65 l39 -27 348 -3 c338 -3 350 -2 391 19 30 14 294 272 850 827 804 804 807 807 823 865 14 49 15 66 5 110 -12 50 -24 63 -339 380 -297 299 -330 329 -375 342 -59 18 -67 18 -131 -1z m-342 -1447 l-678 -677 -130 2 -130 3 -3 130 -3 129 678 678 678 678 132 -132 133 -133 -677 -678z"
+            />
+            <path
+              d="M329 4452 c-39 -20 -62 -41 -84 -77 l-30 -48 -3 -1946 c-2 -1452 0 -1960 8 -2000 17 -77 84 -144 161 -161 40 -8 548 -10 2000 -8 l1946 3 48 30 c36 22 57 45 77 84 l28 53 0 1109 c0 981 -2 1114 -16 1147 -33 79 -110 132 -194 132 -88 0 -152 -38 -193 -115 l-22 -40 -3 -987 -2 -988 -1705 0 -1705 0 0 1705 0 1705 988 2 987 3 45 25 c67 38 103 96 108 174 5 71 -14 120 -65 168 -64 61 3 58 -1212 58 l-1109 0 -53 -28z"
+            />
+          </g>
+        </svg>
+        <!--Alternative ICON-->
+        <!-- <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -54,8 +75,8 @@
             stroke-linejoin="round"
             d="M16.862 3.487a2.125 2.125 0 113.005 3.005L7.5 18.86 3 20.25l1.39-4.5L16.862 3.487z"
           />
-        </svg>
-        <span class="font-medium"> Post </span>
+        </svg> -->
+        <span class="font-medium">Опублікувати</span>
       </button>
     </div>
   </div>
