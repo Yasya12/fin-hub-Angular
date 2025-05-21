@@ -54,7 +54,7 @@ export class ChartsViewComponent implements AfterViewInit {
         showSymbolLogo: true,
         belowLineFillColorGrowing: 'rgba(102, 204, 102, 0.12)',
         symbolActiveColor: 'rgba(101, 101, 101, 0.14)',
-        height: 810,
+        height: 830,
         locale: 'en',
         showFloatingTooltip: true,
       });
