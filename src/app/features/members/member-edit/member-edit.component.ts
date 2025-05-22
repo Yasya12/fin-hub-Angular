@@ -1,11 +1,10 @@
 import { Component, HostListener, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { User } from '../../../core/models/interfaces/user/user.interface';
 import { AuthService } from '../../../core/services/auth.service';
-import { ToastrService } from 'ngx-toastr';
-import { NgForm } from '@angular/forms';
-import { MemberService } from '../services/member.service';
 import { AuthStore } from '../../../core/stores/auth-store';
-
+import { MemberService } from '../services/member.service';
 @Component({
   selector: 'app-member-edit',
   templateUrl: './member-edit.component.html',

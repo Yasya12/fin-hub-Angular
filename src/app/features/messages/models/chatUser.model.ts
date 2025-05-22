@@ -5,4 +5,5 @@ export interface ChatUserDto {
     lastMessageSent: Date;
     isRead: boolean
     unreadCount: number;
+    isSelected: boolean;
   }

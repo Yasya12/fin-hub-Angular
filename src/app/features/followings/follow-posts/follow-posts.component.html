@@ -1,7 +1,7 @@
 <div class="flex justify-center items-center">
   <section class="w-full max-w-3xl h-full">
-    <h2 class="text-lg font-bold my-4">Following Posts</h2>
-    <div class="pr-2">
+    <h2 class="text-lg font-bold mt-4 text-center">Following Posts</h2>
+    <div class="">
       <!-- Creating post -->
       <app-create-post
         [currentUser]="curretnUserResponse()"
@@ -15,7 +15,7 @@
           <!-- Iterate over each post -->
           @for(post of posts(); track post.id) {
           <div
-            class="bg-[#ffffff] p-4 rounded-lg transition-all duration-300 flex flex-col cursor-pointer"
+            class="bg-[#ffffff] p-4 rounded-lg transition-all duration-300 flex flex-col cursor-pointer border"
             (click)="onLinkClick($event, post.id)"
           >
             <!-- Author information -->

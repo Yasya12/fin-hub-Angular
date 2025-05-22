@@ -1,9 +1,9 @@
 import { Component, EventEmitter, inject, input, OnInit, Output } from '@angular/core';
-import { NotificationDto } from '../models/notificationDto.model';
+import { NotificationDto } from '../../models/notificationDto.model';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { NotificationService } from '../services/notification.service';
-import { HubService } from '../../hubs/services/hub.service';
+import { NotificationService } from '../../services/notification.service';
+import { HubService } from '../../../hubs/services/hub.service';
 
 @Component({
   selector: 'app-notification-card',

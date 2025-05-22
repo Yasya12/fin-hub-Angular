@@ -20,7 +20,7 @@
     0 || group.messages[i - 1].dateRead)) {
     <div class="flex justify-center my-2">
       <span
-        class="text-sm bg-blue-100 text-blue-700 px-4 py-1 rounded-full shadow"
+        class="text-sm bg-teal-100 text-teal-700 px-4 py-1 rounded-full shadow"
       >
         Unread messages
       </span>
@@ -34,11 +34,9 @@
           'justify-end': message.senderUserName !== username(),
           'justify-start': message.senderUserName === username()
         }"
-      >
-        <!-- усе всередині цього блоку залишаєш без змін -->
-      </div>
+      ></div>
 
-      <!-- If the message is from others, show avatar on left -->
+      <!-- If the message is from others -->
       @if(message.senderUserName === username()){
       <div class="flex items-end space-x-4">
         <img
@@ -63,7 +61,7 @@
       </div>
       }
 
-      <!-- If the message is from current user, show avatar on right -->
+      <!-- If the message is from current user -->
       @if(message.senderUserName !== username()){
       <div class="flex items-end flex-row-reverse">
         <img
@@ -73,13 +71,13 @@
         />
         <div class="text-right ml-24">
           <div
-            class="relative bg-green-100 text-green-800 px-3 py-2 rounded-lg inline-block"
+            class="relative bg-teal-400 text-white px-3 py-2 rounded-lg inline-block max-w-xs md:max-w-md w-fit ml-24"
           >
             <div class="flex justify-between items-end gap-2">
               <div class="break-words leading-snug text-justify">
                 {{ message.content }}
               </div>
-              <span class="text-xs text-gray-500 whitespace-nowrap">
+              <span class="text-xs text-gray-300 whitespace-nowrap">
                 {{ message.messageSent | date : "HH:mm" }}
               </span>
             </div>
@@ -89,36 +87,68 @@
             @if(!message.dateRead && message.senderUserName !== username()){
             <span class="text-xs text-gray-500">unread</span>
             } @if(message.dateRead && message.senderUserName !== username()){
-            <span class="text-xs text-green-500">read</span>
+            <span class="text-xs text-teal-500">read</span>
             }
           </div>
         </div>
       </div>
       }
     </div>
-    } } @if (groupMessages.length === 0) {
+    } }
+
+    <!-- If the chat not selected -->
+    @if (groupMessages.length === 0) {
     <div
-      class="flex justify-center items-center h-full text-gray-500 text-sm italic"
+      class="flex justify-center items-center h-full text-gray-500 text-lg italic"
     >
       Select a chat to start messaging
     </div>
     }
   </div>
+  @if (groupMessages.length != 0) {
   <!-- Message input box -->
-  <div class="flex items-center space-x-4 mt-2 p-2">
+  <div class="flex items-center space-x-4 mt-2 py-2 px-4">
     <input
       type="text"
-      placeholder="Type your message"
-      class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+      placeholder="Напишіть своє повідомлення"
+      class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
       [(ngModel)]="messageContent"
       (keydown)="onKeyDown($event)"
     />
     <button
-      class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none disabled:bg-gray-400"
+      class="p-3 transition-all duration-300 bg-gray-300 rounded-full"
+      [class]="!messageContent ? '' : 'hover:bg-gray-400'"
       (click)="sendMessage()"
       [disabled]="!messageContent"
     >
-      Send
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        version="1.0"
+        class="size-6 transition-all duration-300"
+        [class]="messageContent ? 'text-teal-400' : 'text-gray-100'"
+        viewBox="0 0 512.000000 538.000000"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <g
+          transform="translate(0.000000,538.000000) scale(0.100000,-0.100000)"
+          fill="currentColor"
+          stroke=""
+        >
+          <path
+            d="M4480 4823 c-14 -3 -914 -259 -2000 -569 -1579 -451 -1983 -570 -2015 -592 -63 -44 -97 -109 -102 -195 -4 -64 -2 -78 24 -126 15 -30 44 -68 64 -84 30 -23 865 -361 1407 -568 145 -55 225 -66 327 -46 159 33 174 44 545 413 184 183 348 337 363 343 39 15 111 14 150 -3 43 -17 93 -76 106 -123 14 -48 13 -58 0 -108 -9 -33 -66 -95 -343 -375 -354 -358 -377 -386 -411 -515 -19 -74 -19 -174 -1 -246 8 -30 142 -378 297 -772 302 -767 306 -774 391 -818 118 -60 280 -12 338 101 22 43 1138 3940 1147 4005 7 56 -18 140 -58 188 -51 62 -155 102 -229 90z"
+          />
+          <path
+            d="M945 2531 c-26 -12 -138 -118 -321 -302 -302 -305 -311 -317 -301 -405 13 -117 131 -192 252 -160 21 5 120 97 323 299 272 272 294 296 308 344 46 156 -113 293 -261 224z"
+          />
+          <path
+            d="M1726 2025 c-32 -11 -182 -156 -704 -677 -451 -450 -670 -676 -683 -703 -67 -144 68 -305 222 -265 40 10 108 75 716 683 370 370 680 686 688 703 17 37 20 111 4 151 -23 62 -110 123 -174 122 -16 0 -48 -6 -69 -14z"
+          />
+          <path
+            d="M2225 1251 c-56 -26 -589 -563 -610 -613 -21 -51 -19 -104 6 -155 40 -82 133 -126 220 -103 39 10 79 46 332 298 159 158 296 300 304 317 23 44 21 122 -5 172 -45 87 -160 126 -247 84z"
+          />
+        </g>
+      </svg>
     </button>
   </div>
+  }
 </div>

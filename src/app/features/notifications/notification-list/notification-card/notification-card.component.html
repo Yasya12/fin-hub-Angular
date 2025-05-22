@@ -1,7 +1,7 @@
 <div
-  class="bg-gray-100 p-4 rounded-lg shadow mb-4 cursor-pointer"
+  class="bg-gray-100 p-4 rounded-lg shadow mb-4 cursor-pointer border"
   [ngClass]="{
-    'bg-gray-200': !notification().isRead,
+    'bg-gray-100': !notification().isRead,
     'bg-white': notification().isRead
   }"
   (click)="navigateTo(notification())"
@@ -23,7 +23,7 @@
         <span
           class="text-xs text-white py-1 px-2 rounded-full"
           [ngClass]="{
-            'bg-gray-500': notification().type === 'like',
+            'bg-teal-400': notification().type === 'like',
             'bg-green-500': notification().type === 'follow',
             'bg-yellow-500': notification().type === 'request'
           }"
@@ -42,7 +42,7 @@
   <div class="flex justify-end items-center mt-4 px-1">
     <!-- Delete button -->
     <button
-      class="w-8 h-8 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full hover:bg-gray-400 transition"
+      class="w-8 h-8 flex items-center justify-center bg-red-600 text-gray-600 rounded-full hover:bg-red-400 transition"
       (click)="onDelete(notification().id, $event)"
     >
       🗑️

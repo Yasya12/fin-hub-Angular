@@ -1,7 +1,7 @@
-<div class="flex justify-center">
-  <div class="flex w-full max-w-5xl p-4 items-start gap-4">
+<div class="flex">
+  <div class="flex w-full p-4 items-start gap-4">
     <!-- Sidebar -->
-    <aside class="w-52 pt-2">
+    <aside class="w-[10rem] pt-2">
       <div class="mb-4">
         <h2 class="text-lg font-semibold px-3 mb-1">Filters</h2>
         <hr class="border-t border-gray-500" />
@@ -10,8 +10,8 @@
         <button
           class="block w-full text-left px-3 py-2 rounded"
           [ngClass]="{
-            'bg-green-600 text-white font-semibold': selectedFilter() === 'all',
-            'hover:bg-gray-100': selectedFilter() !== 'all'
+            'bg-teal-400 text-white font-semibold': selectedFilter() === 'all',
+            'hover:bg-gray-200': selectedFilter() !== 'all'
           }"
           (click)="onFilterChange('all')"
         >
@@ -20,9 +20,9 @@
         <button
           class="block w-full text-left px-3 py-2 rounded"
           [ngClass]="{
-            'bg-green-600 text-white font-semibold':
+            'bg-teal-400 text-white font-semibold':
               selectedFilter() === 'likes',
-            'hover:bg-gray-100': selectedFilter() !== 'likes'
+            'hover:bg-gray-200': selectedFilter() !== 'likes'
           }"
           (click)="onFilterChange('likes')"
         >
@@ -31,9 +31,9 @@
         <button
           class="block w-full text-left px-3 py-2 rounded"
           [ngClass]="{
-            'bg-green-600 text-white font-semibold':
+            'bg-teal-400 text-white font-semibold':
               selectedFilter() === 'requests',
-            'hover:bg-gray-100': selectedFilter() !== 'requests'
+            'hover:bg-gray-200': selectedFilter() !== 'requests'
           }"
           (click)="onFilterChange('requests')"
         >
@@ -42,9 +42,9 @@
         <button
           class="block w-full text-left px-3 py-2 rounded"
           [ngClass]="{
-            'bg-green-600 text-white font-semibold':
+            'bg-teal-400 text-white font-semibold':
               selectedFilter() === 'followings',
-            'hover:bg-gray-100': selectedFilter() !== 'followings'
+            'hover:bg-gray-200': selectedFilter() !== 'followings'
           }"
           (click)="onFilterChange('followings')"
         >
@@ -91,5 +91,18 @@
         </div>
       </ng-template>
     </main>
+  </div>
+
+  <!-- News view bar -->
+  <div
+    class="grow-0 shrink-0 basis-[320px] flex flex-col border-x-2 border-gray-300 h-full"
+  >
+    <span class="font-medium text-lg px-4 py-2">Останні новини</span>
+
+    <div
+      class="relative w-full h-[710px] border-b-2 border-gray-300 overflow-hidden"
+    >
+      <app-news class="absolute -top-[56px] left-0"></app-news>
+    </div>
   </div>
 </div>

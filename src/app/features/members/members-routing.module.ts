@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MemberEditComponent } from './member-edit/member-edit.component';
 import { preventUnsavedChangesGuard } from '../../shared/guards/prevent-unsaved-changes.guard';
-import { MemberDetailComponent } from './member-detail/member-detail.component';
 import { memberDetailedResolver } from './resolvers/member-detailed.resolver';
+import { MemberProfileComponent } from './member-profile/member-profile.component';
+import { MemberEditComponent } from './member-edit/member-edit.component';
 
 const routes: Routes = [
   {
@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: ':username',
-    component: MemberDetailComponent,
+    component: MemberProfileComponent,
     resolve: {
       user: memberDetailedResolver
     },

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { MessageService } from '../services/message.service';
-import { ChatUserDto } from '../models/chatUser.model';
+import { MessageService } from '../../services/message.service';
+import { ChatUserDto } from '../../models/chatUser.model';
 
 @Component({
   selector: 'app-message-chat-list',
@@ -21,14 +21,19 @@ export class MessageChatListComponent implements OnInit {
   //hooks
   ngOnInit(): void {
     this.loadUserChats();
-
   }
 
   //methods
-   onSelectChat(chat: ChatUserDto) {
-    chat.unreadCount = 0;
+  onSelectChat(chosenChat: ChatUserDto) {
+    chosenChat.unreadCount = 0;
+
+    for (const chat of this.userChats!) {
+      chat.isSelected = false;
+    }
+    chosenChat.isSelected = true;
+    
     this.cdr.markForCheck();
-    this.selectChat.emit(chat.username);
+    this.selectChat.emit(chosenChat.username);
   }
 
   loadUserChats() {

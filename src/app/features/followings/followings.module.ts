@@ -6,6 +6,7 @@ import { FollowFollowingsComponent } from './follow-followings/follow-followings
 import { FollowPostsComponent } from './follow-posts/follow-posts.component';
 import { HomeModule } from '../home/home.module';
 import { FormattedDatePipe } from '../../shared/pipes/FormattedDatePipe';
+import { NewsComponent } from '../../shared/ui/news/news.component';
 
 
 
@@ -19,7 +20,8 @@ import { FormattedDatePipe } from '../../shared/pipes/FormattedDatePipe';
     CommonModule,
     FollowingsRoutingModule,
     HomeModule,
-    FormattedDatePipe
+    FormattedDatePipe,
+    NewsComponent
   ]
 })
 export class FollowingsModule { }

@@ -1,0 +1,76 @@
+<!--main content - profile-->
+<div class="">
+  <div class="flex items-start justify-start mt-4">
+    <img
+      [src]="user.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
+      alt="Profile photo"
+      class="size-32 rounded-full border border-gray-300"
+    />
+    <div class="flex flex-col gap-1 items-start justify-start">
+      <h1 class="mt-4 text-2xl font-bold ml-5">{{ user.username }}</h1>
+      <p class="text-lg font-medium text-gray-600 ml-5">{{ user.email }}</p>
+      <button
+        class="mt-2 px-6 py-1.5 border rounded-full text-lg font-medium hover:bg-teal-500 hover:text-white transition ml-2"
+        (click)="doNext()"
+      >
+        @if(isCurrentUser){ Edit Profile }@else { Follow }
+      </button>
+    </div>
+  </div>
+
+  <!--bio-->
+  <div class="text-[16px] tracking-wider mt-8">
+    <span class="font-bold">BIO:</span> {{ user.bio }}
+  </div>
+
+  <!--joind-->
+  <div class="my-3 text-[16px] text-gray-500 border-y p-3 text-end">
+    <span class="font-medium">Joined</span>
+  </div>
+
+  <!--following/ers-->
+  <div class="text-[18px] mt-3 flex flex-row gap-3">
+    <div class="flex flex-row gap-1">
+      <span class="font-bold">0</span> <span>Following</span>
+    </div>
+    <div class="flex flex-row gap-1">
+      <span class="font-bold">0</span> <span>Followers</span>
+    </div>
+  </div>
+
+  <!--tabs-->
+  <div class="mt-6">
+    <nav class="flex text-lg font-medium text-teal-700">
+      <button
+        (click)="selectTab('posts')"
+        class="relative w-1/2 pb-2 text-center"
+      >
+        <div
+          class="absolute -bottom-[2px] w-full h-[2px] bg-black"
+          [class]="selectedTab === 'posts' ? 'block' : 'hidden'"
+        ></div>
+        <span>Posts</span>
+      </button>
+      <button
+        (click)="selectTab('liked')"
+        class="w-1/2 pb-2 text-center relative"
+      >
+        <span>Liked</span>
+        <div
+          class="absolute -bottom-[2px] w-full h-[2px] bg-black"
+          [class]="selectedTab === 'liked' ? 'block' : 'hidden'"
+        ></div>
+      </button>
+    </nav>
+  </div>
+
+  @if(selectedTab === 'posts'){
+  <div>
+    <p class="mt-10 text-gray-500 text-center text-lg">No posts yet.</p>
+  </div>
+  }
+
+  <div *ngIf="selectedTab === 'liked'">
+    <p class="mt-10 text-gray-500 text-center text-lg">No liked posts.</p>
+  </div>
+</div>

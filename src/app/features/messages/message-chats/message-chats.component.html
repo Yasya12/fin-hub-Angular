@@ -1,13 +1,14 @@
-<div class="flex flex-row items-center justify-center mt-4">
-  <div class="border w-[17%] h-[70vh] self-start bg-yellow-400"></div>
-  <div class="grow max-w-xl h-[90vh]">
+<div class="sticky top-[106px] flex flex-row">
+  <div class="grow">
     <div
-      class="h-[5vh] bg-gray-100 flex items-center justify-between px-4 rounded-t-lg border-b shadow-sm text-gray-700 font-medium"
+      class="h-[44px] bg-gray-100 flex items-center justify-center px-4 shadow-sm text-black font-medium"
     >
-      {{ username }}
+      <span class="text-xl">
+        {{ username }}
+      </span>
     </div>
 
-    <div class="px-2 pb-2 flex-1 border-x border-gray-200">
+    <div class="pb-2 flex-1 border-x border-gray-200">
       <app-message-chat
         [username]="username"
         [newMessages]="newMessages"
@@ -15,7 +16,14 @@
       ></app-message-chat>
     </div>
   </div>
-  <div class="w-[17%] h-[90vh] self-start border-r border-t">
+  <div
+    class="bg-gray-100 grow-0 shrink-0 basis-[344px] h-[90vh] self-start border-r border-l-2 border-l-gray-300"
+  >
+    <div
+      class="relative h-[44px] w-full flex flex-row justify-center items-center"
+    >
+      <span class="text-black text-xl mt-0.5">Переписники</span>
+    </div>
     <app-message-chat-list
       (selectChat)="onChatSelected($event)"
     ></app-message-chat-list>

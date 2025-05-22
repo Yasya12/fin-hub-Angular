@@ -13,9 +13,9 @@
   </div>
 
   <!--WHEN USER IS NOT LOGGED-->
-  @if(false) {
+  @if(!user()) {
   <!--AUTHENTICATION-->
-  <div class="mb-[10px]">
+  <div class="mb-[10px] p-2">
     <h2 class="font-medium text-xl pb-2">Вперше на FinHub?</h2>
     <span
       >Отримуйте доступ до розмов у реальному часі, настроїв інвесторів,
@@ -23,9 +23,10 @@
     >
   </div>
   <!--ACCOUNT BUTTONS-->
-  <div class="flex flex-col gap-[10px] items-center">
+  <div class="flex flex-col gap-[10px] items-center p-2">
     <button
       class="px-8 py-2 rounded-full border-2 border-gray-300 w-full text-lg font-bold transition-all hover:bg-gray-100"
+      (click)="navigateToSignup() "
     >
       Увійти
     </button>
@@ -35,7 +36,7 @@
       Зареєструватися
     </button>
   </div>
-  } @if(true) {
+  } @if(user()) {
   <div
     class="px-4 pb-4 flex flex-col border-b-2 border-gray-300 bg-white gap-[2px] font-medium"
   >
@@ -50,14 +51,17 @@
       >
         <span
           class="capitalize py-1.5 cursor-pointer pl-3 pr-4 transition-colors duration-75 hover:bg-gray-100"
+          (click)="navigateToUserProfile(user()!.username)"
           >переглянути профіль</span
         >
         <span
           class="capitalize py-1.5 cursor-pointer pl-3 pr-6 transition-colors duration-75 hover:bg-gray-100"
+           (click)="navigateToEditUserProfile()"
           >редагувати профіль</span
         >
         <span
           class="capitalize text-red-400 py-1.5 cursor-pointer pl-3 pr-6 transition-colors duration-75 hover:bg-red-100"
+          (click)="this.authService.logout()"
           >вийти</span
         >
       </div>
@@ -65,6 +69,7 @@
         (click)="profileClicked()"
         class="flex flex-row gap-2 items-center hover:bg-gray-100 py-1.5 pl-[40px] pr-3.5 cursor-pointer rounded-full w-min"
       >
+        @if(!user()){
         <!--PROFILE BIG_COVER-->
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -83,6 +88,13 @@
             />
           </g>
         </svg>
+        } @else {
+        <img
+          [src]="this.authService.currentUser()?.user?.profilePictureUrl"
+          alt="User Icon"
+          class="size-[35px] rounded-full text-teal-500 absolute top-0 left-0 border border-gray-400"
+        />
+        }
         <span>Профіль</span>
         <svg
           aria-hidden="true"
@@ -102,7 +114,7 @@
       </div>
     </div>
     <!--Notifications-->
-    <div class="cursor-pointer">
+    <div class="cursor-pointer" routerLink="/notifications">
       <div
         class="flex flex-row gap-4 items-center hover:bg-gray-100 py-1.5 pl-2 pr-3.5 cursor-pointer rounded-full w-min"
       >
@@ -125,7 +137,7 @@
       </div>
     </div>
     <!--Messages-->
-    <div class="cursor-pointer">
+    <div class="cursor-pointer" routerLink="/messages/chats">
       <div
         class="flex flex-row gap-4 items-center hover:bg-gray-100 py-1.5 pl-2 pr-3.5 rounded-full w-min"
       >
@@ -148,7 +160,7 @@
       </div>
     </div>
     <!--Followings-->
-    <div class="cursor-pointer">
+    <div class="cursor-pointer" routerLink="/followings">
       <div
         class="flex flex-row gap-4 items-center hover:bg-gray-100 py-1.5 pl-2 pr-3.5 cursor-pointer rounded-full w-min"
       >
@@ -200,6 +212,9 @@
       <span>Створити пост</span>
     </button>
   </div>
+  }
+
+  <!--List-->
   <div class="relative flex flex-col bg-white">
     <span class="font-medium pt-4 pb-3 pl-4 z-20">Cписок спостережень</span>
     <div class="relative -top-[52px] z-10 overflow-hidden">
@@ -235,5 +250,4 @@
     <!--Added height-->
     <div class="h-[12px] w-full"></div>
   </div>
-  }
 </div>

@@ -39,12 +39,6 @@ export class HeaderComponent implements OnInit {
   hasUnreadNotifications = signal<boolean>(false);
 
   menuItems = [
-    // {
-    //   key: 'home',
-    //   icon: 'home_icon',
-    //   chosenIcon: 'chosen_home_icon',
-    //   route: '/home',
-    // },
     {
       key: 'Hubs',
       name: 'Спільноти',

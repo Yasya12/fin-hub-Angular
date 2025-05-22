@@ -1,35 +1,53 @@
-<!-- Top Posts Section -->
-<div class="px-6 max-w-3xl mx-auto mt-4">
-  <!-- Tab Buttons -->
-  <div class="border-b border-gray-300 flex space-x-4">
-    <button
-      (click)="selectTab('posts')"
-      [ngClass]="{
-        'border-b-2 border-green-600 text-green-600 font-medium':
-          selectedTab === 'posts',
-        'text-gray-600 hover:text-green-600': selectedTab !== 'posts'
-      }"
-      class="px-4 py-2 transition duration-150"
-    >
-      Posts
-    </button>
+<div class="flex justify-center h-full">
+  <!-- Top Posts Section -->
+  <div class="grow max-w-[50rem] mx-auto mt-4">
+    <!-- Tab Buttons -->
+    <div class="border-b border-gray-300 flex space-x-4">
+      <button
+        (click)="selectTab('posts')"
+        [ngClass]="{
+          'border-b-2 border-teal-600 text-teal-600 font-medium':
+            selectedTab === 'posts',
+          'text-gray-600 hover:text-teal-600': selectedTab !== 'posts'
+        }"
+        class="px-4 py-2 transition duration-150"
+      >
+        Posts
+      </button>
 
-    <button
-      (click)="selectTab('followings')"
-      [ngClass]="{
-        'border-b-2 border-green-600 text-green-600 font-medium':
-          selectedTab === 'followings',
-        'text-gray-600 hover:text-green-600': selectedTab !== 'followings'
-      }"
-      class="px-4 py-2 transition duration-150"
-    >
-      Followings
-    </button>
+      <button
+        (click)="selectTab('followings')"
+        [ngClass]="{
+          'border-b-2 border-teal-600 text-teal-600 font-medium':
+            selectedTab === 'followings',
+          'text-gray-600 hover:text-teal-600': selectedTab !== 'followings'
+        }"
+        class="px-4 py-2 transition duration-150"
+      >
+        Followings
+      </button>
+    </div>
+
+    @if (selectedTab === 'posts') {
+    <app-follow-posts
+      [curretnUserResponse]="currentUserResponse"
+      [currentUser]="currentUser"
+    ></app-follow-posts>
+    } @else if (selectedTab === 'followings') {
+    <app-follow-followings></app-follow-followings>
+    }
   </div>
 
-  @if (selectedTab === 'posts') {
-  <app-follow-posts [curretnUserResponse]="currentUserResponse" [currentUser]="currentUser"></app-follow-posts>
-  } @else if (selectedTab === 'followings') {
-  <app-follow-followings></app-follow-followings>
-  }
+  <!-- News view bar -->
+  <div
+    class="grow-0 shrink-0 basis-[320px] flex flex-col border-x-2 border-gray-300 h-full"
+  >
+    <span class="font-medium text-lg px-4 py-2">Останні новини</span>
+
+    <div
+      class="relative w-full h-[710px] border-b-2 border-gray-300 overflow-hidden"
+    >
+      <app-news class="absolute -top-[56px] left-0"></app-news>
+    </div>
+  </div>
 </div>

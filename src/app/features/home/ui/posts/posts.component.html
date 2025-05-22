@@ -12,7 +12,7 @@
         <!-- Iterate over each post -->
         @for(post of posts(); track post.id) {
         <div
-          class="bg-[#ffffff] p-4 rounded-lg transition-all duration-300 flex flex-col cursor-pointer border  border-gray-400"
+          class="bg-[#ffffff] p-4 rounded-lg transition-all duration-300 flex flex-col cursor-pointer border"
           (click)="onLinkClick($event, post.id)"
         >
           <div class="relative cursor-pointer flex items-center mb-3">

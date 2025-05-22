@@ -1,11 +1,11 @@
 <div class="flex justify-center items-center">
   <div class="w-full max-w-3xl p-4">
-    <h2 class="text-xl font-bold mb-4">People</h2>
+    <h2 class="text-xl font-bold mb-4 text-center">People</h2>
 
     @if(follows != undefined && follows.length > 0) {
     <div
       *ngFor="let follow of follows"
-      class="bg-white shadow-md rounded-2xl p-4 mb-4 flex items-center"
+      class="bg-white shadow-md rounded-2xl p-4 mb-4 flex items-center border"
     >
       <img
         [src]="follow.profilePhoroUrl || '/assets/images/Sample_User_Icon.png'"

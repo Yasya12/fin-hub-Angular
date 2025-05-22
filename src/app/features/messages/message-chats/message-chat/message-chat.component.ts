@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Message } from '../models/message.model';
-import { MessageService } from '../services/message.service';
+import { Message } from '../../models/message.model';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-message-chat',

@@ -1,0 +1,117 @@
+<div class="min-h-screen bg-white flex">
+  <!-- Чорна шапка зверху -->
+  <div
+    class="w-[40%] ml-40 bg-teal-700 text-white flex items-start justify-center pt-40 p-10"
+  >
+    <div class="max-w-md">
+      <h1 class="text-4xl font-bold mb-6 italic">finhub</h1>
+      <p class="text-5xl font-bold leading-tight">
+        Welcome to one of the largest investing communities on the planet.
+      </p>
+    </div>
+  </div>
+
+  <!-- Основний контент під шапкою -->
+  <main class="flex-grow flex items-center justify-center p-10">
+    <div class="w-full max-w-sm">
+      <h1 class="text-4xl font-bold mb-6 text-center italic">finhub</h1>
+
+      <div>
+        <form #signupForm="ngForm" (ngSubmit)="signup()">
+          <h2 class="text-lg font-semibold mb-2">Get Started</h2>
+          <input
+            type="text"
+            name="username"
+            autocomplete="username"
+            [(ngModel)]="signupData.username"
+            placeholder="User Name"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-1 focus:ring-gray-500"
+          />
+          <input
+            type="email"
+            name="email"
+            autocomplete="email"
+            [(ngModel)]="signupData.email"
+            placeholder="Email"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-1 focus:ring-gray-500"
+          />
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="signupData.password"
+            autocomplete="current-password"
+            placeholder="Password"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-1 focus:ring-gray-500"
+          />
+
+          <button
+            type="submit"
+            class="w-full bg-teal-700 text-white font-semibold py-2 rounded-full mb-2"
+          >
+            Sign Up
+          </button>
+
+          <div class="flex justify-center items-center">
+            <div
+              *ngIf="errorMessage"
+              class="mt-4 transition-all duration-300 text-xs"
+            >
+              <pre class="text-wrap p-1 text-white bg-black">{{
+                errorMessage
+              }}</pre>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <p class="text-sm mb-2">
+        Already have an account?
+        <a href="#" class="text-blue-600 hover:underline">Log in</a>
+      </p>
+
+      <div class="flex items-center my-3">
+        <hr class="flex-grow border-gray-300" />
+        <span class="mx-2 text-gray-400">or</span>
+        <hr class="flex-grow border-gray-300" />
+      </div>
+
+      <!-- Google-кнопка -->
+      <div
+        *ngIf="!errorMessage"
+        class="w-full flex items-start justify-center bg-white"
+      >
+        <div class="scale-125">
+          <div
+            id="g_id_onload"
+            data-client_id="338848987617-d03vnfo57c3g809vc4umirrjas5s4gr6.apps.googleusercontent.com"
+            data-callback="handleCredentialResponse"
+            data-scope="email profile"
+            data-context="use"
+            data-ux_mode="popup"
+            data-auto_prompt="false"
+          ></div>
+
+          <div
+            class="g_id_signin"
+            data-type="standard"
+            data-shape="pill"
+            data-theme="outline"
+            data-text="continue_with"
+            data-size="large"
+            data-logo_alignment="left"
+          ></div>
+        </div>
+      </div>
+
+      <p class="text-xs text-gray-500 mt-4">
+        By signing up, you agree to the
+        <a href="#" class="text-blue-600 hover:underline"
+          >Terms and Conditions</a
+        >.
+      </p>
+    </div>
+  </main>
+</div>

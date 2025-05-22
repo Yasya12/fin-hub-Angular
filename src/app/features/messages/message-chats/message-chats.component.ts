@@ -13,7 +13,6 @@ export class MessageChatsComponent implements OnInit {
     this.loadMessages();
   }
 
-
   private messageService = inject(MessageService)
 
   newMessages: Message[] = [];

@@ -5,4 +5,5 @@ export interface User {
   role: string;
   profilePictureUrl: string;
   bio: string;
+  country: string;
 }
