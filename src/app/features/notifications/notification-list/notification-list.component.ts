@@ -22,7 +22,7 @@ export class NotificationListComponent implements OnInit {
   //states
   currentUser: User | undefined;
   allNotifications = signal<NotificationDto[] | undefined>(undefined);
-  selectedFilter = signal<'all' | 'likes' | 'requests' | 'followings'>('all');
+  selectedFilter = signal<'all' | 'likes' | 'requests' | 'follows'>('all');
 
 
   //hooks
@@ -34,7 +34,7 @@ export class NotificationListComponent implements OnInit {
   }
 
   //methods
-  onFilterChange(filter: 'all' | 'likes' | 'requests' | 'followings') {
+  onFilterChange(filter: 'all' | 'likes' | 'requests' | 'follows') {
     this.selectedFilter.set(filter);
 
     switch (filter) {
@@ -47,9 +47,9 @@ export class NotificationListComponent implements OnInit {
       case 'requests':
         this.loadRequests();
         break;
-      // case 'followings':
-      //   this.loadFollowings();
-      //   break;
+      case 'follows':
+        this.loadFollows();
+        break;
     }
   }
 
@@ -71,6 +71,12 @@ export class NotificationListComponent implements OnInit {
 
   loadRequests(){
     this.notificationService.getRequestNotificationsForUser().subscribe((result) => {
+      this.allNotifications.set(result);
+    })
+  }
+
+  loadFollows(){
+    this.notificationService.getFollowNotificationsForUser().subscribe((result) => {
       this.allNotifications.set(result);
     })
   }

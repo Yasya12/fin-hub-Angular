@@ -24,7 +24,7 @@
 
   <div class="mb-6">
     <!-- post() content -->
-    <div class="text-gray-800 text-lg mb-3" [innerHTML]="post()!.content"></div>
+    <div class="text-gray-800 text-lg mb-3 break-words whitespace-pre-wra text-wrapp" [innerHTML]="sanitizeHtmlContent(post()!.content)"></div>
     <!-- Loop through images -->
     <div *ngIf="post()!.images && post()!.images!.length > 0">
       <div *ngFor="let image of post()!.images">

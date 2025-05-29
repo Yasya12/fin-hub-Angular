@@ -1,0 +1,62 @@
+<div class="flex justify-center">
+  <div class="w-full max-w-3xl p-4">
+    <h2 class="text-xl font-bold mb-4 text-center">
+      <span *ngIf="mode === 'followers'">Followers</span>
+      <span *ngIf="mode === 'following'">Following</span>
+    </h2>
+
+    <div
+      *ngIf="list.length === 0"
+      class="text-center animate-fade-in text-gray-500 my-4"
+    >
+      {{ username }} is not
+      {{
+        mode === "followers" ? "followed by anyone" : "following anyone"
+      }}
+      yet.
+    </div>
+
+    <div
+      *ngFor="let user of list"
+      class="bg-white shadow-md rounded-2xl p-4 mb-4 flex items-center border"
+    >
+      <img
+        [src]="user.profilePhoroUrl || '/assets/images/Sample_User_Icon.png'"
+        alt="Profile photo"
+        class="w-16 h-16 rounded-full mr-4 object-cover"
+      />
+      <div class="flex-1">
+        <h3 class="text-lg font-semibold">{{ user.username }}</h3>
+        <p *ngIf="user.email" class="text-gray-600">{{ user.email }}</p>
+        <p *ngIf="user.bio" class="text-gray-500 text-sm">{{ user.bio }}</p>
+      </div>
+
+      <!-- При потребі додай кнопку, наприклад: -->
+      <!--
+      <button
+        [ngClass]="{
+          'border-green-500 text-green-500 hover:bg-green-100': !isFollowing(user),
+          'border-red-500 text-red-500 hover:bg-red-100': isFollowing(user)
+        }"
+        class="ml-auto border-2 font-semibold py-1 px-4 rounded-xl transition duration-200"
+        (click)="toggleFollow(user)"
+      >
+        {{ isFollowing(user) ? 'Unfollow' : 'Follow' }}
+      </button>
+      -->
+    </div>
+  </div>
+
+  <!-- News view bar -->
+  <div
+    class="grow-0 shrink-0 basis-[320px] flex flex-col border-x-2 border-gray-300 h-full"
+  >
+    <span class="font-medium text-lg px-4 py-2">Останні новини</span>
+
+    <div
+      class="relative w-full h-[710px] border-b-2 border-gray-300 overflow-hidden"
+    >
+      <app-news class="absolute -top-[56px] left-0"></app-news>
+    </div>
+  </div>
+</div>

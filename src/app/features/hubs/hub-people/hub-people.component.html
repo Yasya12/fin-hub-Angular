@@ -1,12 +1,9 @@
 <div class="flex justify-center items-center">
   <div class="w-full max-w-3xl p-4">
-    <h2 class="text-xl font-bold mb-4">People</h2>
+    <h2 class="text-xl font-bold mb-4">Люди</h2>
 
-    <div
-      class="bg-green-600 text-center p-2 rounded mb-4"
-      (click)="openModal()"
-    >
-      <div class="text-white">Want to be a contributor? Apply here</div>
+    <div class="bg-teal-500 text-center p-2 rounded mb-4" (click)="openModal()">
+      <div class="text-white">Хочете стати дописувачем? Подайте заявку тут</div>
     </div>
 
     <div
@@ -84,30 +81,30 @@
     class="bg-white rounded-md p-6 w-[32rem]"
     (click)="stopPropagation($event)"
   >
-    <h3 class="text-xl font-bold mb-4">Request to become a contributor</h3>
+    <h3 class="text-xl font-bold mb-4">Прохання стати дописувачем</h3>
 
     <!-- Trustworthiness Text Area -->
-    <p class="mb-2">Why should people trust you?</p>
+    <p class="mb-2">Чому люди повинні вам довіряти?</p>
     <textarea
       class="w-full h-20 p-2 border rounded mb-1"
-      placeholder="Provide a brief reason (around 20 words)..."
+      placeholder="Надайте коротку причину (близько 20 слів)..."
       [(ngModel)]="trustReason"
       (input)="updateWordCount('trust')"
       maxlength="110"
     ></textarea>
-    <div class="text-sm text-gray-500 mb-4">{{ trustWordCount }} words</div>
+    <div class="text-sm text-gray-500 mb-4">{{ trustWordCount }} слова</div>
 
     <!-- Contribution Reason Text Area -->
-    <p class="mb-2">Why do you want to become a member?</p>
+    <p class="mb-2">Чому ви хочете стати учасником?</p>
     <textarea
       class="w-full h-32 p-2 border rounded mb-1"
-      placeholder="Write something (around 500 words)..."
+      placeholder="Напишіть щось (близько 500 слів)..."
       [(ngModel)]="memberReason"
       (input)="updateWordCount('contribution')"
       maxlength="2500"
     ></textarea>
     <div class="text-sm text-gray-500 mb-4">
-      {{ contributionWordCount }} words
+      {{ contributionWordCount }} слова
     </div>
 
     <!-- Buttons -->
@@ -116,14 +113,14 @@
         class="mr-2 px-4 py-2 rounded text-gray-600"
         (click)="closeModal()"
       >
-        Cancel
+        Скасувати
       </button>
       <button
-        class="px-4 py-2 bg-blue-600 text-white rounded"
+        class="px-4 py-2 bg-teal-600 text-white rounded"
         (click)="submitRequest()"
         [disabled]="trustWordCount > 30 || contributionWordCount > 500"
       >
-        Submit Request
+        Надіслати запит
       </button>
     </div>
   </div>

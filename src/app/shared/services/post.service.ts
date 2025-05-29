@@ -20,6 +20,7 @@ export class PostService {
   paginatedResult = signal<PaginatedResult<Post[]> | undefined>(undefined);
   paginatedHubResult = signal<PaginatedResult<Post[]> | undefined>(undefined);
   paginatedFollowResult = signal<PaginatedResult<Post[]> | undefined>(undefined);
+  paginatedForSpecificUser = signal<PaginatedResult<Post[]> | undefined>(undefined);
 
   getPosts(pageNumber: number, pageSize: number): Observable<HttpResponse<Post>> {
     const params = new HttpParams()
@@ -34,6 +35,56 @@ export class PostService {
         tap(response => {
           const paginationHeader = response.headers.get('Pagination');
           this.paginatedResult.set({
+            items: response.body ? (Array.isArray(response.body) ? response.body : [response.body]) : [],
+            pagination: JSON.parse(paginationHeader!),
+          });
+        }
+        )
+      )
+  }
+
+  getPostsForSpecificUser(pageNumber: number, pageSize: number, specificUserId: string): Observable<HttpResponse<Post>> {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize)
+      .set('specificUserId', specificUserId);
+
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`)
+      .set('Cache-Control', 'no-cache');
+
+    return this.http
+      .get<Post>(`${this.baseUrl}/post/specific-user-with-likes`, {
+        observe: 'response', params, headers, transferCache: { includeHeaders: ['Pagination'] }
+      }).pipe(
+        tap(response => {
+          const paginationHeader = response.headers.get('Pagination');
+          this.paginatedForSpecificUser.set({
+            items: response.body ? (Array.isArray(response.body) ? response.body : [response.body]) : [],
+            pagination: JSON.parse(paginationHeader!),
+          });
+        }
+        )
+      )
+  }
+
+  getLikedPostsForSpecificUser(pageNumber: number, pageSize: number, specificUserId: string): Observable<HttpResponse<Post>> {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize)
+      .set('specificUserId', specificUserId);
+
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`)
+      .set('Cache-Control', 'no-cache');
+
+    return this.http
+      .get<Post>(`${this.baseUrl}/post/liked-specific-user-with-likes`, {
+        observe: 'response', params, headers, transferCache: { includeHeaders: ['Pagination'] }
+      }).pipe(
+        tap(response => {
+          const paginationHeader = response.headers.get('Pagination');
+          this.paginatedForSpecificUser.set({
             items: response.body ? (Array.isArray(response.body) ? response.body : [response.body]) : [],
             pagination: JSON.parse(paginationHeader!),
           });
@@ -124,8 +175,8 @@ export class PostService {
 
   getFollowingPostsWithLikes(pageNumber: number, pageSize: number): Observable<HttpResponse<Post>> {
     if (!this.authService.currentUser()?.token) {
-            return of(new HttpResponse<Post>({ status: 401 }));
-        }
+      return of(new HttpResponse<Post>({ status: 401 }));
+    }
     const params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());

@@ -59,6 +59,7 @@ export class CreatePostComponent {
 
     formData.append('UserEmail', this.currentUser()?.user.email!);
     formData.append('Content', this.content);
+    console.log(this.content);
     const hubIdValue = this.hubId?.();
 
   if (hubIdValue) {

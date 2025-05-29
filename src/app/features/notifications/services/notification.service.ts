@@ -56,6 +56,14 @@ export class NotificationService {
         return this.http.get<NotificationDto[]>(`${this.baseUrl}/notification/request-noti`, { headers });
     }
 
+    getFollowNotificationsForUser(): Observable<NotificationDto[]> {
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+
+
+        return this.http.get<NotificationDto[]>(`${this.baseUrl}/notification/follow-noti`, { headers });
+    }
+
     markNotificationRead(notiId: string) {
         const headers = new HttpHeaders()
             .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);

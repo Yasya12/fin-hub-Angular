@@ -1,4 +1,4 @@
-<div *ngIf="hub() as hub">
+<div *ngIf="hub() as hub" class="border-r h-full">
   <!-- Background Section -->
   <div
     class="relative w-full h-96 bg-cover bg-center flex items-end"
@@ -28,13 +28,13 @@
         <!-- Right: Follow Button (Aligned with Description) -->
         <button
           [ngClass]="{
-            'text-red-50 bg-green-600 hover:bg-green-700 ': !isFollowing,
+            'text-red-50 bg-teal-400 hover:bg-teal-500 ': !isFollowing,
             'bg-red-600 text-white hover:bg-red-700': isFollowing
           }"
           class="py-2 px-4 rounded-lg transition self-end"
           (click)="toggleFollow(hub)"
         >
-          {{ isFollowing ? "Unfollow" : "Follow" }}
+          {{ isFollowing ? "Не стежити" : "Стежити" }}
         </button>
       </div>
     </div>
@@ -47,50 +47,50 @@
       <button
         (click)="selectTab('about')"
         [ngClass]="{
-          'border-b-2 border-green-600 text-green-600 font-medium':
+          'border-b-2 border-teal-600 text-teal-600 font-medium':
             selectedTab === 'about',
-          'text-gray-600 hover:text-green-600': selectedTab !== 'about'
+          'text-gray-600 hover:text-teal-600': selectedTab !== 'about'
         }"
         class="px-4 py-2 transition duration-150"
       >
-        About
+        Про
       </button>
 
       <button
         (click)="selectTab('posts')"
         [ngClass]="{
-          'border-b-2 border-green-600 text-green-600 font-medium':
+          'border-b-2 border-teal-600 text-teal-600 font-medium':
             selectedTab === 'posts',
-          'text-gray-600 hover:text-green-600': selectedTab !== 'posts'
+          'text-gray-600 hover:text-teal-600': selectedTab !== 'posts'
         }"
         class="px-4 py-2 transition duration-150"
       >
-        Posts
+        Пости
       </button>
 
       @if(isAdmin) {
       <button
         (click)="selectTab('requests')"
         [ngClass]="{
-          'border-b-2 border-green-600 text-green-600 font-medium':
+          'border-b-2 border-teal-600 text-teal-600 font-medium':
             selectedTab === 'requests',
-          'text-gray-600 hover:text-green-600': selectedTab !== 'requests'
+          'text-gray-600 hover:text-teal-600': selectedTab !== 'requests'
         }"
         class="px-4 py-2 transition duration-150"
       >
-        Requests
+        Запити
       </button>
 
       <button
         (click)="selectTab('edit')"
         [ngClass]="{
-          'border-b-2 border-green-600 text-green-600 font-medium':
+          'border-b-2 border-teal-600 text-teal-600 font-medium':
             selectedTab === 'edit',
-          'text-gray-600 hover:text-green-600': selectedTab !== 'edit'
+          'text-gray-600 hover:text-teal-600': selectedTab !== 'edit'
         }"
         class="px-4 py-2 transition duration-150"
       >
-        Edit Hub
+        Редагувати Хаб
       </button>
 
       }

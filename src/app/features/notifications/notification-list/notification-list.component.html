@@ -43,12 +43,12 @@
           class="block w-full text-left px-3 py-2 rounded"
           [ngClass]="{
             'bg-teal-400 text-white font-semibold':
-              selectedFilter() === 'followings',
-            'hover:bg-gray-200': selectedFilter() !== 'followings'
+              selectedFilter() === 'follows',
+            'hover:bg-gray-200': selectedFilter() !== 'follows'
           }"
-          (click)="onFilterChange('followings')"
+          (click)="onFilterChange('follows')"
         >
-          Followings
+          Follows
         </button>
       </nav>
     </aside>

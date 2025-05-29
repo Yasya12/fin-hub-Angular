@@ -6,14 +6,12 @@ import {
   input,
   OnInit,
   signal,
-  TemplateRef,
 } from '@angular/core';
 import { Post } from '../../models/post.interface';
 import { PostService } from '../../../../shared/services/post.service';
 import { LikeService } from '../../../../shared/services/like.service';
 import { Router } from '@angular/router';
 import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
-import { ScrollService } from '../../../../shared/services/scroll.service';
 import { PostDetailStore } from '../../../post-detail/stores/post-detail/post-detail.store';
 import { firstValueFrom } from 'rxjs';
 
@@ -24,27 +22,17 @@ import { firstValueFrom } from 'rxjs';
   standalone: false,
   providers: [PostDetailStore]
 })
-export class PostsComponent implements OnInit {
-  View: string | TemplateRef<unknown> | undefined;
-  ngAfterViewInit(): void {
-    if (!this.postService.paginatedResult()) {
-      this.loadPosts();
-    }
-  }
+export class PostsComponent implements OnInit, AfterViewInit {
   // Services
   private readonly postService = inject(PostService);
   private readonly likeService = inject(LikeService);
   private readonly router = inject(Router);
-  private readonly scrollService = inject(ScrollService);
 
   //Stores
   posrDetailStore = inject(PostDetailStore); //TODO: write a store for the auth and dont use the post detail store here
 
   // Inputs
-  currentUser = input<ResponseModel>();
-
-  tooltipProfile: string = 'View Profile';
-  tooltipPost: string = 'Go to Post';
+  currentUser = input.required<ResponseModel>();
 
   // States
   posts = signal<Post[]>([]);
@@ -52,11 +40,16 @@ export class PostsComponent implements OnInit {
   newPost = signal<Post | undefined>(undefined);
   pageNumber = 1;
   pageSize = 10;
-  totalPages = 1; // default until first load
-
+  totalPages = 1;
   hasMorePosts = true;
   lastScrollTop: number = 0;
+  tooltipProfile: string = 'View Profile';
+  tooltipPost: string = 'Go to Post';
+  showModal: boolean = false;
+  hoveredUser: string = '';
+  modalPosition = { top: 0, left: 0 };
 
+  //effects
   myEffect = effect(
     () => {
       const post = this.newPost();
@@ -67,60 +60,20 @@ export class PostsComponent implements OnInit {
     { allowSignalWrites: true }
   );
 
-  //
-  showModal: boolean = false;
-  hoveredUser: string = '';
-  modalPosition = { top: 0, left: 0 };
-
- showUserModal(userName: string, container: HTMLElement): void {
-  this.hoveredUser = userName;
-  this.showModal = true;
-
-  const rect = container.getBoundingClientRect();
-
-  this.modalPosition = {
-    top: rect.top + window.scrollY + rect.height + 5,
-    left: rect.left + window.scrollX,
-  };
-}
-
-
-  hideUserModal() {
-    this.showModal = false;
-    this.hoveredUser = '';
-  }
-
-  goToUserProfile(event: Event, userName: string): void {
-    // Зупиняємо спливання події на контейнер
-    event.stopPropagation();
-    this.router.navigate(['/member', userName]);
-  }
-
-  navigateToPost(postId: string) {
-    this.router.navigateByUrl(`/home/post/${postId}`);
-  }
-
-
-  //
-
   // Lifecycle hooks
   ngOnInit(): void {
     this.loadPosts();
 
+    window.addEventListener('scroll', this.onWindowScroll.bind(this));
+  }
 
-    this.scrollService.scrollContainer$.subscribe((container) => {
-      if (container) {
-        container.nativeElement.addEventListener(
-          'scroll',
-          this.onScroll.bind(this)
-        );
-      }
-    });
+  ngAfterViewInit(): void {
+    if (!this.postService.paginatedResult()) {
+      this.loadPosts();
+    }
   }
 
   //Methods
-  
-
   async loadPosts() {
     if (!this.hasMorePosts || this.loading()) {
       return;
@@ -148,7 +101,6 @@ export class PostsComponent implements OnInit {
     this.loading.set(false);
   }
 
-
   toggleLike(post: Post): void {
     this.likeService.toggleLike(post.id).subscribe(() => {
       this.posts.update((posts) =>
@@ -165,11 +117,40 @@ export class PostsComponent implements OnInit {
     });
   }
 
+  //modal
+  showUserModal(userName: string, container: HTMLElement): void {
+    this.hoveredUser = userName;
+    this.showModal = true;
+
+    const rect = container.getBoundingClientRect();
+
+    this.modalPosition = {
+      top: rect.top + window.scrollY + rect.height + 5,
+      left: rect.left + window.scrollX,
+    };
+  }
+
+  hideUserModal() {
+    this.showModal = false;
+    this.hoveredUser = '';
+  }
+
+  goToUserProfile(event: Event, userName: string): void {
+    event.stopPropagation();
+    this.router.navigate(['/member', userName]);
+  }
+
+  navigateToPost(postId: string) {
+    this.router.navigateByUrl(`/home/post/${postId}`);
+  }
+
   addPost(post: Post): void {
     this.newPost.set(post);
   }
 
-  
+  sanitizeHtmlContent(html: string): string {
+    return html.replace(/&nbsp;/g, ' ');
+  }
 
   // Event handlers
   onLinkClick(event: Event, postId: string) {
@@ -178,13 +159,16 @@ export class PostsComponent implements OnInit {
     this.navigateToPost(postId);
   }
 
-  onScroll(event: Event): void {
-    if (!this.hasMorePosts) return;
-    const container = event.target as HTMLElement;
-    if (
-      container.scrollTop + container.clientHeight >=
-      container.scrollHeight - container.scrollHeight * 0.1
-    ) {
+  onWindowScroll(): void {
+    if (!this.hasMorePosts || this.loading()) return;
+
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    const scrollThreshold = documentHeight - windowHeight * 1.2;
+
+    if (scrollTop >= scrollThreshold) {
       if (this.pageNumber < this.totalPages) {
         this.pageNumber++;
         this.loadPosts();

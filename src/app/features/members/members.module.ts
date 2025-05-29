@@ -8,6 +8,8 @@ import { TimeAgoPipe } from '../../shared/pipes/TimeAgoPipe';
 import { MemberProfileComponent } from './member-profile/member-profile.component';
 import { NewsComponent } from '../../shared/ui/news/news.component';
 import { MemberEditComponent } from './member-edit/member-edit.component';
+import { PostListComponent } from "../../shared/ui/post-list/post-list.component";
+import { FollowersFollowingComponent } from './member-profile/member-detail/followers-following/followers-following.component';
 
 
 
@@ -16,15 +18,17 @@ import { MemberEditComponent } from './member-edit/member-edit.component';
     MemberEditComponent,
     MemberDetailComponent,
     MemberMessagesComponent,
-    MemberProfileComponent
+    MemberProfileComponent,
+    FollowersFollowingComponent
   ],
   imports: [
     CommonModule,
     MembersRoutingModule,
     FormsModule,
     TimeAgoPipe,
-    NewsComponent
-  ],
+    NewsComponent,
+    PostListComponent
+],
   exports: [
     MemberMessagesComponent
   ]

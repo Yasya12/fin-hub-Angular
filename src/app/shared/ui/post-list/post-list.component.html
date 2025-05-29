@@ -1,14 +1,8 @@
-<section class="w-full h-full">
+<section class="w-full h-full my-4">
   <div class="">
-    <!-- Creating post -->
-    <app-create-post
-      [currentUser]="currentUser()"
-      (addPost)="addPost($event)"
-    ></app-create-post>
-
     <div class="flex flex-col w-full">
       <!-- Display posts after loading -->
-      <div class="flex flex-col gap-2 w-full px-4">
+      <div class="flex flex-col gap-2 w-full ">
         <!-- Iterate over each post -->
         @for(post of posts(); track post.id) {
         <div
@@ -24,14 +18,10 @@
               "
               alt="Author Avatar"
               class="w-10 h-10 rounded-full mr-3"
-              (click)="goToUserProfile($event, post.userName)"
-              (mouseenter)="showUserModal(post.userName, avatarContainer)"
-              (mouseleave)="hideUserModal()"
             />
             <div>
               <h4
                 class="font-bold text-lg"
-                (click)="goToUserProfile($event, post.userName)"
               >
                 {{ post.userName }}
               </h4>
@@ -40,71 +30,6 @@
               </p>
             </div>
 
-            <!-- Модальне вікно стилізоване -->
-            <div
-              *ngIf="showModal && hoveredUser === post.userName"
-              class="fixed w-80 bg-white border border-gray-300 rounded-xl p-4 shadow-2xl z-50 transition-opacity duration-200 ease-in-out"
-              [ngClass]="{ 'opacity-100': showModal, 'opacity-0': !showModal }"
-              [style.top.px]="modalPosition.top"
-              [style.left.px]="modalPosition.left"
-              (mouseleave)="hideUserModal()"
-              (click)="goToUserProfile($event, post.userName)"
-            >
-              <!-- Аватар -->
-              <div class="flex items-center mb-3">
-                <img
-                  [src]="
-                    post.profilePictureUrl ||
-                    '/assets/images/Sample_User_Icon.png'
-                  "
-                  alt="User Avatar"
-                  class="w-14 h-14 rounded-full mr-3 border"
-                />
-                <button
-                  class="ml-auto px-3 py-1 border border-gray-400 rounded-full text-sm hover:bg-gray-100"
-                >
-                  Підписка
-                </button>
-              </div>
-
-              <!-- Ім'я та юзернейм -->
-              <div class="mb-1">
-                <p class="text-lg font-semibold truncate">
-                  {{ post.userName }}
-                </p>
-                <p class="text-sm text-gray-500">{{ post.userName }}</p>
-              </div>
-
-              <!-- Опис -->
-              <p class="text-sm text-gray-700 mb-3">
-                {{ "Опис користувача відсутній." }}
-              </p>
-
-              <!-- Статистика -->
-              <div class="flex gap-4 text-sm text-gray-600 mb-2">
-                <span><strong>160</strong> читає(те)</span>
-                <span><strong>5 408</strong> читачів</span>
-              </div>
-
-              <!-- Заглушка взаємних -->
-              <div class="flex items-center text-sm text-gray-500 mb-2">
-                <img
-                  src="/assets/images/Sample_User_Icon.png"
-                  class="w-6 h-6 rounded-full mr-2"
-                  alt="avatar"
-                />
-                <span
-                  >Читають {{ post.userName }} і ще кілька з-поміж тих, кого ви
-                  читаєте</span
-                >
-              </div>
-
-              <button
-                class="w-full mt-2 py-1 border border-gray-400 rounded-lg text-sm hover:bg-gray-100"
-              >
-                Зведення профілю
-              </button>
-            </div>
           </div>
 
           @if(post.hubName){
@@ -160,7 +85,7 @@
                   d="M14 9l-2-2m0 0l-2 2m2-2v6m-6 2a2 2 0 01-2-2v-4a2 2 0 012-2h.01"
                 ></path>
               </svg>
-              Like <span class="ml-2">{{ post.likesCount }}</span>
+              Вподобайка <span class="ml-2">{{ post.likesCount }}</span>
             </button>
 
             <!-- Comments -->
@@ -182,7 +107,7 @@
                   d="M8 10h8m-8 4h4m1-14a7 7 0 11-14 0 7 7 0 0114 0z"
                 ></path>
               </svg>
-              Comment <span class="ml-2">{{ post.commentsCount }}</span>
+              Комент <span class="ml-2">{{ post.commentsCount }}</span>
             </a>
           </div>
         </div>
@@ -192,9 +117,9 @@
       <!-- Display if there are no posts -->
       <div
         *ngIf="!loading && (!posts || posts.length === 0)"
-        class="text-center animate-fade-in text-gray-500 my-4"
+        class="mt-10 text-gray-500 text-center text-lg"
       >
-        No posts available.
+        No posts yet.
       </div>
     </div>
   </div>

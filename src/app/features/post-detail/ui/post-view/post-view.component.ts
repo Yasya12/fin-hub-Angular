@@ -26,6 +26,10 @@ export class PostViewComponent implements OnInit {
     this.makeLinksClickable();
   }
 
+  sanitizeHtmlContent(html: string): string {
+    return html.replace(/&nbsp;/g, ' ');
+  }
+
   private makeLinksClickable() {
     if (isPlatformBrowser(this.platformId)) {
       setTimeout(() => {

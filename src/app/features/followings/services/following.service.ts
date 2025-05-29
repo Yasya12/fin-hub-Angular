@@ -18,6 +18,14 @@ export class FollowingService {
         return this.http.get<Follow[]>(`${this.baseUrl}/following/followings`, { headers });
     }
 
+    getFollowingsForSpecificUser(username: string): Observable<Follow[]> {
+        return this.http.get<Follow[]>(`${this.baseUrl}/following/followings-for-specific-user/${username}`);
+    }
+
+    getFollowersForSpecificUser(username: string): Observable<Follow[]> {
+        return this.http.get<Follow[]>(`${this.baseUrl}/following/followers-for-specific-user/${username}`);
+    } 
+
     isFollowingHub(followingHubId: string, type: string = "hub") {
         if (!this.authService.currentUser()?.token) {
             return of(false);

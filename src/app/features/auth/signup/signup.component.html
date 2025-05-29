@@ -1,0 +1,134 @@
+<!-- Signup Form -->
+<div>
+  <form #signupForm="ngForm" (ngSubmit)="signup()">
+    <h2 class="text-lg font-semibold mb-2">Почати</h2>
+    <input
+      type="text"
+      name="username"
+      autocomplete="username"
+      [(ngModel)]="signupData.username"
+      #username="ngModel"
+      placeholder="Ім’я користувача"
+      required
+      minlength="3"
+      class="w-full px-4 py-2 border border-gray-300 rounded mb-1 focus:outline-none focus:ring-1 focus:ring-gray-500"
+    />
+    <div
+      *ngIf="username.invalid && (username.dirty || username.touched || formSubmitted)"
+      class="text-red-600 text-xs mb-2"
+    >
+      <div *ngIf="username.errors?.['required']">
+        Ім’я користувача обов’язкове.
+      </div>
+      <div *ngIf="username.errors?.['minlength']">
+        Ім’я користувача має містити мінімум 3 символи.
+      </div>
+    </div>
+
+    <input
+      type="email"
+      name="email"
+      autocomplete="email"
+      [(ngModel)]="signupData.email"
+      #email="ngModel"
+      placeholder="Електронна пошта"
+      required
+      email
+      class="w-full px-4 py-2 border border-gray-300 rounded mb-1 focus:outline-none focus:ring-1 focus:ring-gray-500"
+    />
+    <div
+      *ngIf="email.invalid && (email.dirty || email.touched || formSubmitted)"
+      class="text-red-600 text-xs mb-2"
+    >
+      <div *ngIf="email.errors?.['required']">
+        Електронна пошта обов’язкова.
+      </div>
+      <div *ngIf="email.errors?.['email']">
+        Введіть коректну електронну пошту.
+      </div>
+    </div>
+
+    <input
+      type="password"
+      name="password"
+      [(ngModel)]="signupData.password"
+      #password="ngModel"
+      autocomplete="current-password"
+      placeholder="Пароль"
+      required
+      minlength="8"
+      class="w-full px-4 py-2 border border-gray-300 rounded mb-1 focus:outline-none focus:ring-1 focus:ring-gray-500"
+    />
+    <div
+      *ngIf="password.invalid && (password.dirty || password.touched || formSubmitted)"
+      class="text-red-600 text-xs mb-2"
+    >
+      <div *ngIf="password.errors?.['required']">Пароль обов’язковий.</div>
+      <div *ngIf="password.errors?.['minlength']">
+        Пароль має містити мінімум 8 символів.
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full bg-teal-700 text-white font-semibold py-2 rounded-full my-2"
+    >
+      Зареєструватися
+    </button>
+
+    <div class="flex justify-center items-center">
+      <div *ngIf="externalError" class="text-red-500 text-xs text-center mt-2">
+        {{ externalError }}
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Alredy have the account -->
+<p class="text-sm mb-2 mt-2 text-gray-500">
+  Вже маєте обліковий запис?
+  <a
+    [routerLink]="['/auth']"
+    [queryParams]="{ tab: 'login' }"
+    class="text-blue-600 hover:underline"
+    >Увійти</a
+  >
+</p>
+
+<!-- Or hr -->
+<div class="flex items-center my-3">
+  <hr class="flex-grow border-gray-300" />
+  <span class="mx-2 text-gray-400">or</span>
+  <hr class="flex-grow border-gray-300" />
+</div>
+
+<!-- Google-кнопка -->
+<div class="w-full flex items-start justify-center bg-white">
+  <div class="scale-125">
+    <div
+      id="g_id_onload"
+      data-client_id="338848987617-d03vnfo57c3g809vc4umirrjas5s4gr6.apps.googleusercontent.com"
+      data-callback="handleCredentialResponse"
+      data-scope="email profile"
+      data-context="use"
+      data-ux_mode="popup"
+      data-auto_prompt="false"
+    ></div>
+
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-shape="pill"
+      data-theme="outline"
+      data-text="continue_with"
+      data-size="large"
+      data-logo_alignment="left"
+    ></div>
+  </div>
+</div>
+
+<!-- Term and Consitions -->
+<p class="text-xs text-gray-500 mt-5">
+  Реєструючись, ви погоджуєтеся з
+  <a href="#" class="text-blue-600 hover:underline">Умовами та Положеннями</a>.
+</p>

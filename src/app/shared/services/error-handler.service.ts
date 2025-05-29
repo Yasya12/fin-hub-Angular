@@ -8,7 +8,7 @@ export class ErrorHandlerService {
   
   handleHttpError(err: any): string {
     if (!err || !err.status) {
-      return 'An unexpected error occurred. Please try again.';
+      return 'Сталася неочікувана помилка. Спробуйте ще раз.';
     }
 
     switch (err.status) {
@@ -18,18 +18,18 @@ export class ErrorHandlerService {
         }
         return this.formatValidationErrors(err.error?.errors);
       case 401:
-        return 'Invalid email or password. Please try again.';
+        return 'Неправильна електронна пошта або пароль. Спробуйте ще раз.';
       case 409:
-        return 'This email is already in use. Please use another email.';
+        return 'Ця електронна пошта вже використовується. Будь ласка, використайте іншу.';
       case 500:
-        return 'Server error. Please try again later.';
+        return 'Помилка сервера. Спробуйте пізніше.';
       default:
-        return 'Something went wrong. Please check your input and try again.';
+        return 'Щось пішло не так. Перевірте введені дані і спробуйте ще раз.';
     }
   }
 
   formatValidationErrors(errors: ValidationError): string {
-    if (!errors) return 'Invalid input. Please check your data.';
+    if (!errors) return 'Невірні дані. Перевірте правильність заповнення.';
     
     return Object.values(errors)
       .flat()

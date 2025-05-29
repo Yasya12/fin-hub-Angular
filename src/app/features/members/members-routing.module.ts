@@ -4,6 +4,7 @@ import { preventUnsavedChangesGuard } from '../../shared/guards/prevent-unsaved-
 import { memberDetailedResolver } from './resolvers/member-detailed.resolver';
 import { MemberProfileComponent } from './member-profile/member-profile.component';
 import { MemberEditComponent } from './member-edit/member-edit.component';
+import { FollowersFollowingComponent } from './member-profile/member-detail/followers-following/followers-following.component';
 
 const routes: Routes = [
   {
@@ -12,14 +13,25 @@ const routes: Routes = [
     canDeactivate: [preventUnsavedChangesGuard]
   },
   {
+    path: ':username/followers',
+    component: FollowersFollowingComponent,
+    data: { mode: 'followers' }
+  },
+  {
+    path: ':username/following',
+    component: FollowersFollowingComponent,
+    data: { mode: 'following' }
+  },
+  {
     path: ':username',
     component: MemberProfileComponent,
     resolve: {
       user: memberDetailedResolver
     },
     canDeactivate: [preventUnsavedChangesGuard]
-  }
+  },
 ];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

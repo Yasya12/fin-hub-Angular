@@ -58,7 +58,7 @@ export class ApartAsideComponent implements OnInit {
   }
 
   navigateToSignup() {
-    this.router.navigateByUrl(`/signup`);
+    this.router.navigateByUrl(`/auth`);
     this.showProfileDropDown.set(false);
   }
 

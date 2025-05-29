@@ -1,3 +1,78 @@
+<div class="border-r">
+  <div class="w-[95%] h-full rounded-xl mx-auto mt-5">
+    <div
+      style="
+        background: linear-gradient(
+          to top,
+          #134347 0%,
+          #134347 22%,
+          #258089 100%
+        );
+      "
+      class="w-full rounded-2xl flex flex-col justify-center items-center px-6 py-10 gap-6 shadow-lg"
+    >
+      <img
+        [src]="'/assets/images/hero-back.jpg'"
+        class="size-48 rounded-xl object-cover shadow-md"
+        alt="Hero image"
+      />
+
+      <div class="text-lg text-white text-center max-w-md leading-relaxed">
+        Підпишіться на Hub, щоб дізнатися більше про те, що вас цікавить, на
+        FinHub.
+      </div>
+
+      <button
+        class="px-6 py-2 text-white border border-white rounded-full font-semibold transition-all duration-300 ease-in-out hover:bg-white hover:text-teal-600"
+        (click)="openModal()"
+      >
+        Створити Хаб
+      </button>
+    </div>
+
+    <!-- Hubs Grid -->
+    <div *ngIf="hubs().length > 0" class="mt-8">
+      <h2 class="text-xl text-gray-400 font-semibold mb-4">Всі хаби</h2>
+      <div class="grid grid-cols-2 gap-6">
+        <ng-container *ngFor="let hub of hubs()">
+          <div
+            class="border rounded-xl p-6 shadow hover:shadow-md transition cursor-pointer"
+            [routerLink]="['/hubs', hub.id]"
+            [queryParams]="{ tab: 'posts' }"
+          >
+            <div class="flex items-start space-x-5">
+              <img
+                [src]="hub.mainPhotoUrl || '/assets/images/1.jpg'"
+                alt="{{ hub.name }}"
+                class="size-32 min-w-[128px] rounded-lg"
+              />
+              <div class="flex flex-col gap-3 w-full">
+                <h3 class="font-bold text-gray-800 text-2xl">{{ hub.name }}</h3>
+                <p class="text-xs text-gray-100">{{ hub.description }}</p>
+
+                <div class="mt-5 flex justify-between">
+                  <button
+                    class="px-4 py-1 border-2 font-medium rounded-full transition duration-300 ease-in-out hover:bg-gray-200"
+                    (click)="openModal()"
+                  >
+                    Дізнатися більше
+                  </button>
+                  <button
+                    class="px-4 py-1 border-2 font-medium rounded-full transition duration-300 ease-in-out hover:bg-gray-200"
+                    (click)="openModal()"
+                  >
+                    Слідкувати
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="p-6 text-gray-900 flex justify-center min-h-screen">
   <div class="">
     <!-- Header -->

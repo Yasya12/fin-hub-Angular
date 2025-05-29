@@ -1,0 +1,113 @@
+<!-- Login Form -->
+<div>
+  <form #loginForm="ngForm" (ngSubmit)="login()">
+    <h2 class="text-lg font-semibold mb-2">Увійти</h2>
+    <!-- Email -->
+    <input
+      type="email"
+      name="email"
+      [(ngModel)]="loginData.email"
+      #emailRef="ngModel"
+      placeholder="Електронна пошта"
+      required
+      class="w-full px-4 py-2 border border-gray-300 rounded mb-1"
+    />
+    <div
+      *ngIf="emailRef.invalid && (emailRef.touched || formSubmitted)"
+      class="text-xs text-red-500 mb-2"
+    >
+      Електронна пошта обов’язкова і має бути дійсною.
+    </div>
+
+    <!-- Password -->
+    <input
+      type="password"
+      name="password"
+      [(ngModel)]="loginData.password"
+      #passwordRef="ngModel"
+      placeholder="Пароль"
+      required
+     
+      class="w-full px-4 py-2 border border-gray-300 rounded mb-1"
+    />
+    <div
+      *ngIf="passwordRef.invalid && (passwordRef.touched || formSubmitted)"
+      class="text-xs text-red-500 mb-2"
+    >
+      Пароль обов’язковий і має бути не менше 8 символів.
+    </div>
+
+    <button
+      type="submit"
+      class="w-full bg-teal-700 text-white font-semibold py-2 rounded-full mb-2 mt-2"
+    >
+      Увійти
+    </button>
+
+    <div class="flex justify-center items-center">
+      <div *ngIf="externalError" class="text-red-500 text-xs text-center mt-2">
+        {{ externalError }}
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Alredy have the account -->
+<p class="text-sm mb-2 mt-2 text-gray-500">
+  Не маєте облікового запису?
+  <a
+    [routerLink]="['/auth']"
+    [queryParams]="{ tab: 'signup' }"
+    class="text-blue-600 hover:underline"
+    >Зареєструватися</a
+  >
+</p>
+
+<!-- Or hr -->
+<div class="flex items-center my-3">
+  <hr class="flex-grow border-gray-300" />
+  <span class="mx-2 text-gray-400">or</span>
+  <hr class="flex-grow border-gray-300" />
+</div>
+
+<!-- Google-кнопка -->
+<div class="w-full flex items-start justify-center bg-white">
+  <div class="scale-125">
+    <div
+      id="g_id_onload"
+      data-client_id="338848987617-d03vnfo57c3g809vc4umirrjas5s4gr6.apps.googleusercontent.com"
+      data-callback="handleCredentialResponse"
+      data-scope="email profile"
+      data-context="use"
+      data-ux_mode="popup"
+      data-auto_prompt="false"
+    ></div>
+
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-shape="pill"
+      data-theme="outline"
+      data-text="continue_with"
+      data-size="large"
+      data-logo_alignment="left"
+    ></div>
+  </div>
+</div>
+
+<!-- Term and Consitions -->
+<div class="text-sm text-gray-500 mt-5 flex gap-2 flex-col">
+  <p>
+    FinHub не є брокером-дилером, інвестиційним радником або будь-яким іншим
+    фінансовим фахівцем. Жоден контент на платформі FinHub не повинен
+    розглядатися як пропозиція, запрошення до пропозиції або порада щодо купівлі
+    чи продажу цінних паперів чи будь-яких інших видів інвестицій або фінансових
+    продуктів.
+  </p>
+  <p>
+    Використовуючи платформу FinHub, ви розумієте і погоджуєтеся з тим, що
+    FinHub не надає інвестиційних консультацій, не рекомендує жодні цінні
+    папери, операції чи замовлення, не випускає цінні папери, а також не
+    проводить і не надає дослідження.
+  </p>
+</div>
