@@ -5,4 +5,6 @@ export interface Follow {
   username: string;
   email?: string;
   bio?: string;
+  isFollowedByCurrentUser: boolean;
+  isUser: boolean;
 }

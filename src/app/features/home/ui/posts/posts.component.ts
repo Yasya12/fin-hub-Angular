@@ -14,19 +14,49 @@ import { Router } from '@angular/router';
 import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
 import { PostDetailStore } from '../../../post-detail/stores/post-detail/post-detail.store';
 import { firstValueFrom } from 'rxjs';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { User } from '../../../../core/models/interfaces/user/user.interface';
+import { MemberService } from '../../../members/services/member.service';
+import { FollowingService } from '../../../followings/services/following.service';
+import { Follow } from '../../../followings/models/follow.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
   styleUrl: './posts.component.css',
   standalone: false,
-  providers: [PostDetailStore]
+  providers: [PostDetailStore],
+  animations: [
+    trigger('fadeInOut', [
+      state('visible', style({
+        opacity: 1,
+        transform: 'translateY(0)'
+      })),
+      state('hidden', style({
+        opacity: 0,
+        transform: 'translateY(10px)'
+      })),
+      transition('hidden => visible', [
+        animate('400ms ease-out')
+      ]),
+      transition('visible => hidden', [
+        animate('400ms ease-in')
+      ])
+    ])
+  ]
 })
 export class PostsComponent implements OnInit, AfterViewInit {
   // Services
   private readonly postService = inject(PostService);
   private readonly likeService = inject(LikeService);
   private readonly router = inject(Router);
+  private readonly memberService = inject(MemberService);
+
+  toastr = inject(ToastrService);
+
+
+  followingService = inject(FollowingService);
 
   //Stores
   posrDetailStore = inject(PostDetailStore); //TODO: write a store for the auth and dont use the post detail store here
@@ -42,12 +72,12 @@ export class PostsComponent implements OnInit, AfterViewInit {
   pageSize = 10;
   totalPages = 1;
   hasMorePosts = true;
-  lastScrollTop: number = 0;
-  tooltipProfile: string = 'View Profile';
-  tooltipPost: string = 'Go to Post';
   showModal: boolean = false;
-  hoveredUser: string = '';
+  hoveredPostId: string | null = null;
   modalPosition = { top: 0, left: 0 };
+  hoveredUser: User | undefined;
+  hoverFollowUser: Follow | undefined;
+  isFollowing: boolean | undefined;
 
   //effects
   myEffect = effect(
@@ -74,6 +104,9 @@ export class PostsComponent implements OnInit, AfterViewInit {
   }
 
   //Methods
+
+
+
   async loadPosts() {
     if (!this.hasMorePosts || this.loading()) {
       return;
@@ -118,9 +151,17 @@ export class PostsComponent implements OnInit, AfterViewInit {
   }
 
   //modal
-  showUserModal(userName: string, container: HTMLElement): void {
-    this.hoveredUser = userName;
+  isHovering = false;
+  hoverTimeout: any;
+
+  showUserModal(post: Post, container: HTMLElement): void {
+    this.loadHoveredUser(post.userName);
+
+    console.log(this.hoveredUser)
+
+    this.hoveredPostId = post.id;
     this.showModal = true;
+    this.isHovering = true;
 
     const rect = container.getBoundingClientRect();
 
@@ -130,10 +171,62 @@ export class PostsComponent implements OnInit, AfterViewInit {
     };
   }
 
-  hideUserModal() {
-    this.showModal = false;
-    this.hoveredUser = '';
+  loadHoveredUser(username: string) {
+    this.memberService.getUserByUsername(username).subscribe((user) => {
+      this.hoveredUser = user;
+      this.checkIfFollows(user.id);
+    })
   }
+
+  // loadHoverdFollowUser(id: string) {
+  //   this.followingService.getFollowById(id).subscribe((user) => {
+  //     this.hoverFollowUser = user;
+  //   })
+  // }
+
+  onModalClick(event: MouseEvent) {
+    this.goToUserProfile(event, this.hoveredUser!.username);
+    event.stopPropagation();
+  }
+
+  hideUserModalWithDelay() {
+    this.isHovering = false;
+
+    this.hoverTimeout = setTimeout(() => {
+      if (!this.isHovering) {
+        this.showModal = false;
+        this.hoveredPostId = '';
+      }
+    }, 300); // 200 мс — можна більше/менше
+  }
+
+  cancelHideModal() {
+    this.isHovering = true;
+    clearTimeout(this.hoverTimeout);
+  }
+
+  checkIfFollows(id: string) {
+    this.followingService.isFollowingUser(id).subscribe((result) => {
+      this.isFollowing = result;
+    })
+  }
+
+  toggleFollow(userId: string): void {
+    if (!this.isFollowing) {
+      this.followingService.followUser(userId).subscribe(() => {
+        this.isFollowing = !this.isFollowing;
+        this.toastr.success(`Now you are following ${this.hoveredUser?.username}`);
+      })
+
+    } else {
+      this.followingService.unfollow(userId).subscribe(() => {
+        this.isFollowing = !this.isFollowing;
+        this.toastr.error(`You unfollowd ${this.hoveredUser?.username}`);
+      })
+
+    }
+  }
+
 
   goToUserProfile(event: Event, userName: string): void {
     event.stopPropagation();

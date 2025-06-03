@@ -1,49 +1,91 @@
 <div class="flex justify-center">
-  <div class="w-full max-w-3xl p-4">
-    <h2 class="text-xl font-bold mb-4 text-center">
-      <span *ngIf="mode === 'followers'">Followers</span>
-      <span *ngIf="mode === 'following'">Following</span>
-    </h2>
-
+  <div class="grow">
+    <!--go to the user profile-->
     <div
-      *ngIf="list.length === 0"
-      class="text-center animate-fade-in text-gray-500 my-4"
+      class="h-[60px] flex items-center justify-start px-4 border-gray-300 border-b text-black font-medium grow cursor-pointer hover:underline"
+      [routerLink]="['/member', username]"
     >
-      {{ username }} is not
-      {{
-        mode === "followers" ? "followed by anyone" : "following anyone"
-      }}
-      yet.
+      <!--arrow-->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="size-5 rotate-180 mr-2 text-black"
+        viewBox="0 0 512.000000 512.000000"
+      >
+        <g
+          transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+          fill="#000000"
+          stroke="none"
+        >
+          <path
+            d="M1721 4034 c-94 -47 -137 -147 -107 -249 11 -37 29 -63 68 -101 29 -28 333 -290 676 -583 342 -293 622 -535 621 -539 0 -4 -277 -243 -615 -532 -777 -663 -740 -629 -759 -693 -54 -181 134 -339 298 -251 59 32 1549 1310 1583 1358 64 90 51 196 -33 278 -26 25 -382 331 -790 680 -556 476 -751 637 -781 646 -60 18 -103 14 -161 -14z"
+          />
+        </g>
+      </svg>
+
+      <span class="text-xl">
+        {{ username }}
+      </span>
     </div>
 
-    <div
-      *ngFor="let user of list"
-      class="bg-white shadow-md rounded-2xl p-4 mb-4 flex items-center border"
-    >
-      <img
-        [src]="user.profilePhoroUrl || '/assets/images/Sample_User_Icon.png'"
-        alt="Profile photo"
-        class="w-16 h-16 rounded-full mr-4 object-cover"
-      />
-      <div class="flex-1">
-        <h3 class="text-lg font-semibold">{{ user.username }}</h3>
-        <p *ngIf="user.email" class="text-gray-600">{{ user.email }}</p>
-        <p *ngIf="user.bio" class="text-gray-500 text-sm">{{ user.bio }}</p>
+    <!--tabs-->
+    <div class="mt-6">
+      <nav class="flex text-lg font-medium text-teal-700">
+        <button
+          (click)="selectTab('following')"
+          class="relative w-1/2 pb-2 text-center"
+        >
+          <div
+            class="absolute -bottom-[2px] w-full h-[2px] bg-black"
+            [class]="mode === 'following' ? 'block' : 'hidden'"
+          ></div>
+          <span>Підписок</span>
+        </button>
+        <button
+          (click)="selectTab('followers')"
+          class="w-1/2 pb-2 text-center relative"
+        >
+          <span>Підписників</span>
+          <div
+            class="absolute -bottom-[2px] w-full h-[2px] bg-black"
+            [class]="mode === 'followers' ? 'block' : 'hidden'"
+          ></div>
+        </button>
+      </nav>
+    </div>
+
+    <!--list of followers/ing-->
+    <div class="grow max-w-[50rem] mx-auto mt-4">
+      <div
+        *ngIf="list.length === 0"
+        class="text-center animate-fade-in text-gray-500 my-10"
+      >
+        {{ username }} ще не
+        {{
+          mode === "followers" ? "має підписників" : "підписаний(а) ні на кого"
+        }}.
       </div>
 
-      <!-- При потребі додай кнопку, наприклад: -->
-      <!--
-      <button
-        [ngClass]="{
-          'border-green-500 text-green-500 hover:bg-green-100': !isFollowing(user),
-          'border-red-500 text-red-500 hover:bg-red-100': isFollowing(user)
-        }"
-        class="ml-auto border-2 font-semibold py-1 px-4 rounded-xl transition duration-200"
-        (click)="toggleFollow(user)"
-      >
-        {{ isFollowing(user) ? 'Unfollow' : 'Follow' }}
-      </button>
-      -->
+      <div *ngFor="let user of list" class="p-1 mb-4 flex items-center">
+        <img
+          [src]="user.profilePhoroUrl || '/assets/images/Sample_User_Icon.png'"
+          alt="Profile photo"
+          class="w-16 h-16 rounded-full mr-4 object-cover"
+        />
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold">{{ user.username }}</h3>
+          <p *ngIf="user.email" class="text-gray-600">{{ user.email }}</p>
+          <p *ngIf="user.bio" class="text-gray-500 text-sm">{{ user.bio }}</p>
+        </div>
+
+        @if(user.email !== currentUserEmail) {
+        <button
+          (click)="toggleFollow(user)"
+          class="ml-auto border text-gray-500 border-gray-400 py-1 px-4 rounded-full transition duration-200 hover:bg-gray-200"
+        >
+          {{ user.isFollowedByCurrentUser ? "Не стежити" : "Стежити" }}
+        </button>
+        }
+      </div>
     </div>
   </div>
 

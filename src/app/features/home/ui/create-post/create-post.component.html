@@ -1,3 +1,4 @@
+@if(!isFromSidePannel()) {
 <div class="p-4 bg-[#ffffff] rounded-xl mb-2">
   <div class="flex flex-row items-center justify-center gap-5 px-2">
     @if(currentUser()) {
@@ -81,6 +82,7 @@
     </div>
   </div>
 </div>
+}
 
 <!-- Modal window -->
 <div

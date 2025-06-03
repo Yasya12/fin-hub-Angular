@@ -1,0 +1,35 @@
+<div class="flex justify-center">
+  <div class="grow">
+    <!--list of followers/ing-->
+    <div class="grow max-w-[50rem] mx-auto mt-4">
+      <div
+        *ngIf="follows?.length === 0"
+        class="text-center animate-fade-in text-gray-500 my-10"
+      >
+        Поки що не підписаний(а) ні на кого.
+      </div>
+
+      <div *ngFor="let user of follows" class="p-1 mb-4 flex items-center">
+        <img
+          [src]="user.profilePhoroUrl || '/assets/images/Sample_User_Icon.png'"
+          alt="Profile photo"
+          class="w-16 h-16 rounded-full mr-4 object-cover"
+        />
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold">{{ user.username }}</h3>
+          <p *ngIf="user.email" class="text-gray-600">{{ user.email }}</p>
+          <p *ngIf="user.bio" class="text-gray-500 text-sm">{{ user.bio }}</p>
+        </div>
+
+        @if(user.email !== currentUserEmail) {
+        <button
+          (click)="toggleFollow(user)"
+          class="ml-auto border text-gray-500 border-gray-400 py-1 px-4 rounded-full transition duration-200 hover:bg-gray-200"
+        >
+          {{ user.isFollowedByCurrentUser ? "Не стежити" : "Стежити" }}
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

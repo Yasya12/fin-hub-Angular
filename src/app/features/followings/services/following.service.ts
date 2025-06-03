@@ -19,12 +19,18 @@ export class FollowingService {
     }
 
     getFollowingsForSpecificUser(username: string): Observable<Follow[]> {
-        return this.http.get<Follow[]>(`${this.baseUrl}/following/followings-for-specific-user/${username}`);
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+
+        return this.http.get<Follow[]>(`${this.baseUrl}/following/followings-for-specific-user/${username}`, { headers });
     }
 
     getFollowersForSpecificUser(username: string): Observable<Follow[]> {
-        return this.http.get<Follow[]>(`${this.baseUrl}/following/followers-for-specific-user/${username}`);
-    } 
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+
+        return this.http.get<Follow[]>(`${this.baseUrl}/following/followers-for-specific-user/${username}`, { headers });
+    }
 
     isFollowingHub(followingHubId: string, type: string = "hub") {
         if (!this.authService.currentUser()?.token) {
@@ -39,14 +45,33 @@ export class FollowingService {
         });
     }
 
+    isFollowingUser(followingId: string, type: string = "user") {
+        if (!this.authService.currentUser()?.token) {
+            return of(false);
+        }
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+
+        return this.http.get<boolean>(`${this.baseUrl}/following/is-following`, {
+            headers,
+            params: { id: followingId, type }
+        });
+    }
+
 
     followUser(followingUserId: string): Observable<{ message: string }> {
         const headers = new HttpHeaders()
             .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
-        console.log()
 
         return this.http.post<{ message: string }>(`${this.baseUrl}/following/follow-user?followingId=${followingUserId}`, {}, { headers });
     }
+
+    // followUserByEmail(followingUserEmail: string): Observable<{ message: string }> {
+    //     const headers = new HttpHeaders()
+    //         .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+
+    //     return this.http.post<{ message: string }>(`${this.baseUrl}/following/follow-user-by-email?followingEmail=${followingUserEmail}`, {}, { headers });
+    // }
 
     followHub(followingHubId: string): Observable<{ message: string }> {
         const headers = new HttpHeaders()

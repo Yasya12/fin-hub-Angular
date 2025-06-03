@@ -33,14 +33,14 @@
   <!--following/ers-->
   <div class="text-[18px] mt-3 flex flex-row gap-3">
     <div
-      class="flex flex-row gap-1 cursor-pointer"
+      class="flex flex-row gap-1 cursor-pointer hover:underline"
       [routerLink]="['/member', user.username, 'following']"
     >
       <span class="font-bold">{{ user.followingCount }}</span>
       <span>Підписок</span>
     </div>
     <div
-      class="flex flex-row gap-1 cursor-pointer"
+      class="flex flex-row gap-1 cursor-pointer hover:underline"
       [routerLink]="['/member', user.username, 'followers']"
     >
       <span class="font-bold">{{ user.folowersCount }}</span>

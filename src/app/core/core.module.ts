@@ -6,6 +6,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ApartAsideComponent } from './ui/apart-aside/apart-aside.component';
 import { ChartsViewComponent } from '../shared/ui/charts-view/charts-view.component';
 import { TickerTapeComponent } from './ui/ticker-tape/ticker-tape.component';
+import { HomeModule } from "../features/home/home.module";
 
 @NgModule({
   declarations: [
@@ -17,8 +18,9 @@ import { TickerTapeComponent } from './ui/ticker-tape/ticker-tape.component';
     CommonModule,
     RouterModule,
     ChartsViewComponent,
-    TooltipModule.forRoot()
-  ],
+    TooltipModule.forRoot(),
+    HomeModule
+],
   exports: [
     HeaderComponent,
     ApartAsideComponent,

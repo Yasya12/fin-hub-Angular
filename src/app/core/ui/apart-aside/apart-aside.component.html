@@ -26,14 +26,14 @@
   <div class="flex flex-col gap-[10px] items-center p-2">
     <button
       class="px-8 py-2 rounded-full border-2 border-gray-300 w-full text-lg font-bold transition-all hover:bg-gray-100"
-      [routerLink]="['/auth']" 
+      [routerLink]="['/auth']"
       [queryParams]="{ tab: 'login' }"
     >
       Увійти
     </button>
     <button
       class="px-8 py-2 rounded-full border-2 border-gray-300 w-full text-lg font-bold transition-all hover:bg-gray-100"
-      [routerLink]="['/auth']" 
+      [routerLink]="['/auth']"
       [queryParams]="{ tab: 'signup' }"
     >
       Зареєструватися
@@ -191,8 +191,10 @@
       </div>
     </div>
 
+    <!--Create Post-->
     <button
       class="group relative bg-teal-500 rounded-full mt-2 py-2 text-white flex flex-row justify-center items-center gap-2 overflow-hidden"
+      (click)="createPostModal()"
     >
       <div
         class="transition-all group-hover:opacity-15 opacity-0 absolute top-0 left-0 w-full h-full bg-white z-10"
@@ -214,6 +216,16 @@
       </svg>
       <span>Створити пост</span>
     </button>
+
+    @if(createPost) {
+    <app-create-post
+      class="bg-black bg-opacity-50"
+      [currentUser]="this.authService.currentUser()"
+      [openModalWindow]="openModalWindow"
+      [isFromSidePannel]="true"
+      (addPostModal)="addPostModal($event)"
+    ></app-create-post>
+    }
   </div>
   }
 

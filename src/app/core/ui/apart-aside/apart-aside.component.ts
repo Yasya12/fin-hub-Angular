@@ -1,5 +1,6 @@
 import { trigger, transition, style, animate } from '@angular/animations';
 import {
+  ChangeDetectorRef,
   Component,
   computed,
   ElementRef,
@@ -15,6 +16,7 @@ import { AuthStore } from '../../stores/auth-store';
 import { User } from '../../models/interfaces/user/user.interface';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { BlobOptions } from 'buffer';
 
 @Component({
   selector: 'app-apart-aside',
@@ -41,6 +43,7 @@ import { AuthService } from '../../services/auth.service';
 export class ApartAsideComponent implements OnInit {
   //stores
   authService = inject(AuthService)
+  cdr = inject(ChangeDetectorRef);
 
   //services
   router = inject(Router);
@@ -49,6 +52,8 @@ export class ApartAsideComponent implements OnInit {
   user = computed<User | undefined>(() => {
     return this.authService.currentUser()?.user
   });
+  createPost: boolean = false;
+  openModalWindow: boolean = true;
 
   @ViewChild('dropdown') dropdownRef!: ElementRef;
   showProfileDropDown = signal(false);
@@ -82,5 +87,20 @@ export class ApartAsideComponent implements OnInit {
     if (dropdownEl && !dropdownEl.contains(event.target)) {
       this.showProfileDropDown.set(false);
     }
+  }
+
+  createPostModal() {
+    this.createPost = true;
+     this.openModalWindow = true;
+    this.cdr.detectChanges()
+    console.log("crreate post ", this.createPost)
+     console.log("openmodal ", this.openModalWindow)
+  }
+
+  addPostModal(isModalOpen: boolean): void {
+    this.createPost = false;
+    this.openModalWindow = isModalOpen;
+    console.log("crreate post ", this.createPost)
+    console.log("openmodal ", this.openModalWindow)
   }
 }

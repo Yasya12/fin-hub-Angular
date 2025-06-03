@@ -1,6 +1,5 @@
 <div class="flex justify-center items-center">
   <section class="w-full max-w-3xl h-full">
-    <h2 class="text-lg font-bold mt-4 text-center">Following Posts</h2>
     <div class="">
       <!-- Creating post -->
       <app-create-post
@@ -48,7 +47,7 @@
 
             <div class="cursor-pointer" (click)="navigateToPost(post.id)">
               <div class="mb-3">
-                <div [innerHTML]="post.content"></div>
+                <div [innerHTML]="sanitizeHtmlContent(post.content)"></div>
               </div>
               <!-- Iterate over images -->
               <div *ngIf="post.images && post.images.length > 0" class="mt-3">

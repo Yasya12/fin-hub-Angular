@@ -1,11 +1,10 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { User } from '../../../core/models/interfaces/user/user.interface';
-import { LikeService } from '../../../shared/services/like.service';
-import { ScrollService } from '../../../shared/services/scroll.service';
-import { Post } from '../../home/models/post.interface';
-import { PostService } from '../../../shared/services/post.service';
-import { ResponseModel } from '../../../shared/models/interfaces/response.model';
+import { User } from '../../../../core/models/interfaces/user/user.interface';
+import { LikeService } from '../../../../shared/services/like.service';
+import { Post } from '../../../home/models/post.interface';
+import { PostService } from '../../../../shared/services/post.service';
+import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,7 +17,6 @@ export class FollowPostsComponent {
   private readonly postService = inject(PostService);
   private readonly likeService = inject(LikeService);
   private readonly router = inject(Router);
-  private readonly scrollService = inject(ScrollService);
 
   // Inputs
   curretnUserResponse = input.required<ResponseModel | undefined>();
@@ -45,19 +43,9 @@ export class FollowPostsComponent {
 
   // Lifecycle hooks
   ngOnInit(): void {
-    //this.curretnUser = this.authService.currentUser();
-
     this.loadPosts();
 
-
-    this.scrollService.scrollContainer$.subscribe((container) => {
-      if (container) {
-        container.nativeElement.addEventListener(
-          'scroll',
-          this.onScroll.bind(this)
-        );
-      }
-    });
+    window.addEventListener('scroll', this.onWindowScroll.bind(this));
   }
 
   ngAfterViewInit(): void {
@@ -67,6 +55,10 @@ export class FollowPostsComponent {
   }
 
   //Methods
+  sanitizeHtmlContent(html: string): string {
+    return html.replace(/&nbsp;/g, ' ');
+  }
+
   async loadPosts() {
     if (!this.hasMorePosts || this.loading()) {
       return;
@@ -120,13 +112,16 @@ export class FollowPostsComponent {
     this.navigateToPost(postId);
   }
 
-  onScroll(event: Event): void {
-    if (!this.hasMorePosts) { return; }
-    const container = event.target as HTMLElement;
-    if (
-      container.scrollTop + container.clientHeight >=
-      container.scrollHeight - container.scrollHeight * 0.1
-    ) {
+  onWindowScroll(): void {
+    if (!this.hasMorePosts || this.loading()) return;
+
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    const scrollThreshold = documentHeight - windowHeight * 1.2;
+
+    if (scrollTop >= scrollThreshold) {
       if (this.pageNumber < this.totalPages) {
         this.pageNumber++;
         this.loadPosts();

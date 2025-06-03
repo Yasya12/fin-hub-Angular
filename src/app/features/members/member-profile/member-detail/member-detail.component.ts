@@ -51,18 +51,18 @@ export class MemberDetailComponent implements OnInit {
     this.selectedTab = tab;
   }
 
-  toggleFollow(user: User): void {
-    this.isFollowing = this.isFollowing ? false : true;
+  // toggleFollow(user: User): void {
+  //   this.isFollowing = this.isFollowing ? false : true;
 
-    if (this.isFollowing) {
-      this.followingService.followUser(user.id).subscribe(() => {
-        this.toastr.success(`Now you are following ${user.username}`);
-      })
-    } else {
-      this.followingService.unfollow(user.id).subscribe(() => {
-        this.toastr.error(`You unfollowd ${user.username}`)
-      })
+  //   if (this.isFollowing) {
+  //     this.followingService.followUser(user.id).subscribe(() => {
+  //       this.toastr.success(`Now you are following ${user.username}`);
+  //     })
+  //   } else {
+  //     this.followingService.unfollow(user.id).subscribe(() => {
+  //       this.toastr.error(`You unfollowd ${user.username}`)
+  //     })
 
-    }
-  }
+  //   }
+  // }
 }

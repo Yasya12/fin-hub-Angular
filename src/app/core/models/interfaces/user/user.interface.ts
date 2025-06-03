@@ -9,4 +9,5 @@ export interface User {
   createdAt: Date;
   followingCount: number;
   folowersCount: number;
+  postsCount: number;
 }

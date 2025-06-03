@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CreatePost } from '../../models/create-post';
 import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
@@ -12,7 +12,8 @@ import { AuthStore } from '../../../../core/stores/auth-store';
   standalone: false,
   providers: [AuthStore]
 })
-export class CreatePostComponent {
+export class CreatePostComponent implements OnChanges, OnInit {
+
   //Stores
   authStore = inject(AuthStore);
 
@@ -22,6 +23,8 @@ export class CreatePostComponent {
 
   // Inputs
   currentUser = input<ResponseModel>();
+  openModalWindow = input<boolean>();
+  isFromSidePannel = input<boolean>();
   hubId = input<string>();
 
   // States
@@ -30,6 +33,21 @@ export class CreatePostComponent {
   isInsideModal = false;
 
   @Output() addPost = new EventEmitter<Post>();
+  @Output() addPostModal = new EventEmitter<boolean>();
+
+  ngOnInit() {
+    if (this.openModalWindow() == true) {
+      this.isModalOpen = true;
+    }
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['openModal'] && changes['openModal'].currentValue === true) {
+      this.isModalOpen = true;
+    }
+  }
+
 
   openModal() {
     if (!this.currentUser()) {
@@ -46,6 +64,7 @@ export class CreatePostComponent {
   closeModal() {
     this.isModalOpen = false;
     this.content = '';
+     this.addPostModal.emit(false);
   }
 
   handleContentChange(content: string, images: string[]) {
@@ -62,9 +81,9 @@ export class CreatePostComponent {
     console.log(this.content);
     const hubIdValue = this.hubId?.();
 
-  if (hubIdValue) {
-    formData.append('HubId', hubIdValue.toString());
-  }
+    if (hubIdValue) {
+      formData.append('HubId', hubIdValue.toString());
+    }
 
     // Convert Base64 images to File and append them
     images.forEach((base64Image, index) => {
@@ -75,6 +94,7 @@ export class CreatePostComponent {
     this.postService.createPost(formData).subscribe((data) => {
       this.closeModal();
       this.addPost.emit(this.mapToPost(data));
+      this.addPostModal.emit(false);
     });
   }
 
