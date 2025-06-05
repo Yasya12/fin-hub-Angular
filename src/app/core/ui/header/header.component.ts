@@ -40,47 +40,53 @@ export class HeaderComponent implements OnInit {
 
   menuItems = [
     {
-      key: 'Hubs',
+      key: 'hubs',
       name: 'Спільноти',
-      icon: 'hubs_icon',
-      chosenIcon: 'chosen_hubs_icon',
       route: '/hubs',
     },
     {
-      key: 'News',
-      name: 'Новини',
-      icon: '',
-      chosenIcon: '',
-      route: '/news',
-    },
-    {
-      key: 'About Us',
+      key: 'about',
       name: 'Про нас',
-      icon: '',
-      chosenIcon: '',
-      route: '/aboutus',
+      route: '/info/about',
     },
     {
-      key: 'Contact Us',
+      key: 'contact',
       name: 'Контакти',
-      icon: '',
-      chosenIcon: '',
-      route: '/contactus'
+      route: '/info/contact',
     },
   ];
   @ViewChild('dropdownMenu') dropdownMenu: ElementRef | undefined;
+
+  selectTab(tab: string) {
+    if (tab === 'signup') {
+      this.router.navigate(['/signup']);
+    } else if (tab === 'messages' && !this.authService.currentUser()) {
+      this.toastr.warning('You need to be logged in to access the messages');
+      this.router.navigate(['/signup']);
+      return;
+    } else if (tab === 'askQuestion') {
+      this.router.navigate(['/under-development']);
+    } else if (tab === 'edit-member') {
+      this.router.navigate(['/member/edit']);
+    } else {
+      const route =
+        this.menuItems.find((item) => item.key === tab)?.route || '/home';
+      console.log('Navigating to route:', route);
+      this.router.navigate([route]);
+    }
+  }
 
   constructor(protected authService: AuthService, private router: Router) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.isDropdownOpen = false;
       }
-      if (event instanceof NavigationEnd) {
-        // This will run after navigation has completed
-        if (event.urlAfterRedirects === '/home') {
-          this.selectTab('home');
-        }
-      }
+      // if (event instanceof NavigationEnd) {
+      //   // This will run after navigation has completed
+      //   if (event.urlAfterRedirects === '/home') {
+      //     this.selectTab('home');
+      //   }
+      // }
     });
 
     effect(
@@ -102,23 +108,7 @@ export class HeaderComponent implements OnInit {
     this.notificationService.getAllNotificationsForUser();
   }
 
-  selectTab(tab: string) {
-    if (tab === 'signup') {
-      this.router.navigate(['/signup']);
-    } else if (tab === 'messages' && !this.authService.currentUser()) {
-      this.toastr.warning('You need to be logged in to access the messages');
-      this.router.navigate(['/signup']);
-      return;
-    } else if (tab === 'askQuestion') {
-      this.router.navigate(['/under-development']);
-    } else if (tab === 'edit-member') {
-      this.router.navigate(['/member/edit']);
-    } else {
-      const route =
-        this.menuItems.find((item) => item.key === tab)?.route || '/home';
-      this.router.navigate([route]);
-    }
-  }
+
 
   logout() {
     this.authService.logout();

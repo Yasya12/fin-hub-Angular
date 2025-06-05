@@ -1,0 +1,139 @@
+<div class="bg-white text-black w-full">
+  <!-- Hero Section -->
+  <div class="w-full pt-24 pb-10 relative flex">
+    <!-- Text and join team button -->
+    <div class="w-full mx-96">
+      <div class="text-[60px] font-bold leading-tight">
+        Finhub — соціальна мережа<br />
+        на тему фінансів, інвестицій<br />
+        та фінансової грамотності.
+      </div>
+      <button
+        class="mt-6 bg-teal-400 text-white font-semibold px-6 py-2 rounded-full hover:bg-teal-500 transition"
+      >
+        Приєднатися
+      </button>
+    </div>
+
+    <!-- Decorative lines (imitating graph lines) -->
+    <div
+      class="absolute right-0 -top-0 w-1/2 h-full pointer-events-none mr-10"
+    >
+      <svg
+        class="w-full h-full"
+        viewBox="0 0 500 300"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0 300 L120 200 L170 230 L280 150 L400 250"
+          stroke="#60A5FA"
+          stroke-width="1"
+        />
+        <path
+          d="M30 350 L150 150 L300 270 L410 170"
+          stroke="purple"
+          stroke-width="1"
+        />
+        <path
+          d="M75 340 L320 55 L380 170 L400 150"
+          stroke="#10B981"
+          stroke-width="1"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Mission Section -->
+  <div class="bg-gray-100 py-16">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <p
+        class="text-sm uppercase tracking-widest text-blue-600 font-semibold mb-2"
+      >
+        Наша місія
+      </p>
+      <div class="text-[30px] font-bold leading-snug">
+        Розвивати відкриту фінансову спільноту,<br />
+        де кожен — від початківця до професіонала —<br />
+        може обговорювати, навчатися, заробляти й отримувати задоволення.
+      </div>
+    </div>
+  </div>
+
+  <!-- History Section -->
+  <div
+    class="max-w-6xl mx-auto px-6 py-20 flex flex-col lg:flex-row items-center gap-10"
+  >
+    <!-- History -->
+    <div class="w-[40%]">
+      <h2 class="text-[42px] font-bold mb-4">Our History</h2>
+      <p class="text-gray-400 mb-4 leading-relaxed text-[20px]">
+        Finhub з’явився у 2024 році як студентський проєкт і швидко перетворився
+        на окрему соціальну мережу для всіх, хто цікавиться фінансами,
+        інвестиціями та економікою.
+      </p>
+      <p class="text-gray-400 mb-4 leading-relaxed text-[20px]">
+        Ми створили простір для спілкування, обміну знаннями та формування
+        фінансово обізнаної спільноти.
+      </p>
+      <p class="text-gray-400 leading-relaxed text-[20px]">
+        Finhub постійно розвивається, переосмислюючи фінансові медіа,
+        інструменти та сервіси для нового покоління користувачів.
+      </p>
+    </div>
+
+    <!-- Photo -->
+    <div class="w-[60%] flex justify-center">
+      <!-- Placeholder for phone image -->
+      <div class="flex items-center justify-center">
+        <img
+          #avatarContainer
+          [src]="'/assets/images/app-view.png'"
+          alt="Author Avatar"
+          class="h-[500px] w-[650px]"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Join FinHub Section -->
+  <section class="bg-gray-100 text-center py-16">
+    <h2 class="text-2xl text-[34px] font-bold mb-4">Приєднуйся до FinHub</h2>
+    <p class="text-[24px] mx-auto text-gray-700 text-lg leading-relaxed">
+      Ми шукаємо захоплених учасників команди, які допоможуть нам
+      переосмислити<br />
+      майбутнє фінансових медіа, продуктів і сервісів для нового покоління<br />
+      обізнаних у фінансах користувачів.
+    </p>
+    <button
+      class="mt-6 bg-teal-400 hover:bg-teal-500 text-white font-semibold px-6 py-2 rounded-full transition"
+    >
+      Переглянути вакансії
+    </button>
+  </section>
+
+  <!-- Contact CTA Section -->
+  <section class="bg-teal-400 text-white text-center py-12">
+    <h3 class="text-2xl font-semibold">
+      Маєш питання? <span class="font-light">Ми будемо раді почути тебе.</span>
+    </h3>
+    <button
+      class="mt-4 border border-white text-white px-6 py-2 rounded-full hover:bg-white hover:text-teal-600 transition"
+    >
+      Контакт
+    </button>
+  </section>
+
+  <!--Fotter-->
+  <section class="text-center py-10">
+    <div
+      class="border-t mx-96 border-gray-300 pt-4 text-sm text-gray-600 flex justify-center gap-4 flex-wrap"
+    >
+      <a href="#" class="hover:underline">Про нас</a>
+      <a href="#" class="hover:underline">Контакти</a>
+      <a href="#" class="hover:underline">Політика конфіденційності</a>
+      <a href="#" class="hover:underline">Умови</a>
+    </div>
+    <p class="mt-4 text-xs text-gray-400">© 2025 FinHub. Усі права захищено.</p>
+  </section>
+</div>

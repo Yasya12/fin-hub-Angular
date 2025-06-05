@@ -6,6 +6,7 @@ import { SinglePost } from '../../features/post-detail/models/interfaces/single-
 import { PaginatedResult } from '../models/interfaces/pagination.model';
 import { AuthService } from '../../core/services/auth.service';
 import { environment } from '../../../environments/environment';
+import { CreatePost } from '../../features/home/models/create-post';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,25 @@ export class PostService {
   paginatedHubResult = signal<PaginatedResult<Post[]> | undefined>(undefined);
   paginatedFollowResult = signal<PaginatedResult<Post[]> | undefined>(undefined);
   paginatedForSpecificUser = signal<PaginatedResult<Post[]> | undefined>(undefined);
+
+  private _newPost = signal<Post | null>(null);
+
+  // публічний доступ для читання
+  readonly newPost = this._newPost.asReadonly();
+
+  // метод для оновлення
+  addPost(post: Post) {
+    this._newPost.set(post);
+  }
+
+  // метод для скидання (опціонально)
+  reset() {
+    this._newPost.set(null);
+  }
+
+  createPost(post: FormData): Observable<CreatePost> {
+    return this.http.post<CreatePost>(`${this.baseUrl}/post`, post);
+  }
 
   getPosts(pageNumber: number, pageSize: number): Observable<HttpResponse<Post>> {
     const params = new HttpParams()

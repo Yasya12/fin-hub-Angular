@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { Post } from '../../models/post.interface';
-import { PostService } from '../../../../shared/services/post.service';
+
 import { LikeService } from '../../../../shared/services/like.service';
 import { Router } from '@angular/router';
 import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
@@ -20,6 +20,7 @@ import { MemberService } from '../../../members/services/member.service';
 import { FollowingService } from '../../../followings/services/following.service';
 import { Follow } from '../../../followings/models/follow.interface';
 import { ToastrService } from 'ngx-toastr';
+import { PostService } from '../../../../shared/services/post.service';
 
 @Component({
   selector: 'app-posts',
@@ -84,11 +85,21 @@ export class PostsComponent implements OnInit, AfterViewInit {
     () => {
       const post = this.newPost();
       if (post && typeof post === 'object') {
+
         this.posts.update((posts) => [post, ...posts]);
       }
     },
     { allowSignalWrites: true }
   );
+
+  sideBarPostAddEffect = effect(() => {
+    const post = this.postService.newPost();
+    if (post) {
+      this.posts.update((posts) => [post, ...posts]);
+      this.postService.reset(); // очищаємо після додавання
+    }
+  },
+    { allowSignalWrites: true });
 
   // Lifecycle hooks
   ngOnInit(): void {
@@ -156,8 +167,6 @@ export class PostsComponent implements OnInit, AfterViewInit {
 
   showUserModal(post: Post, container: HTMLElement): void {
     this.loadHoveredUser(post.userName);
-
-    console.log(this.hoveredUser)
 
     this.hoveredPostId = post.id;
     this.showModal = true;

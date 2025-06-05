@@ -53,6 +53,12 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
   },
   {
+    path: 'info',
+    component: AuthLayoutComponent,
+    loadChildren: () =>
+      import('./features/info-pages/info-pages.module').then(m => m.InfoPagesModule),
+  },
+  {
     path: '**',
     redirectTo: 'home',
   }

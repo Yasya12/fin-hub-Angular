@@ -1,10 +1,10 @@
 import { Component, EventEmitter, inject, input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CreatePost } from '../../models/create-post';
-import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
 import { Post } from '../../models/post.interface';
 import { ToastrService } from 'ngx-toastr';
 import { AuthStore } from '../../../../core/stores/auth-store';
+import { PostService } from '../../../../shared/services/post.service';
 
 @Component({
   selector: 'app-create-post',
@@ -39,7 +39,6 @@ export class CreatePostComponent implements OnChanges, OnInit {
     if (this.openModalWindow() == true) {
       this.isModalOpen = true;
     }
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -64,7 +63,7 @@ export class CreatePostComponent implements OnChanges, OnInit {
   closeModal() {
     this.isModalOpen = false;
     this.content = '';
-     this.addPostModal.emit(false);
+    this.addPostModal.emit(false);
   }
 
   handleContentChange(content: string, images: string[]) {
@@ -78,7 +77,6 @@ export class CreatePostComponent implements OnChanges, OnInit {
 
     formData.append('UserEmail', this.currentUser()?.user.email!);
     formData.append('Content', this.content);
-    console.log(this.content);
     const hubIdValue = this.hubId?.();
 
     if (hubIdValue) {
@@ -93,8 +91,13 @@ export class CreatePostComponent implements OnChanges, OnInit {
 
     this.postService.createPost(formData).subscribe((data) => {
       this.closeModal();
-      this.addPost.emit(this.mapToPost(data));
-      this.addPostModal.emit(false);
+      if (this.isFromSidePannel()) {
+        this.postService.addPost(this.mapToPost(data));
+        this.addPostModal.emit(false);
+      }
+      else {
+        this.addPost.emit(this.mapToPost(data));
+      }
     });
   }
 

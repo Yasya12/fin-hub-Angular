@@ -93,14 +93,10 @@ export class ApartAsideComponent implements OnInit {
     this.createPost = true;
      this.openModalWindow = true;
     this.cdr.detectChanges()
-    console.log("crreate post ", this.createPost)
-     console.log("openmodal ", this.openModalWindow)
   }
 
   addPostModal(isModalOpen: boolean): void {
     this.createPost = false;
     this.openModalWindow = isModalOpen;
-    console.log("crreate post ", this.createPost)
-    console.log("openmodal ", this.openModalWindow)
   }
 }

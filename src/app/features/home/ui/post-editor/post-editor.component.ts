@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Inject, input, Input, Output, PLATFORM_ID, viewChild, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
-import { PostService } from '../../services/posts.service';
 import { ResponseModel } from '../../../../shared/models/interfaces/response.model';
 import Quill from 'quill';
+import { PostService } from '../../../../shared/services/post.service';
 
 @Component({
   selector: 'app-post-editor',
