@@ -1,20 +1,28 @@
 <div class="w-full">
   <!-- Пошук -->
   <div class="px-4 pt-2 border-b-2">
-    <input
-      type="text"
-      [(ngModel)]="searchText"
-      placeholder="Пошук"
-      class="w-full px-3 py-2 mb-3 text-sm border border-gray-300 rounded-full focus:outline-none"
-    />
+    <div class="px-4 pt-2 border-b-2">
+      <input
+        #searchInput
+        type="text"
+        [value]="searchText()"
+        (input)="searchText.set(searchInput.value)"
+        placeholder="Пошук"
+        class="w-full px-3 py-2 mb-3 text-sm border-gray-300 rounded-full focus:outline-none"
+      />
+    </div>
   </div>
 
-  @for (chat of filteredChats; track $index) {
+  @for (chat of filteredChats(); track $index) {
   <div class="">
     <div
       class="flex p-2 cursor-pointer"
       (click)="onSelectChat(chat!)"
-      [ngClass]="{ 'bg-gray-100': !chat.isRead, 'bg-teal-500': chat.isSelected,  'hover:bg-gray-200': !chat.isSelected }"
+      [ngClass]="{
+        'bg-gray-100': !chat.isRead && !chat.isSelected,
+        'bg-teal-500 text-white': chat.isSelected,
+        'hover:bg-gray-200': !chat.isSelected
+      }"
     >
       <img
         [src]="chat.photoUrl || '/assets/images/Sample_User_Icon.png'"
@@ -22,20 +30,19 @@
         class="size-14 rounded-full mr-3 my-1"
       />
 
+      <!-- ⬇️ ВСІ ТЕКСТОВІ ЕЛЕМЕНТИ ВСЕРЕДИНІ ЦЬОГО БЛОКУ успадковуватимуть text-white -->
       <div class="flex flex-col flex-1 my-1">
-        <!-- Верхній рядок: ім’я + дата -->
-        <div class="flex justify-between items-center text-black" [ngClass]="{ 'bg-gray-100': !chat.isRead, 'text-white': chat.isSelected,  'hover:bg-gray-200': !chat.isSelected }">
+        <div class="flex justify-between items-center">
           <div class="font-semibold text-[18px] truncate max-w-[160px]">
             {{ chat.username }}
           </div>
-          <div class="text-xs text-gray-400 whitespace-nowrap"  [ngClass]="{ ' text-white': chat.isSelected  }"> 
+          <div class="text-xs whitespace-nowrap">
             {{ chat.lastMessageSent | date : "shortTime" }}
           </div>
         </div>
 
-        <!-- Нижній рядок: повідомлення + badge -->
         <div class="flex justify-between items-center mt-1">
-          <div class="text-black text-base truncate max-w-[180px] " [ngClass]="{ 'bg-gray-100': !chat.isRead, 'text-white': chat.isSelected,  'hover:bg-gray-200': !chat.isSelected }">
+          <div class="text-base truncate max-w-[180px]">
             {{ chat.lastMessage }}
           </div>
 
@@ -44,7 +51,7 @@
               class="bg-teal-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
               title="Непрочитане повідомлення"
             >
-              {{chat.unreadCount}}
+              {{ chat.unreadCount }}
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Login } from '../../signup/models/login.model';
 
@@ -8,6 +8,7 @@ import { Login } from '../../signup/models/login.model';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+
   //states
   loginData: Login = { email: '', password: '' };
   errorMessage: string = '';
@@ -19,6 +20,7 @@ export class LoginComponent {
 
   //html elements
   @ViewChild('loginForm') loginForm!: NgForm;
+
 
   //methods
   login() {

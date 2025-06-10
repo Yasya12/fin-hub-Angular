@@ -1,31 +1,107 @@
+
+
 <div
   class="flex flex-row justify-between px-[20px] items-center gap-4 py-2 bg-[#ffffff] w-full border-r-2 border-b-2 border-gray-300"
-
 >
-  <!--SEARCH BAR-->
-  <div
-    class="flex flex-row items-center w-3/5 px-4 py-1.5 bg-gray-100 rounded-full border border-gray-300"
-  >
-    <svg
-      aria-hidden="true"
-      focusable="false"
-      data-prefix="fal"
-      data-icon="magnifying-glass"
-      class="size-5 mr-2 text-gray-400 stroke-black"
-      role="img"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 512 512"
+  <div class="relative w-3/5">
+    <div
+      class="flex flex-row items-center w-full px-4 py-1.5 bg-gray-100 rounded-full border border-gray-300 z-20"
     >
-      <path
-        fill="currentColor"
-        d="M384 208A176 176 0 1 0 32 208a176 176 0 1 0 352 0zM343.3 366C307 397.2 259.7 416 208 416C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208c0 51.7-18.8 99-50 135.3L507.3 484.7c6.2 6.2 6.2 16.4 0 22.6s-16.4 6.2-22.6 0L343.3 366z"
-      ></path>
-    </svg>
-    <input
-      type="text"
-      placeholder="Пошук на FinHub..."
-      class="w-full focus:ring-0 border border-transparent bg-transparent focus:outline-none text-black placeholder-gray-400"
-    />
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        class="size-5 mr-2 text-gray-400"
+        role="img"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+      >
+        <path
+          fill="currentColor"
+          d="M384 208A176 176 0 1 0 32 208a176 176 0 1 0 352 0zM343.3 366C307 397.2 259.7 416 208 416C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208c0 51.7-18.8 99-50 135.3L507.3 484.7c6.2 6.2 6.2 16.4 0 22.6s-16.4 6.2-22.6 0L343.3 366z"
+        ></path>
+      </svg>
+      <input
+        type="text"
+        placeholder="Пошук на FinHub..."
+        class="w-full bg-transparent focus:outline-none text-black placeholder-gray-400"
+        #searchInput
+        (input)="onSearchInput($event)"
+        (focus)="isDropdownVisible.set(true)"
+      />
+    </div>
+
+    @if(isDropdownVisible() && searchInput.value.length > 0) {
+    <div
+      class="absolute top-full mt-2 w-full bg-white rounded-2xl border border-gray-200 shadow-lg z-10 overflow-hidden"
+    >
+      @if(isSearchLoading()) {
+      <div class="p-4 text-center text-gray-500">Пошук...</div>
+      } @else if (
+        !searchResults() ||
+        (searchResults()?.users?.length === 0 &&
+          searchResults()?.hubs?.length === 0 &&
+          searchResults()?.posts?.length === 0)
+      ) {
+      <div class="p-4 text-center text-gray-500">Нічого не знайдено.</div>
+      } @else {
+      <ul class="max-h-96 overflow-y-auto">
+        @if(searchResults()?.users?.length) {
+        <li class="px-4 pt-3 pb-2 text-xs font-bold text-gray-400 uppercase">
+          Користувачі
+        </li>
+        @for(user of searchResults()!.users; track user.username) {
+        <li
+          (click)="navigateTo(['/profile', user.username])"
+          class="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100"
+        >
+          <img
+            [src]="
+              user.profilePictureUrl || 'assets/images/Sample_User_Icon.png'
+            "
+            alt="avatar"
+            class="size-9 rounded-full"
+          />
+          <span>{{ user.username }}</span>
+        </li>
+        } } @if(searchResults()?.hubs?.length) {
+        <li
+          class="px-4 pt-3 pb-2 text-xs font-bold text-gray-400 uppercase border-t"
+        >
+          Хаби
+        </li>
+        @for(hub of searchResults()!.hubs; track hub.name) {
+        <li
+          (click)="navigateTo(['/hubs', hub.name])"
+          class="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100"
+        >
+          <span class="font-semibold">#{{ hub.name }}</span>
+        </li>
+        } } @if(searchResults()?.posts?.length) {
+        <li
+          class="px-4 pt-3 pb-2 text-xs font-bold text-gray-400 uppercase border-t"
+        >
+          Пости
+        </li>
+        @for(post of searchResults()!.posts; track post.id) {
+        <li
+          (click)="navigateTo(['/post', post.id])"
+          class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+        >
+          <p class="line-clamp-2">{{ post.content }}</p>
+        </li>
+        } }
+        <li
+          (click)="
+            navigateTo(['/search'], { queryParams: { q: searchInput.value } })
+          "
+          class="px-4 py-3 text-center text-sm font-semibold text-teal-600 cursor-pointer hover:bg-gray-100 border-t"
+        >
+          Знайти всі результати для "{{ searchInput.value }}"
+        </li>
+      </ul>
+      }
+    </div>
+    }
   </div>
 
   <!-- Navigation Menu -->
@@ -47,4 +123,4 @@
       </span>
     </div>
   </div>
-
+</div>

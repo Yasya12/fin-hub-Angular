@@ -1,6 +1,8 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, ElementRef, EventEmitter, HostListener, inject, input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Message } from '../../models/message.model';
 import { MessageService } from '../../services/message.service';
+import { ActivatedRoute } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-message-chat',
@@ -21,6 +23,7 @@ export class MessageChatComponent {
 
 
   @Output() loadMoreMessages = new EventEmitter<void>();
+  @Output() messageSend = new EventEmitter<void>();
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   initializing: boolean = true;
@@ -30,6 +33,7 @@ export class MessageChatComponent {
       this.groupMessages = [];
       this.firstTime = true;
       this.initializing = true;
+      this.loadingOldMessages = false;
       this.scrollToBottom();
     }
 
@@ -37,12 +41,20 @@ export class MessageChatComponent {
       const messages = changes['newMessages'].currentValue as Message[];
 
       if (!this.loadingOldMessages) {
-        this.groupMessages = [];
+        if (this.firstTime) {
+          this.groupMessages = []; // ✅ очищати лише один раз при ініціалізації
+        }
         this.addMessagesToGroup(messages, false);
         setTimeout(() => {
           this.scrollToBottom();
-          this.initializing = false; // після автоскролу завершуємо ініціалізацію
+
+          // only stop initializing if not firstTime
+          if (!this.firstTime) {
+            this.initializing = false;
+          }
+          this.firstTime = false;
         }, 0);
+
       } else {
         this.addMessagesToGroup(messages, false);
         setTimeout(() => {
@@ -85,6 +97,7 @@ export class MessageChatComponent {
           this.messageContent = '';
           this.addMessageToGroup(message, true); // Для нового повідомлення додаємо в кінець
           this.scrollToBottom();
+          this.messageSend.emit();
         }
       });
     }

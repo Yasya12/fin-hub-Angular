@@ -42,6 +42,16 @@ export class PostService {
     return this.http.post<CreatePost>(`${this.baseUrl}/post`, post);
   }
 
+   deletePost(postId: string): Observable<any> {
+    const token = this.authService.currentUser()?.token;
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.delete(`${this.baseUrl}/post/${postId}`, { headers });
+  }
+
   getPosts(pageNumber: number, pageSize: number): Observable<HttpResponse<Post>> {
     const params = new HttpParams()
       .set('pageNumber', pageNumber)

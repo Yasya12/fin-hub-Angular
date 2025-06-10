@@ -4,6 +4,9 @@ import { InfoPagesComponent } from './info-pages.component';
 import { AboutPageComponent } from './about-page/about-page.component';
 import { ContactPageComponent } from './contact-page/contact-page.component';
 import { InfoPagesRoutingModule } from './info-pages-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PrivacyComponent } from './privacy/privacy.component';
+import { TermsComponent } from './terms/terms.component';
 
 
 @NgModule({
@@ -11,11 +14,14 @@ import { InfoPagesRoutingModule } from './info-pages-routing.module';
     InfoPagesComponent,
     AboutPageComponent,
     ContactPageComponent,
-    ContactPageComponent
+    ContactPageComponent,
+    PrivacyComponent,
+    TermsComponent
   ],
   imports: [
     CommonModule,
-    InfoPagesRoutingModule
+    InfoPagesRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class InfoPagesModule { }

@@ -5,6 +5,7 @@ import { AuthService } from './core/services/auth.service';
 import { ScrollService } from './shared/services/scroll.service';
 import { NgxSpinnerComponent } from 'ngx-spinner';
 import { NewsComponent } from './shared/ui/news/news.component';
+import { MessageService } from './features/messages/services/message.service';
 
 @Component({
   selector: 'app-root',
@@ -17,15 +18,18 @@ export class AppComponent implements OnInit, AfterViewInit {
   // Services
   private readonly authService = inject(AuthService);
   private readonly scrollService = inject(ScrollService);
+  private readonly messageService = inject(MessageService);
+
 
   //States
   title = 'fin-hub';
 
   // HtmlElements
   scrollContainer = viewChild<ElementRef>('scrollContainer');
-  
+
   ngOnInit(): void {
     this.authService.checkTokenExpiration();
+    //this.messageService.loadMessages();
   }
 
   ngAfterViewInit(): void {

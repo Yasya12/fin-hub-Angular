@@ -47,6 +47,10 @@ export class MemberDetailComponent implements OnInit {
     }
   }
 
+  writeToUser(username: string): void {
+    this.router.navigate(['/messages/chats', username]);
+  }
+
   selectTab(tab: string) {
     this.selectedTab = tab;
   }

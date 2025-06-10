@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthLayoutComponent } from './shared/layouts/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './shared/layouts/main-layout/main-layout.component';
 import { UnderDevelopmentComponent } from './shared/ui/under-development/under-development.component';
+import { SearchResultsComponent } from './core/ui/search-results/search-results.component';
 
 export const routes: Routes = [
   {
@@ -9,6 +10,7 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
+      { path: 'search', component: SearchResultsComponent },
       {
         path: 'signup',
         loadChildren: () => import('./features/signup/signup.module').then(m => m.SignupModule)

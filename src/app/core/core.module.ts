@@ -7,19 +7,23 @@ import { ApartAsideComponent } from './ui/apart-aside/apart-aside.component';
 import { ChartsViewComponent } from '../shared/ui/charts-view/charts-view.component';
 import { TickerTapeComponent } from './ui/ticker-tape/ticker-tape.component';
 import { HomeModule } from "../features/home/home.module";
+import { SearchResultsComponent } from './ui/search-results/search-results.component';
+import { NewsComponent } from '../shared/ui/news/news.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     ApartAsideComponent,
-    TickerTapeComponent
+    TickerTapeComponent,
+    SearchResultsComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     ChartsViewComponent,
     TooltipModule.forRoot(),
-    HomeModule
+    HomeModule,
+    NewsComponent
 ],
   exports: [
     HeaderComponent,

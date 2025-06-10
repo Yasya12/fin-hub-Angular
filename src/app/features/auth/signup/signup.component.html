@@ -14,7 +14,10 @@
       class="w-full px-4 py-2 border border-gray-300 rounded mb-1 focus:outline-none focus:ring-1 focus:ring-gray-500"
     />
     <div
-      *ngIf="username.invalid && (username.dirty || username.touched || formSubmitted)"
+      *ngIf="
+        username.invalid &&
+        (username.dirty || username.touched || formSubmitted)
+      "
       class="text-red-600 text-xs mb-2"
     >
       <div *ngIf="username.errors?.['required']">
@@ -60,7 +63,10 @@
       class="w-full px-4 py-2 border border-gray-300 rounded mb-1 focus:outline-none focus:ring-1 focus:ring-gray-500"
     />
     <div
-      *ngIf="password.invalid && (password.dirty || password.touched || formSubmitted)"
+      *ngIf="
+        password.invalid &&
+        (password.dirty || password.touched || formSubmitted)
+      "
       class="text-red-600 text-xs mb-2"
     >
       <div *ngIf="password.errors?.['required']">Пароль обов’язковий.</div>
@@ -130,5 +136,7 @@
 <!-- Term and Consitions -->
 <p class="text-xs text-gray-500 mt-5">
   Реєструючись, ви погоджуєтеся з
-  <a href="#" class="text-blue-600 hover:underline">Умовами та Положеннями</a>.
+  <a routerLink="/info/terms" class="text-blue-600 hover:underline"
+    >Умовами та Положеннями</a
+  >.
 </p>

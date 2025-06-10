@@ -22,6 +22,29 @@ export class MessageService {
     paginatedResult = signal<PaginatedResult<Message[]> | undefined>(undefined);
     paginatedThreadMessages = signal<PaginatedResult<Message[]> | undefined>(undefined);
 
+    messages = signal<number>(0);
+
+    constructor() {
+        this.loadMessages();
+        // setInterval(() => {
+        //     console.log('Reloading messages...');
+        //     this.loadMessages();
+        // }, 10000); // кожні 30 сек
+    }
+
+    loadMessages(): void {
+        this.authService.setCurerntUser();
+
+        if (!this.authService.currentUser()?.token) {
+            console.warn('No user token found. Messages will not be loaded.');
+            return;
+        }
+
+        this.getUnreadMessagesForUser().subscribe((data) => {
+            this.messages.set(data);
+        });
+    }
+
     getMessages(pageNumber: number, pageSize: number, username: string, container: string) {
         const params = new HttpParams()
             .set('pageNumber', pageNumber)
@@ -119,13 +142,27 @@ export class MessageService {
         return this.http.get<ChatUserDto[]>(`${this.baseUrl}/message/chat-users`, { headers });
     }
 
+    getUnreadMessagesForUser(): Observable<number> {
+        if (!this.authService.currentUser()?.token) {
+            return of(0);
+        }
+
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
+
+        return this.http.get<number>(`${this.baseUrl}/message/all-messages-for-user`, { headers });
+    }
+
     markMessagesAsRead(senderUsername: string): Observable<void> {
         const headers = new HttpHeaders()
             .set('Authorization', `Bearer ${this.authService.currentUser()?.token}`);
 
+       // this.loadMessages();
         return this.http.post<void>(
             `${this.baseUrl}/message/mark-as-read/${senderUsername}`,
             {}, { headers }
         );
+
+
     }
 }

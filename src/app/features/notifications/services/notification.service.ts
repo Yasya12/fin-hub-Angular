@@ -22,11 +22,13 @@ export class NotificationService {
     }
 
     loadNotifications(): void {
+        this.authService.setCurerntUser();
+
         if (!this.authService.currentUser()?.token) {
+            console.warn('No user token found. Notifications will not be loaded.');
             return;
         }
 
-        this.authService.setCurerntUser();
         this.getAllNotificationsForUser().subscribe((data) => {
             this.notifications.set(data);
         });

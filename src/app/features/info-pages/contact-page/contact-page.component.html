@@ -38,61 +38,51 @@
   </div>
 
   <div class="bg-gray-100 py-12">
-    <form class="max-w-xl mx-auto space-y-6 px-4">
+    <form
+      [formGroup]="contactForm"
+      (ngSubmit)="onSubmit()"
+      class="max-w-xl mx-auto space-y-6 px-4"
+    >
       <!-- First Name -->
       <div>
-        <label
-          class="text-[12px] uppercase tracking-widest font-semibold mb-2"
-          for="first-name"
-          >Ім`я</label
-        >
+        <label for="first-name">Ім`я</label>
         <input
           id="first-name"
           type="text"
+          formControlName="firstName"
           class="w-full border border-gray-300 rounded px-3 py-2 text-sm"
         />
       </div>
 
       <!-- Last Name -->
       <div>
-        <label
-          class="text-[12px] uppercase tracking-widest font-semibold mb-2"
-          for="last-name"
-          >Прізвище</label
-        >
+        <label for="last-name">Прізвище</label>
         <input
           id="last-name"
           type="text"
+          formControlName="lastName"
           class="w-full border border-gray-300 rounded px-3 py-2 text-sm"
         />
       </div>
 
       <!-- Email -->
       <div>
-        <label
-          class="text-[12px] uppercase tracking-widest font-semibold mb-2"
-          for="email"
-          >Ваша електронна скринька <span class="text-red-500">*</span></label
-        >
+        <label for="email">Email <span class="text-red-500">*</span></label>
         <input
           id="email"
           type="email"
+          formControlName="email"
           class="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-          required
         />
       </div>
 
       <!-- Subject -->
       <div>
-        <label
-          class="text-[12px] uppercase tracking-widest font-semibold mb-2"
-          for="subject"
-          >Тема електронного листа <span class="text-red-500">*</span></label
-        >
+        <label for="subject">Тема <span class="text-red-500">*</span></label>
         <select
           id="subject"
-          class="w-full border border-gray-300 rounded px-3 py-2 text-sm hover:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
-          required
+          formControlName="subject"
+          class="w-full border border-gray-300 rounded px-3 py-2 text-sm"
         >
           <option disabled selected>— Виберіть варіант—</option>
           <option>Загальне запитання</option>
@@ -103,24 +93,22 @@
 
       <!-- Message -->
       <div>
-        <label
-          class="text-[12px] uppercase tracking-widest font-semibold mb-2"
-          for="message"
-          >Повідомлення<span class="text-red-500">*</span></label
+        <label for="message"
+          >Повідомлення <span class="text-red-500">*</span></label
         >
         <textarea
           id="message"
+          formControlName="message"
           rows="6"
           class="w-full border border-gray-300 rounded px-3 py-2 text-sm resize-none"
-          required
         ></textarea>
       </div>
 
-      <!-- Send Button -->
+      <!-- Submit -->
       <div class="text-center">
         <button
           type="submit"
-          class="bg-teal-400 hover:bg-teal-500 text-white rounded-full px-8 py-2 font-semibold text-sm transition duration-200"
+          class="bg-teal-400 hover:bg-teal-500 text-white rounded-full px-8 py-2 font-semibold text-sm"
         >
           Відправити
         </button>
@@ -143,10 +131,9 @@
 
   <!-- Contact CTA Section -->
   <section class="bg-teal-400 text-white text-center py-12 flex flex-col">
-    <h3 class="text-2xl font-semibold">&#64;stocktwits</h3>
+    <h3 class="text-2xl font-semibold">&#64;finhub</h3>
     <span class="font-light"
-      >Залишайтеся соціальними! Надішліть нам DM на цей соціальний
-      канал.</span
+      >Залишайтеся соціальними! Надішліть нам DM на цей соціальний канал.</span
     >
   </section>
 
@@ -155,10 +142,12 @@
     <div
       class="border-t mx-96 border-gray-300 pt-4 text-sm text-gray-600 flex justify-center gap-4 flex-wrap"
     >
-      <a href="#" class="hover:underline">Про нас</a>
-      <a href="#" class="hover:underline">Контакти</a>
-      <a href="#" class="hover:underline">Політика конфіденційності</a>
-      <a href="#" class="hover:underline">Умови</a>
+      <a routerLink="/info/about" class="hover:underline">Про нас</a>
+      <a routerLink="/info/contact" class="hover:underline">Контакти</a>
+      <a routerLink="/info/privacy" class="hover:underline"
+        >Політика конфіденційності</a
+      >
+      <a routerLink="/info/terms" class="hover:underline">Умови</a>
     </div>
     <p class="mt-4 text-xs text-gray-400">© 2025 FinHub. Усі права захищено.</p>
   </section>

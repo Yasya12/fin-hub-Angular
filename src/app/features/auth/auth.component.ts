@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ErrorHandlerService } from '../../shared/services/error-handler.service';
 import { GoogleSigninService } from '../signup/services/google-signin.service';
+import { NotificationService } from '../notifications/services/notification.service';
+import { MessageService } from '../messages/services/message.service';
 
 @Component({
   selector: 'app-auth',
@@ -18,6 +20,8 @@ export class AuthComponent {
   private errorHandler = inject(ErrorHandlerService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  notificationService = inject(NotificationService);
+  messageService = inject(MessageService);
 
   //states
   errorMessage: string = '';
@@ -41,7 +45,11 @@ export class AuthComponent {
   //methods
   OnSignup(signupData: Signup) {
     this.authService.signup(signupData).subscribe({
-      next: () => this.router.navigate(['/home']),
+      next: () => {
+        this.notificationService.loadNotifications();
+        this.messageService.loadMessages();
+        this.router.navigate(['/home']);
+      },
       error: (err) => {
         this.errorMessage = this.errorHandler.handleHttpError(err);
       }
@@ -51,6 +59,8 @@ export class AuthComponent {
   OnLogin(loginData: Login) {
     this.authService.login(loginData).subscribe({
       next: () => {
+        this.notificationService.loadNotifications();
+        this.messageService.loadMessages();
         this.router.navigate(['/home']);
       },
       error: (err) => {

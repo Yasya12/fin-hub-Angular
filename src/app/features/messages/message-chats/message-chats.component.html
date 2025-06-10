@@ -13,6 +13,7 @@
         [username]="username"
         [newMessages]="newMessages"
         (loadMoreMessages)="onLoadMoreMessages()"
+        (messageSend)="onSendMessage()"
       ></app-message-chat>
     </div>
   </div>
@@ -26,6 +27,8 @@
     </div>
     <app-message-chat-list
       (selectChat)="onChatSelected($event)"
+      [isThereNewMessages]="isThereNewMessages()"
+      [activeUsername]="username"
     ></app-message-chat-list>
   </div>
 </div>

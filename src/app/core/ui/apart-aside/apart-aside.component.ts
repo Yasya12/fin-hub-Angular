@@ -9,14 +9,12 @@ import {
   OnInit,
   signal,
   ViewChild,
-  viewChild,
-  WritableSignal,
 } from '@angular/core';
-import { AuthStore } from '../../stores/auth-store';
 import { User } from '../../models/interfaces/user/user.interface';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { BlobOptions } from 'buffer';
+import { NotificationService } from '../../../features/notifications/services/notification.service';
+import { MessageService } from '../../../features/messages/services/message.service';
 
 @Component({
   selector: 'app-apart-aside',
@@ -42,7 +40,9 @@ import { BlobOptions } from 'buffer';
 })
 export class ApartAsideComponent implements OnInit {
   //stores
-  authService = inject(AuthService)
+  authService = inject(AuthService);
+  notifyService = inject(NotificationService);
+  messageService = inject(MessageService);
   cdr = inject(ChangeDetectorRef);
 
   //services
@@ -54,6 +54,7 @@ export class ApartAsideComponent implements OnInit {
   });
   createPost: boolean = false;
   openModalWindow: boolean = true;
+  //unreadNotificationsCount: number = 3;
 
   @ViewChild('dropdown') dropdownRef!: ElementRef;
   showProfileDropDown = signal(false);
@@ -91,12 +92,19 @@ export class ApartAsideComponent implements OnInit {
 
   createPostModal() {
     this.createPost = true;
-     this.openModalWindow = true;
+    this.openModalWindow = true;
     this.cdr.detectChanges()
   }
 
   addPostModal(isModalOpen: boolean): void {
     this.createPost = false;
     this.openModalWindow = isModalOpen;
+  }
+
+  logout() {
+    this.notifyService.loadNotifications();
+    this.messageService.loadMessages();
+    this.authService.logout();
+     this.router.navigate(['/home']);
   }
 }

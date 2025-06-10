@@ -10,15 +10,14 @@
       </div>
       <button
         class="mt-6 bg-teal-400 text-white font-semibold px-6 py-2 rounded-full hover:bg-teal-500 transition"
+        routerLink="/info/contact"
       >
-        Приєднатися
+        Контакт
       </button>
     </div>
 
     <!-- Decorative lines (imitating graph lines) -->
-    <div
-      class="absolute right-0 -top-0 w-1/2 h-full pointer-events-none mr-10"
-    >
+    <div class="absolute right-0 -top-0 w-1/2 h-full pointer-events-none mr-10">
       <svg
         class="w-full h-full"
         viewBox="0 0 500 300"
@@ -66,7 +65,7 @@
   >
     <!-- History -->
     <div class="w-[40%]">
-      <h2 class="text-[42px] font-bold mb-4">Our History</h2>
+      <h2 class="text-[42px] font-bold mb-4">Наша історія</h2>
       <p class="text-gray-400 mb-4 leading-relaxed text-[20px]">
         Finhub з’явився у 2024 році як студентський проєкт і швидко перетворився
         на окрему соціальну мережу для всіх, хто цікавиться фінансами,
@@ -105,10 +104,13 @@
       майбутнє фінансових медіа, продуктів і сервісів для нового покоління<br />
       обізнаних у фінансах користувачів.
     </p>
+    <p class="mx-auto text-gray-400 text-lg leading-relaxed mt-6">
+      Надішліть нам DM і ми сконтакнуємо з тобою
+    </p>
     <button
-      class="mt-6 bg-teal-400 hover:bg-teal-500 text-white font-semibold px-6 py-2 rounded-full transition"
+      class="mt-2 bg-teal-400 hover:bg-teal-500 text-white font-semibold px-6 py-2 rounded-full transition"
     >
-      Переглянути вакансії
+      &#64;finhub
     </button>
   </section>
 
@@ -119,6 +121,7 @@
     </h3>
     <button
       class="mt-4 border border-white text-white px-6 py-2 rounded-full hover:bg-white hover:text-teal-600 transition"
+      routerLink="/info/contact"
     >
       Контакт
     </button>
@@ -129,10 +132,12 @@
     <div
       class="border-t mx-96 border-gray-300 pt-4 text-sm text-gray-600 flex justify-center gap-4 flex-wrap"
     >
-      <a href="#" class="hover:underline">Про нас</a>
-      <a href="#" class="hover:underline">Контакти</a>
-      <a href="#" class="hover:underline">Політика конфіденційності</a>
-      <a href="#" class="hover:underline">Умови</a>
+      <a routerLink="/info/about" class="hover:underline">Про нас</a>
+      <a routerLink="/info/contact" class="hover:underline">Контакти</a>
+      <a routerLink="/info/privacy" class="hover:underline"
+        >Політика конфіденційності</a
+      >
+      <a routerLink="/info/terms" class="hover:underline">Умови</a>
     </div>
     <p class="mt-4 text-xs text-gray-400">© 2025 FinHub. Усі права захищено.</p>
   </section>

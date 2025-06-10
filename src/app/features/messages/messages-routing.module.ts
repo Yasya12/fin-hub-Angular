@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'chats',
     component: MessageChatsComponent
+  },
+  {
+    path: 'chats/:username',
+    component: MessageChatsComponent
   }
 ];
 
@@ -18,4 +22,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class MessagesRoutingModule {}
+export class MessagesRoutingModule { }
