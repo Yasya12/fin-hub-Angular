@@ -26,6 +26,8 @@ export class MemberDetailComponent implements OnInit {
   isCurrentUser = false;
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
+
     this.route.data.subscribe({
       next: data => {
         this.user = data['user'];

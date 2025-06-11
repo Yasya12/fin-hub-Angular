@@ -9,7 +9,7 @@
         Поки що не підписаний(а) ні на кого.
       </div>
 
-      <div *ngFor="let user of follows" class="p-1 mb-4 flex items-center">
+      <div *ngFor="let user of follows" class="p-1 mb-4 flex items-center cursor-pointer hover:bg-gray-100" routerLink="/member/{{ user.username }}">
         <img
           [src]="user.profilePhoroUrl || '/assets/images/Sample_User_Icon.png'"
           alt="Profile photo"

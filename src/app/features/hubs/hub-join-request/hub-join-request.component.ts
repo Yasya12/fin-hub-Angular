@@ -16,6 +16,7 @@ export class HubJoinRequestComponent implements OnInit {
   constructor(private hubService: HubService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     this.loadRequests();
   }
 

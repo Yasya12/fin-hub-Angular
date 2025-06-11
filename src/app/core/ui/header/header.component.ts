@@ -34,36 +34,18 @@ export class HeaderComponent implements OnInit {
   //Services
   toastr = inject(ToastrService);
   notificationService = inject(NotificationService);
+  private searchService = inject(SearchService);
+  authService = inject(AuthService);
+  router = inject(Router);
 
   //States
   isDropdownOpen = false;
   isLoggedIn = signal<boolean>(false);
   hasUnreadNotifications = signal<boolean>(false);
-
   searchResults = signal<SearchResult | null>(null);
   isSearchLoading = signal(false);
   isDropdownVisible = signal(false);
   showProfileDropDown = signal(false);
-
-  // ✅ 5. RxJS для обробки вводу
-  private searchSubject = new Subject<string>();
-  private searchSubscription!: Subscription;
-
-  private searchService = inject(SearchService);
-  private elementRef = inject(ElementRef);
-
-
-  // ✅ 6. Обробка кліків поза компонентом для закриття випадаючого меню пошуку
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    // Цей код закриває і меню профілю, і меню пошуку, якщо клік був поза ними
-    const target = event.target as HTMLElement;
-    if (!this.elementRef.nativeElement.contains(target)) {
-      this.showProfileDropDown.set(false);
-      this.isDropdownVisible.set(false);
-    }
-  }
-
   menuItems = [
     {
       key: 'hubs',
@@ -81,7 +63,15 @@ export class HeaderComponent implements OnInit {
       route: '/info/contact',
     },
   ];
+
+  // RxJS для обробки вводу
+  private searchSubject = new Subject<string>();
+  private searchSubscription!: Subscription;
+
+  private elementRef = inject(ElementRef);
+
   @ViewChild('dropdownMenu') dropdownMenu: ElementRef | undefined;
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   selectTab(tab: string) {
     if (tab === 'signup') {
@@ -102,7 +92,7 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  constructor(protected authService: AuthService, private router: Router) {
+  constructor() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.isDropdownOpen = false;
@@ -126,7 +116,6 @@ export class HeaderComponent implements OnInit {
     this.authService.setCurerntUser();
     this.notificationService.getAllNotificationsForUser();
 
-    // ✅ 7. Налаштовуємо "живий" пошук
     this.searchSubscription = this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -151,7 +140,6 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    // ✅ 8. Відписуємось від searchSubscription, щоб уникнути витоків пам'яті
     this.searchSubscription.unsubscribe();
   }
 
@@ -161,29 +149,26 @@ export class HeaderComponent implements OnInit {
   }
 
   navigateTo(path: any[], extras?: NavigationExtras): void {
-    // Закриваємо всі випадаючі меню
     this.isDropdownVisible.set(false);
     this.showProfileDropDown.set(false);
-    
-    // Виконуємо навігацію з переданими шляхом та опціями
+
     this.router.navigate(path, extras);
+    if (this.searchInput) {
+      this.searchInput.nativeElement.value = '';
+    }
+    this.searchResults.set(null);
   }
 
-  // ✅ 9. Нові та змінені методи для пошуку
-
-  // Цей метод викликається на КОЖНУ зміну в полі вводу
   onSearchInput(event: Event): void {
     const term = (event.target as HTMLInputElement).value;
-    // Показуємо дропдаун одразу, як тільки користувач починає вводити
     this.isDropdownVisible.set(true);
     this.searchSubject.next(term);
   }
 
-  // Метод для переходу на сторінку, коли юзер клікає на результат
   navigateToSearchResult(path: any[]): void {
-    this.isDropdownVisible.set(false); // Закриваємо меню
+    this.isDropdownVisible.set(false);
     this.router.navigate(path);
-    // Опціонально: очистити поле пошуку
+    this.searchResults.set(null);
   }
 
   logout() {
@@ -195,22 +180,26 @@ export class HeaderComponent implements OnInit {
   }
 
   @HostListener('document:click', ['$event'])
-  clickOutside(event: MouseEvent) {
-    if (
-      this.dropdownMenu &&
-      !this.dropdownMenu.nativeElement.contains(event.target)
-    ) {
-      this.isDropdownOpen = false;
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!this.elementRef.nativeElement.contains(target)) {
+      this.showProfileDropDown.set(false);
+      this.isDropdownVisible.set(false);
+      if (this.searchInput) {
+        this.searchInput.nativeElement.value = '';
+      }
+      this.searchResults.set(null);
     }
   }
 
   onSearch(searchTerm: string): void {
-    // Обрізаємо зайві пробіли і перевіряємо, чи запит не порожній
     const term = searchTerm.trim();
     if (term) {
-      // Перенаправляємо користувача на сторінку /search
-      // і передаємо пошуковий запит як параметр 'q'
       this.router.navigate(['/search'], { queryParams: { q: term } });
     }
+  }
+
+  sanitizeHtmlContent(html: string): string {
+    return html.replace(/&nbsp;/g, ' ');
   }
 }

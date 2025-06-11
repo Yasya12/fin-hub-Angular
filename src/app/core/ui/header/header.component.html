@@ -1,5 +1,3 @@
-
-
 <div
   class="flex flex-row justify-between px-[20px] items-center gap-4 py-2 bg-[#ffffff] w-full border-r-2 border-b-2 border-gray-300"
 >
@@ -27,6 +25,9 @@
         #searchInput
         (input)="onSearchInput($event)"
         (focus)="isDropdownVisible.set(true)"
+        (keydown.enter)="
+          navigateTo(['/search'], { queryParams: { q: searchInput.value } })
+        "
       />
     </div>
 
@@ -36,12 +37,9 @@
     >
       @if(isSearchLoading()) {
       <div class="p-4 text-center text-gray-500">Пошук...</div>
-      } @else if (
-        !searchResults() ||
-        (searchResults()?.users?.length === 0 &&
-          searchResults()?.hubs?.length === 0 &&
-          searchResults()?.posts?.length === 0)
-      ) {
+      } @else if ( !searchResults() || (searchResults()?.users?.length === 0 &&
+      searchResults()?.hubs?.length === 0 && searchResults()?.posts?.length ===
+      0) ) {
       <div class="p-4 text-center text-gray-500">Нічого не знайдено.</div>
       } @else {
       <ul class="max-h-96 overflow-y-auto">
@@ -49,9 +47,9 @@
         <li class="px-4 pt-3 pb-2 text-xs font-bold text-gray-400 uppercase">
           Користувачі
         </li>
-        @for(user of searchResults()!.users; track user.username) {
+        @for(user of searchResults()!.users.slice(0, 2); track user.username) {
         <li
-          (click)="navigateTo(['/profile', user.username])"
+          (click)="navigateTo(['/member', user.username])"
           class="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100"
         >
           <img
@@ -69,9 +67,9 @@
         >
           Хаби
         </li>
-        @for(hub of searchResults()!.hubs; track hub.name) {
+        @for(hub of searchResults()!.hubs.slice(0, 2); track hub.name) {
         <li
-          (click)="navigateTo(['/hubs', hub.name])"
+          (click)="navigateTo(['/hubs', hub.id])"
           class="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100"
         >
           <span class="font-semibold">#{{ hub.name }}</span>
@@ -82,22 +80,21 @@
         >
           Пости
         </li>
-        @for(post of searchResults()!.posts; track post.id) {
-        <li
-          (click)="navigateTo(['/post', post.id])"
-          class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-        >
-          <p class="line-clamp-2">{{ post.content }}</p>
-        </li>
+        @for(post of searchResults()!.posts.slice(0, 2); track post.id) {
+        <div
+          (click)="navigateTo(['/home/post', post.id])"
+          class="px-4 py-2 cursor-pointer hover:bg-gray-100 border mb-2"
+          [innerHTML]="sanitizeHtmlContent(post.content)"
+        ></div>
         } }
-        <li
+        <div
           (click)="
             navigateTo(['/search'], { queryParams: { q: searchInput.value } })
           "
           class="px-4 py-3 text-center text-sm font-semibold text-teal-600 cursor-pointer hover:bg-gray-100 border-t"
         >
           Знайти всі результати для "{{ searchInput.value }}"
-        </li>
+        </div>
       </ul>
       }
     </div>

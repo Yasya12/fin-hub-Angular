@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CreateCommentDto } from './models/interfaces/create-comment-dto.interface';
 import { PostDetailStore } from './stores/post-detail/post-detail.store';
 
@@ -8,10 +8,14 @@ import { PostDetailStore } from './stores/post-detail/post-detail.store';
   styleUrls: ['./post-detail.component.css'],
   providers: [PostDetailStore]
 })
-export class PostDetailComponent {
+export class PostDetailComponent implements OnInit {
   postDetailStore = inject(PostDetailStore);
 
   currentUserId: string | undefined = this.postDetailStore.getCurrentUserId();
+
+  ngOnInit(): void {
+    window.scrollTo(0, 0);
+  }
 
   handleAddCommentRequest(commentPayload: CreateCommentDto) {
     if (!this.currentUserId) {
