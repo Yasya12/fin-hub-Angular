@@ -2,7 +2,7 @@
   <div class="">
     <div class="flex flex-col w-full">
       <!-- Display posts after loading -->
-      <div class="flex flex-col gap-2 w-full ">
+      <div class="flex flex-col gap-2 w-full">
         <!-- Iterate over each post -->
         @for(post of posts(); track post.id) {
         <div
@@ -20,16 +20,13 @@
               class="w-10 h-10 rounded-full mr-3"
             />
             <div>
-              <h4
-                class="font-bold text-lg"
-              >
+              <h4 class="font-bold text-lg">
                 {{ post.userName }}
               </h4>
               <p class="text-sm text-gray-600">
                 {{ post.createdAt | formattedDate }}
               </p>
             </div>
-
           </div>
 
           @if(post.hubName){
@@ -73,19 +70,32 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-1"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
+                class="size-9 mr-1 transition-all duration-300 hover:bg-gray-300 p-2 rounded-full"
+                [ngClass]="{
+                  'stroke-teal-400 fill-teal-400': post.isLiked,
+                  'stroke-gray-600 group-hover:stroke-teal-400 fill-none':
+                    !post.isLiked
+                }"
               >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M14 9l-2-2m0 0l-2 2m2-2v6m-6 2a2 2 0 01-2-2v-4a2 2 0 012-2h.01"
-                ></path>
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
               </svg>
-              Вподобайка <span class="ml-2">{{ post.likesCount }}</span>
+
+              <span
+                class="ml-1"
+                [ngClass]="{
+                  'text-teal-400 font-semibold': post.isLiked,
+                  'text-gray-600 group-hover:text-teal-400 font-semibold':
+                    !post.isLiked
+                }"
+              >
+                {{ post.likesCount }}
+              </span>
             </button>
 
             <!-- Comments -->
@@ -95,19 +105,20 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-1"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
+                viewBox="0 0 512.000000 512.000000"
+                class="size-9 mr-1 hover:bg-gray-300 p-2 rounded-full transition-all duration-300"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 10h8m-8 4h4m1-14a7 7 0 11-14 0 7 7 0 0114 0z"
-                ></path>
+                <g
+                  transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+                  fill="currentColor"
+                  stroke="none"
+                >
+                  <path
+                    d="M1620 4630 c-254 -10 -506 -25 -758 -46 -221 -18 -306 -41 -415 -114 -123 -82 -206 -192 -255 -334 l-27 -81 0 -1417 c0 -1415 0 -1417 21 -1444 49 -67 130 -91 195 -60 19 9 137 95 263 191 126 96 232 175 235 175 4 0 27 -28 51 -62 80 -109 211 -198 345 -233 94 -24 530 -57 1005 -75 440 -17 1292 -8 1531 15 l56 6 404 -308 c517 -395 463 -358 531 -358 61 0 94 17 132 69 21 27 21 29 21 1444 l0 1417 -27 80 c-83 243 -290 411 -544 440 l-60 7 -11 77 c-23 154 -77 265 -183 371 -102 101 -211 157 -351 179 -67 11 -382 34 -699 51 -247 14 -1191 20 -1460 10z m1195 -320 c293 -11 692 -34 849 -50 161 -16 249 -71 305 -189 l26 -56 0 -810 c0 -923 5 -864 -87 -961 -78 -83 -113 -93 -382 -114 -127 -10 -337 -24 -466 -32 -312 -17 -1328 -17 -1638 0 -128 8 -246 11 -262 7 -17 -4 -169 -112 -350 -251 -177 -134 -323 -244 -325 -244 -3 0 -4 541 -3 1203 l3 1202 26 56 c33 70 87 125 155 156 56 26 181 40 559 63 460 29 1129 37 1590 20z m1640 -724 c66 -30 122 -87 154 -155 l26 -56 3 -1203 c2 -969 0 -1202 -10 -1196 -7 4 -151 112 -320 241 -168 128 -319 238 -335 244 -20 8 -92 7 -268 -3 -312 -17 -1339 -17 -1645 0 -462 27 -693 49 -747 72 -53 22 -131 95 -156 145 l-15 29 56 44 c51 39 61 43 97 38 200 -27 1341 -31 1795 -6 299 16 610 40 685 51 244 39 437 205 517 444 23 70 23 72 26 708 l3 639 42 -7 c23 -4 65 -17 92 -29z"
+                  />
+                </g>
               </svg>
-              Комент <span class="ml-2">{{ post.commentsCount }}</span>
+              <span class="ml-2 transition-all duration-300">{{ post.commentsCount }}</span>
             </a>
           </div>
         </div>

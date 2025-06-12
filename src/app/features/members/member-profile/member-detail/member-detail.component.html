@@ -20,16 +20,28 @@
       <h1 class="mt-4 text-2xl font-bold ml-5">{{ user.username }}</h1>
       <p class="text-lg font-medium text-gray-600 ml-5">{{ user.email }}</p>
       <div class="flex">
+        @if(isCurrentUser){
         <button
           class="mt-2 px-6 py-1.5 border rounded-full text-lg font-medium hover:bg-teal-500 hover:text-white transition ml-2"
           (click)="doNext()"
         >
-          @if(isCurrentUser){ Редагувати профіль }@else { Слідкувати }
+          Редагувати профіль
         </button>
-        @if(!isCurrentUser){
-
+        }@else {
         <button
-          class="mt-2 px-6 py-1.5 border rounded-full text-lg font-medium hover:bg-teal-500 hover:text-white transition ml-2"
+          (click)="toggleFollow(user)"
+          class="mt-2 px-6 py-1.5 border rounded-full text-lg font-medium transition ml-2"
+          [ngClass]="{
+            'bg-teal-600 text-white hover:opacity-90': !isFollowing,
+            'bg-white text-teal-600 border border-teal-600 hover:bg-teal-50':
+              isFollowing
+          }"
+        >
+          {{ isFollowing ? "Не стежити" : "Стежити" }}
+        </button>
+        } @if(!isCurrentUser){
+        <button
+          class="mt-2 px-6 py-1.5 border border-teal-600 rounded-full text-lg font-medium hover:bg-teal-500 hover:text-white transition ml-2"
           (click)="writeToUser(user.username)"
         >
           Написати

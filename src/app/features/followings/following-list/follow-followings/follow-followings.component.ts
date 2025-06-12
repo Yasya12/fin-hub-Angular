@@ -19,6 +19,7 @@ export class FollowFollowingsComponent implements OnInit {
   follows: Follow[] | undefined
   currentUserEmail: string | undefined;
   curentUsername: string | undefined;
+stoppropagation: any;
 
   //hooks
   ngOnInit(): void {

@@ -5,6 +5,7 @@ import { FollowingService } from '../../../followings/services/following.service
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../../core/services/auth.service';
 import { PresenceService } from '../../../../core/services/presence.service';
+import { use } from 'marked';
 
 @Component({
   selector: 'app-member-detail',
@@ -26,15 +27,18 @@ export class MemberDetailComponent implements OnInit {
   //States
   user: User = {} as User;
   selectedTab: string = 'posts';
-  isFollowing = false;
+  isFollowing: boolean | undefined;
   isCurrentUser = false;
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
 
+
+
     this.route.data.subscribe({
       next: data => {
         this.user = data['user'];
+        this.checkIfFollows(this.user.id);
         if (this.authService.currentUser()?.user.username == this.user.username) {
           this.isCurrentUser = true;
         }
@@ -59,6 +63,29 @@ export class MemberDetailComponent implements OnInit {
 
   selectTab(tab: string) {
     this.selectedTab = tab;
+  }
+
+  toggleFollow(user: User): void {
+    if (!this.isFollowing) {
+      this.followingService.followUser(user.id).subscribe(() => {
+        this.isFollowing = !this.isFollowing;
+        this.toastr.success(`Now you are following ${user.username}`);
+      })
+
+    } else {
+      this.followingService.unfollow(user.id).subscribe(() => {
+        this.isFollowing = !this.isFollowing;
+        this.toastr.error(`You unfollowd ${user.username}`);
+      })
+
+    }
+  }
+
+  checkIfFollows(id: string) {
+    this.followingService.isFollowingUser(id).subscribe((result) => {
+      this.isFollowing = result;
+      console.log(result)
+    })
   }
 
   // toggleFollow(user: User): void {

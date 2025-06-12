@@ -23,7 +23,7 @@
 
         @if(user.email !== currentUserEmail) {
         <button
-          (click)="toggleFollow(user)"
+          (click)="toggleFollow(user); $event.stopPropagation()"
           class="ml-auto border text-gray-500 border-gray-400 py-1 px-4 rounded-full transition duration-200 hover:bg-gray-200"
         >
           {{ user.isFollowedByCurrentUser ? "Не стежити" : "Стежити" }}
