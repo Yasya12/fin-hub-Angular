@@ -24,13 +24,22 @@
         'hover:bg-gray-200': !chat.isSelected
       }"
     >
-      <img
-        [src]="chat.photoUrl || '/assets/images/Sample_User_Icon.png'"
-        alt="Avatar"
-        class="size-14 rounded-full mr-3 my-1"
-      />
+      <div class="relative">
+        <img
+          [src]="chat.photoUrl || '/assets/images/Sample_User_Icon.png'"
+          alt="Avatar"
+          class="size-14 rounded-full mr-3 my-1"
+        />
 
-      <!-- ⬇️ ВСІ ТЕКСТОВІ ЕЛЕМЕНТИ ВСЕРЕДИНІ ЦЬОГО БЛОКУ успадковуватимуть text-white -->
+        @if (chat.isOnline) {
+        <span
+          class="absolute bottom-2 right-2 block size-4 rounded-full bg-teal-400 border-[3px] border-white"
+          title="Онлайн"
+        >
+        </span>
+        }
+      </div>
+
       <div class="flex flex-col flex-1 my-1">
         <div class="flex justify-between items-center">
           <div class="font-semibold text-[18px] truncate max-w-[160px]">

@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, computed, effect, EventEmitter, inject, i
 import { MessageService } from '../../services/message.service';
 import { ChatUserDto } from '../../models/chatUser.model';
 import { Router } from '@angular/router';
+import { PresenceService } from '../../../../core/services/presence.service';
 
 @Component({
   selector: 'app-message-chat-list',
@@ -13,9 +14,11 @@ export class MessageChatListComponent implements OnInit {
   messageService = inject(MessageService)
   cdr = inject(ChangeDetectorRef)
   router = inject(Router)
+  private presenceService = inject(PresenceService);
 
   //states
-  userChats = signal<ChatUserDto[]>([]);
+  //userChats = signal<ChatUserDto[]>([]);
+   userChats = this.messageService.chatUsers;
   searchText = signal('');
 
   //input properties
@@ -27,12 +30,15 @@ export class MessageChatListComponent implements OnInit {
   filteredChats: Signal<ChatUserDto[]> = computed(() => {
     const activeUser = this.activeUsername();
     const search = this.searchText().toLowerCase();
+    const onlineUserEmails = new Set(this.presenceService.onlineUsers());
 
     return this.userChats()
       .map(chat => ({
         ...chat,
         // isSelected тепер не зберігається, а обчислюється на льоту!
-        isSelected: chat.username === activeUser
+        isOnline: onlineUserEmails.has(chat.email),
+        isSelected: chat.username === activeUser,
+        unreadCount: chat.username === activeUser ? 0 : chat.unreadCount
       }))
       .filter(chat =>
         chat.username?.toLowerCase().includes(search)
@@ -44,35 +50,35 @@ export class MessageChatListComponent implements OnInit {
       });
   });
 
-  constructor() {
-    // Effect для перезавантаження чатів при отриманні нового повідомлення
-    effect(() => {
-      if (this.isThereNewMessages()) {
-        this.loadUserChats();
-      }
-    });
-  }
+  // constructor() {
+  //   // Effect для перезавантаження чатів при отриманні нового повідомлення
+  //   effect(() => {
+  //     if (this.isThereNewMessages()) {
+  //       console.log("new chats")
+  //       this.loadUserChats();
+  //     }
+  //   });
+  // }
 
   //hooks
   ngOnInit(): void {
-    this.loadUserChats();
+   //this.loadUserChats();
+   this.messageService.loadUsersChat();
   }
 
   //methods
   onSelectChat(chosenChat: ChatUserDto) {
-
     const currentMessages = this.messageService.messages();
     this.messageService.messages.set(Math.max(0, currentMessages - chosenChat.unreadCount));
-
-    chosenChat.unreadCount = 0;
+    this.messageService.loadUsersChat();
 
     this.router.navigate(['/messages/chats', chosenChat.username]);
     this.selectChat.emit(chosenChat.username);
   }
 
-  loadUserChats() {
-    this.messageService.getUsersChat().subscribe((result) => {
-      this.userChats.set(result);
-    })
-  }
+  // loadUserChats() {
+  //   this.messageService.getUsersChat().subscribe((result) => {
+  //     this.userChats.set(result);
+  //   })
+  // }
 }

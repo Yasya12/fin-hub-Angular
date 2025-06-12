@@ -11,7 +11,6 @@
     <div class="pb-2 flex-1 border-x border-gray-200">
       <app-message-chat
         [username]="username"
-        [newMessages]="newMessages"
         (loadMoreMessages)="onLoadMoreMessages()"
         (messageSend)="onSendMessage()"
       ></app-message-chat>
@@ -26,7 +25,6 @@
       <span class="text-black text-xl mt-0.5">Переписники</span>
     </div>
     <app-message-chat-list
-      (selectChat)="onChatSelected($event)"
       [isThereNewMessages]="isThereNewMessages()"
       [activeUsername]="username"
     ></app-message-chat-list>

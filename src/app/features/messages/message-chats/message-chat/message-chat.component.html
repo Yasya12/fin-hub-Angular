@@ -4,7 +4,7 @@
     (scroll)="onScroll()"
     class="scrollable flex-1 overflow-y-auto px-4 space-y-2"
   >
-    @for (group of groupMessages; track group.date) {
+    @for (group of groupMessages(); track group.date) {
     <!-- Centered Date Label -->
     <div class="flex justify-center">
       <span
@@ -38,15 +38,15 @@
 
       <!-- If the message is from others -->
       @if(message.senderUserName === username()){
-      <div class="flex items-end space-x-4">
+      <div class="flex items-end space-x-4 group">
         <img
           [src]="message.senderUPhotoUrl"
           alt="{{ message.senderUserName }}"
           class="w-10 h-10 rounded-full object-cover"
         />
-        <div class="">
+        <div class="group relative">
           <div
-            class="relative bg-gray-200 text-gray-800 px-3 py-2 rounded-lg max-w-xs md:max-w-md w-fit mr-24"
+            class="bg-gray-200 text-gray-800 px-3 py-2 rounded-lg max-w-xs md:max-w-md w-fit"
           >
             <div class="flex justify-between items-end gap-2">
               <div class="break-words leading-snug text-justify">
@@ -57,22 +57,58 @@
               </span>
             </div>
           </div>
+          <button
+            (click)="deleteMessage(message.id)"
+            class="absolute -right-10 top-1/2 -translate-y-1/2 p-1 rounded-full text-gray-500 hover:bg-white hover:text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            aria-label="Delete message"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
         </div>
       </div>
       }
 
       <!-- If the message is from current user -->
       @if(message.senderUserName !== username()){
-      <div class="flex items-end flex-row-reverse">
+      <div class="flex items-end flex-row-reverse group relative">
         <img
           [src]="message.senderUPhotoUrl"
           alt="{{ message.senderUserName }}"
           class="w-10 h-10 rounded-full object-cover ml-4"
         />
-        <div class="text-right ml-24">
+        <div class="text-right">
           <div
             class="relative bg-teal-400 text-white px-3 py-2 rounded-lg inline-block max-w-xs md:max-w-md w-fit ml-24"
           >
+            <button
+              (click)="deleteMessage(message.id)"
+              class="absolute -left-10 top-1/2 -translate-y-1/2 p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              aria-label="Delete message"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
             <div class="flex justify-between items-end gap-2">
               <div class="break-words leading-snug text-justify">
                 {{ message.content }}

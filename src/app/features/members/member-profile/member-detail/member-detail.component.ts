@@ -1,9 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { User } from '../../../../core/models/interfaces/user/user.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FollowingService } from '../../../followings/services/following.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../../core/services/auth.service';
+import { PresenceService } from '../../../../core/services/presence.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -18,6 +19,9 @@ export class MemberDetailComponent implements OnInit {
   authService = inject(AuthService)
   router = inject(Router)
   resetPosts = signal(true);
+  private presenceService = inject(PresenceService);
+
+  isOnline = computed(() => this.presenceService.onlineUsers().includes(this.user.email));
 
   //States
   user: User = {} as User;
