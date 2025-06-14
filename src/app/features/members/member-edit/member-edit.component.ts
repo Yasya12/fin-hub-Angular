@@ -5,6 +5,7 @@ import { User } from '../../../core/models/interfaces/user/user.interface';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthStore } from '../../../core/stores/auth-store';
 import { MemberService } from '../services/member.service';
+import { ResponseModel } from '../../../shared/models/interfaces/response.model';
 @Component({
   selector: 'app-member-edit',
   templateUrl: './member-edit.component.html',
@@ -44,6 +45,17 @@ export class MemberEditComponent implements OnInit {
     this.authService.getMember().subscribe({
       next: (u: User) => {
         this.user.set(u);
+
+        const old = this.authService.currentUser();
+        if (old) {
+          const updated: ResponseModel = {
+            ...old,
+            user: u
+          };
+          this.authService.currentUser.set(updated);
+
+          localStorage.setItem('user', JSON.stringify(u));
+        }
       }
     })
   }
@@ -53,8 +65,21 @@ export class MemberEditComponent implements OnInit {
       next: _ => {
         this.toastr.success('Profile updated successfully', 'Success');
         this.editForm?.reset(this.user());
+      },
+      error: (error) => {
+        // Виводимо повідомлення про помилку
+        if (error?.error?.errors) {
+          const validationErrors = error.error.errors;
+          for (let key in validationErrors) {
+            if (validationErrors.hasOwnProperty(key)) {
+              this.toastr.error(validationErrors[key][0], `Validation error in ${key}`);
+            }
+          }
+        } else {
+          this.toastr.error('Something went wrong while updating profile', 'Error');
+        }
       }
-    })
+    });
   }
 
   onPhotoSelected(event: Event) {
@@ -82,6 +107,7 @@ export class MemberEditComponent implements OnInit {
       next: () => {
         this.authService.setCurerntUser();
         this.loadUser();
+
         this.toastr.success('Profile photo updated successfully', 'Success');
       },
       error: () => {

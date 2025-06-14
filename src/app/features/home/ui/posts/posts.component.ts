@@ -192,12 +192,6 @@ export class PostsComponent implements OnInit, AfterViewInit {
     })
   }
 
-  // loadHoverdFollowUser(id: string) {
-  //   this.followingService.getFollowById(id).subscribe((user) => {
-  //     this.hoverFollowUser = user;
-  //   })
-  // }
-
   onModalClick(event: MouseEvent) {
     this.goToUserProfile(event, this.hoveredUser!.username);
     event.stopPropagation();

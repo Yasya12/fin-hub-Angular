@@ -8,6 +8,10 @@ import { ResponseModel } from '../../../../shared/models/interfaces/response.mod
 import { AuthService } from '../../../../core/services/auth.service';
 import { ContactService } from '../../../info-pages/services/contact.service';
 import { Router } from '@angular/router';
+import { User } from '../../../../core/models/interfaces/user/user.interface';
+import { Follow } from '../../../followings/models/follow.interface';
+import { FollowingService } from '../../../followings/services/following.service';
+import { MemberService } from '../../../members/services/member.service';
 
 @Component({
   selector: 'app-post-view',
@@ -37,6 +41,7 @@ export class PostViewComponent implements OnInit {
   // Lifecycle hooks
   ngOnInit(): void {
     this.currentUsername = this.authService.currentUser()!.user.username;
+    console.log(this.currentUsername)
 
     this.makeLinksClickable();
   }
@@ -169,4 +174,94 @@ export class PostViewComponent implements OnInit {
     });
   }
 
+
+  showModal: boolean = false;
+  hoveredPostId: string | null = null;
+  modalPosition = { top: 0, left: 0 };
+  hoveredUser: User | undefined;
+  hoverFollowUser: Follow | undefined;
+  isFollowing: boolean | undefined;
+  isHovering = false;
+  hoverTimeout: any;
+
+  private readonly memberService = inject(MemberService);
+  followingService = inject(FollowingService);
+
+  showUserModal(post: SinglePost, container: HTMLElement): void {
+    console.log(1)
+    this.loadHoveredUser(post!.userName);
+
+    this.hoveredPostId = post!.id;
+    this.showModal = true;
+     console.log(this.showModal)
+    this.isHovering = true;
+
+    const rect = container.getBoundingClientRect();
+
+    this.modalPosition = {
+      top: rect.top + window.scrollY + rect.height + 5,
+      left: rect.left + window.scrollX,
+    };
+  }
+
+  loadHoveredUser(username: string) {
+    this.memberService.getUserByUsername(username).subscribe((user) => {
+      this.hoveredUser = user;
+      console.log(this.hoveredUser.username)
+      this.checkIfFollows(user.id);
+    })
+  }
+
+  onModalClick(event: MouseEvent) {
+    this.goToUserProfile(event, this.hoveredUser!.username);
+    event.stopPropagation();
+  }
+
+  hideUserModalWithDelay() {
+    this.isHovering = false;
+
+    this.hoverTimeout = setTimeout(() => {
+      if (!this.isHovering) {
+        this.showModal = false;
+        console.log(this.showModal)
+        this.hoveredPostId = '';
+      }
+    }, 300); // 200 мс — можна більше/менше
+  }
+
+  cancelHideModal() {
+    this.isHovering = true;
+    clearTimeout(this.hoverTimeout);
+  }
+
+  checkIfFollows(id: string) {
+    this.followingService.isFollowingUser(id).subscribe((result) => {
+      this.isFollowing = result;
+    })
+  }
+
+  toggleFollow(userId: string): void {
+    if (!this.isFollowing) {
+      this.followingService.followUser(userId).subscribe(() => {
+        this.isFollowing = !this.isFollowing;
+        this.toastr.success(`Now you are following ${this.hoveredUser?.username}`);
+      })
+
+    } else {
+      this.followingService.unfollow(userId).subscribe(() => {
+        this.isFollowing = !this.isFollowing;
+        this.toastr.error(`You unfollowd ${this.hoveredUser?.username}`);
+      })
+
+    }
+  }
+
+  goToUserProfile(event: Event, userName: string): void {
+    event.stopPropagation();
+    this.router.navigate(['/member', userName]);
+  }
+
+  writeToUser(username: string): void {
+    this.router.navigate(['/messages/chats', username]);
+  }
 }

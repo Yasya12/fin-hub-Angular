@@ -5,7 +5,7 @@
       <img
         [src]="user.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
         alt="Profile photo"
-        class="size-32 rounded-full border-2 border-gray-300"
+        class="size-32 rounded-full border-2 border-gray-300 object-cover"
       />
 
       @if (isOnline()) {
@@ -86,7 +86,7 @@
     <nav class="flex text-lg font-medium text-teal-700">
       <button
         (click)="selectTab('posts')"
-        class="relative w-1/2 pb-2 text-center"
+        class="relative w-1/2 pb-2 text-center hover:text-black"
       >
         <div
           class="absolute -bottom-[2px] w-full h-[2px] bg-black"
@@ -96,7 +96,7 @@
       </button>
       <button
         (click)="selectTab('liked')"
-        class="w-1/2 pb-2 text-center relative"
+        class="w-1/2 pb-2 text-center relative hover:text-black"
       >
         <span>Вподобані пости</span>
         <div

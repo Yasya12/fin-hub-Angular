@@ -28,10 +28,11 @@
         <!-- Right: Follow Button (Aligned with Description) -->
         <button
           [ngClass]="{
-            'text-red-50 bg-teal-400 hover:bg-teal-500 ': !isFollowing,
-            'bg-red-600 text-white hover:bg-red-700': isFollowing
+            'bg-teal-600 text-white hover:opacity-90': !isFollowing,
+            'bg-white text-teal-600 border border-teal-600 hover:bg-teal-50':
+              isFollowing
           }"
-          class="py-2 px-4 rounded-lg transition self-end"
+          class="mt-2 px-6 py-1.5 border rounded-full text-lg font-medium transition ml-2 self-end"
           (click)="toggleFollow(hub)"
         >
           {{ isFollowing ? "Не стежити" : "Стежити" }}
@@ -107,7 +108,7 @@
       [userCanWritePost]="userCanWritePost"
     ></app-hub-posts>
     } @else if (selectedTab === 'edit') {
-    <app-hub-edit [hub]="hub"></app-hub-edit>
+    <app-hub-edit [hubId]="hub!.id" (saved)="onHubSaved()"></app-hub-edit>
     }
   </div>
   @if (selectedTab === 'requests') {

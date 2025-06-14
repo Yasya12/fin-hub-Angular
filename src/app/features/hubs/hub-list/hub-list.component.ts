@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+// ОНОВЛЕНО: додано ViewChild та ElementRef
+import { Component, inject, OnInit, signal, ViewChild, ElementRef } from '@angular/core';
 import { Hub } from '../models/hub.interface';
 import { HubService } from '../services/hub.service';
 import { Router } from '@angular/router';
@@ -28,20 +29,25 @@ export class HubListComponent implements OnInit {
   };
   isSubmitted = false;
 
-  // hooks
+  // Previews
+  mainPhotoPreview?: string;
+  backgroundPhotoPreview?: string;
+
+  // НОВЕ: Властивості для імен файлів та посилання на елементи
+  mainPhotoFileName: string | null = null;
+  backgroundPhotoFileName: string | null = null;
+  @ViewChild('mainPhotoInputModal') mainPhotoInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('backgroundPhotoInputModal') backgroundPhotoInputRef!: ElementRef<HTMLInputElement>;
+
+
   ngOnInit(): void {
     this.loadHubs();
   }
 
-  // methods
   loadHubs() {
     this.hubService.getHubs().subscribe({
       next: (hubs) => this.hubs.set(hubs)
     });
-  }
-
-  navigateToHub(hubId: string) {
-    this.router.navigateByUrl(`/hubs/${hubId}`);
   }
 
   openModal() {
@@ -50,6 +56,7 @@ export class HubListComponent implements OnInit {
 
   closeModal() {
     this.isModalOpen = false;
+    this.resetForm(); // Очищуємо форму при закритті
   }
 
   submitHub() {
@@ -67,70 +74,50 @@ export class HubListComponent implements OnInit {
 
       this.hubService.createhub(formData).subscribe({
         next: (createdHub) => {
-          this.toastr.success('Hub created successfully');
-          this.closeModal();
-          this.resetForm();
-
+          this.toastr.success('Хаб успішно створено');
+          this.closeModal(); // closeModal вже викликає resetForm
           const currentHubs = this.hubs();
           this.hubs.set([...currentHubs, createdHub]);
         },
         error: (err) => {
-          if (err.status === 400 && err.error.message === 'A hub with this name already exists.') {
-            this.toastr.error('A hub with this name already exists.');
+          if (err.status === 400 && err.error.message) {
+            this.toastr.error(err.error.message);
           } else {
-            this.toastr.error('An error occurred while creating the hub.');
+            this.toastr.error('Виникла помилка при створенні хабу.');
           }
         }
       });
-    } else {
-      console.log('Validation failed', this.errors);
     }
   }
 
   validateForm(): boolean {
     this.errors = { name: '', description: '' };
-
     if (this.hubName.trim().length < 3) {
-      this.errors.name = 'Name must be at least 3 characters.';
+      this.errors.name = 'Назва повинна містити щонайменше 3 символи.';
     }
-
     if (this.hubDescription.trim().length < 5) {
-      this.errors.description = 'Description must be at least 5 characters.';
+      this.errors.description = 'Опис повинен містити щонайменше 5 символів.';
     }
-
     return !this.errors.name && !this.errors.description;
   }
 
+  // ОНОВЛЕНО: resetForm тепер очищує і файли
   resetForm() {
     this.hubName = '';
     this.hubDescription = '';
     this.isSubmitted = false;
     this.errors = { name: '', description: '' };
+    this.clearMainPhoto(); // Очищуємо головне фото
+    this.clearBackgroundPhoto(); // Очищуємо фонове фото
   }
 
-  // onMainPhotoChange(event: Event) {
-  //   const input = event.target as HTMLInputElement;
-  //   if (input.files) {
-  //     this.mainPhoto = input.files[0];
-  //   }
-  // }
-
-  // onBackgroundPhotoChange(event: Event) {
-  //   const input = event.target as HTMLInputElement;
-  //   if (input.files) {
-  //     this.backgroundPhoto = input.files[0];
-  //   }
-  // }
-
-  mainPhotoPreview?: string;
-
+  // ОНОВЛЕНО: onMainPhotoSelected
   onMainPhotoSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      this.mainPhoto = input.files[0];
-    }
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      this.mainPhoto = file;
+      this.mainPhotoFileName = file.name; // Зберігаємо ім'я файлу
+
       const reader = new FileReader();
       reader.onload = () => {
         this.mainPhotoPreview = reader.result as string;
@@ -138,22 +125,39 @@ export class HubListComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
-
-  backgroundPhotoPreview?: string;
-
+  
+  // ОНОВЛЕНО: onBackgroundPhotoSelected
   onBackgroundPhotoSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      this.backgroundPhoto = input.files[0];
-    }
-
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      this.backgroundPhoto = file;
+      this.backgroundPhotoFileName = file.name; // Зберігаємо ім'я файлу
+
       const reader = new FileReader();
       reader.onload = () => {
         this.backgroundPhotoPreview = reader.result as string;
       };
       reader.readAsDataURL(file);
+    }
+  }
+
+  // НОВИЙ МЕТОД: Очищення головного фото
+  clearMainPhoto(): void {
+    this.mainPhoto = null;
+    this.mainPhotoPreview = undefined;
+    this.mainPhotoFileName = null;
+    if (this.mainPhotoInputRef) {
+      this.mainPhotoInputRef.nativeElement.value = '';
+    }
+  }
+
+  // НОВИЙ МЕТОД: Очищення фонового фото
+  clearBackgroundPhoto(): void {
+    this.backgroundPhoto = null;
+    this.backgroundPhotoPreview = undefined;
+    this.backgroundPhotoFileName = null;
+    if (this.backgroundPhotoInputRef) {
+      this.backgroundPhotoInputRef.nativeElement.value = '';
     }
   }
 

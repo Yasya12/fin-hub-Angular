@@ -39,14 +39,14 @@ export class NotificationCardComponent implements OnInit {
     if (notification.hubId) {
       this.markAsRead.emit(notification.id);
 
-      this.router.navigate(['/hubs', notification.hubId], { queryParams: { tab: 'requests' } });
-      // if (this.isAdmin) {
-      //   this.router.navigate(['/hubs', notification.hubId], { queryParams: { tab: 'requests' } });
-      // }
-      // else {
-      //   console.log(this.isAdmin)
-      //   this.router.navigate(['/hubs', notification.hubId]);
-      // }
+      //this.router.navigate(['/hubs', notification.hubId], { queryParams: { tab: 'posts' } });
+      if (this.isAdmin) {
+        this.router.navigate(['/hubs', notification.hubId], { queryParams: { tab: 'requests' } });
+      }
+      else {
+        console.log(this.isAdmin)
+        this.router.navigate(['/hubs', notification.hubId]);
+      }
     }
     if (notification.type === 'follow') {
       this.markAsRead.emit(notification.id);

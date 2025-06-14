@@ -30,6 +30,7 @@ export class HubPeopleComponent implements OnInit {
   memberReason: string = '';
   trustWordCount: number = 0;
   contributionWordCount: number = 0;
+  isAdmin: boolean = false;
 
   //inputs
   hubId = input.required<string>();
@@ -38,6 +39,10 @@ export class HubPeopleComponent implements OnInit {
   //hooks
   ngOnInit(): void {
     this.loadPeople(this.hubId());
+
+    this.hubService.isAdmin(this.hubId()).subscribe((isAdmin: boolean) => {
+      this.isAdmin = isAdmin;
+    });
   }
 
   //methods
@@ -84,8 +89,6 @@ export class HubPeopleComponent implements OnInit {
   closeConfirmModal() {
     this.showConfirmModal = false;
   }
-
-
 
 
   loadPeople(hubId: string) {

@@ -2,14 +2,137 @@
 <div *ngIf="post()" class="px-4 pt-4 bg-white w-full rounded-t-lg">
   <div class="flex justify-between">
     <!-- post() author and date -->
-    <div class="flex items-center mb-6">
+    <div class="flex items-center relative">
       <img
+        #avatarContainer
         [src]="
           post()!.profilePictureUrl || '/assets/images/Sample_User_Icon.png'
         "
         alt="Author's Profile Picture"
-        class="size-11 object-cover rounded-full mr-4"
+        class="size-11 object-cover rounded-full mr-4 cursor-pointer"
+        (click)="goToUserProfile($event, post()!.userName)"
+        (mouseenter)="showUserModal(post()!, avatarContainer)"
+        (mouseleave)="hideUserModalWithDelay()"
       />
+
+      <!-- Модальне вікно -->
+      <div
+        *ngIf="showModal"
+        class="absolute w-80 bg-white border border-gray-300 rounded-2xl p-5 z-50 shadow-xl transition-opacity duration-200 ease-in-out"
+        [ngClass]="{
+          'opacity-100': showModal,
+          'opacity-0 pointer-events-none': !showModal
+        }"
+        style="top: 132%; left: 0%; transition: opacity 0.3s ease"
+        (mouseenter)="cancelHideModal()"
+        (mouseleave)="hideUserModalWithDelay()"
+        (click)="onModalClick($event)"
+      >
+        <!-- Аватар, ім'я, верифікація -->
+        <div class="flex flex-col gap-3 items-start">
+          <!-- Info -->
+          <div class="flex gap-2 relative">
+            <!-- Аватар -->
+            <img
+              [src]="
+                hoveredUser?.profilePictureUrl ||
+                '/assets/images/Sample_User_Icon.png'
+              "
+              alt="User Avatar"
+              class="size-14 rounded-full mr-3"
+            />
+
+            <!-- Ім'я, емейл, дата приєднання -->
+            <div class="flex flex-col">
+              <p class="text-base font-semibold leading-tight">
+                {{ hoveredUser?.username }}
+              </p>
+              <p class="text-sm text-gray-500">
+                {{ hoveredUser?.email }}
+              </p>
+              <div class="flex gap-1 items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512.000000 512.000000"
+                  class="size-3 fill-gray-500"
+                >
+                  <g
+                    transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+                    stroke="none"
+                  >
+                    <path
+                      d="M1215 5106 c-37 -17 -70 -52 -84 -89 -6 -16 -11 -88 -11 -162 l0 -133 -292 -4 c-287 -3 -295 -4 -369 -30 -208 -73 -353 -217 -426 -423 l-28 -80 0 -1825 0 -1825 28 -80 c73 -206 217 -349 426 -423 l76 -27 2025 0 2025 0 80 28 c206 73 349 217 423 426 l27 76 0 1825 0 1825 -27 76 c-74 209 -217 353 -423 426 -79 27 -82 28 -372 31 l-292 4 -3 148 c-3 162 -8 177 -72 224 -39 29 -133 29 -172 0 -64 -47 -69 -62 -72 -225 l-3 -149 -1119 0 -1119 0 -3 149 c-3 162 -8 178 -70 224 -34 25 -113 32 -153 13z m3569 -1762 c15 -14 16 -147 14 -1392 l-3 -1377 -28 -57 c-35 -72 -93 -130 -165 -165 l-57 -28 -1985 0 -1985 0 -57 28 c-72 35 -134 97 -167 167 l-26 55 -3 1377 c-2 1245 -1 1378 14 1392 14 15 221 16 2224 16 2003 0 2210 -1 2224 -16z"
+                    />
+                  </g>
+                </svg>
+                <p class="text-xs text-gray-500 mt-0.5">
+                  Приєднався:
+                  {{ hoveredUser?.createdAt | date : "LLLL yyyy" }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Статистика -->
+          <div
+            class="flex justify-between w-full text-sm text-black font-medium mt-2"
+          >
+            <div class="text-center">
+              <p class="font-semibold">
+                {{ hoveredUser?.followingCount }}
+              </p>
+              <p class="text-gray-500 text-xs">Following</p>
+            </div>
+            <div class="text-center">
+              <p class="font-semibold">
+                {{ hoveredUser?.folowersCount }}
+              </p>
+              <p class="text-gray-500 text-xs">Followers</p>
+            </div>
+            <div class="text-center">
+              <p class="font-semibold">
+                {{ hoveredUser?.postsCount }}
+              </p>
+              <p class="text-gray-500 text-xs">Posts</p>
+            </div>
+          </div>
+
+          <!-- Опис -->
+          <p class="text-sm text-gray-700 leading-snug">
+            {{ hoveredUser?.bio }}
+          </p>
+
+          <!-- Кнопка Follow -->
+          @if (hoveredUser?.username !== currentUsername) {
+          <div class="flex justify-between w-full gap-3">
+            <button
+              (click)="toggleFollow(hoveredUser!.id); $event.stopPropagation()"
+              class="w-full py-2 rounded-full text-sm font-semibold transition duration-200"
+              [ngClass]="{
+                'bg-teal-600 text-white hover:opacity-90': !isFollowing,
+                'bg-white text-teal-600 border border-teal-600 hover:bg-teal-50':
+                  isFollowing
+              }"
+            >
+              {{ isFollowing ? "Не стежити" : "Стежити" }}
+            </button>
+            <button
+              (click)="
+                writeToUser(hoveredUser!.username); $event.stopPropagation()
+              "
+              class="w-full py-2 rounded-full text-sm font-semibold transition duration-200"
+              [ngClass]="{
+                'bg-teal-600 text-white hover:opacity-90': isFollowing,
+                'bg-white text-teal-600 border border-teal-600 hover:bg-teal-400 hover:text-white':
+                  !isFollowing
+              }"
+            >
+              Написати
+            </button>
+          </div>
+          }
+        </div>
+      </div>
       <div>
         <h4 class="text-xl font-semibold text-gray-800">
           {{ post()!.userName }}

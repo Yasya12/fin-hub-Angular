@@ -40,7 +40,7 @@
       @if(message.senderUserName === username()){
       <div class="flex items-end space-x-4 group">
         <img
-          [src]="message.senderUPhotoUrl"
+          [src]="message.senderUPhotoUrl || '/assets/images/Sample_User_Icon.png'"
           alt="{{ message.senderUserName }}"
           class="w-10 h-10 rounded-full object-cover"
         />
@@ -83,7 +83,7 @@
       @if(message.senderUserName !== username()){
       <div class="flex items-end flex-row-reverse group relative">
         <img
-          [src]="message.senderUPhotoUrl"
+          [src]="message.senderUPhotoUrl || '/assets/images/Sample_User_Icon.png'"
           alt="{{ message.senderUserName }}"
           class="w-10 h-10 rounded-full object-cover ml-4"
         />

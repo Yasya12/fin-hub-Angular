@@ -1,4 +1,4 @@
-<div class="border-r">
+<div class="border-r mb-4">
   <div class="w-[95%] h-full rounded-xl mx-auto mt-5">
     <div
       style="
@@ -35,126 +35,42 @@
       <h2 class="text-xl text-gray-400 font-semibold mb-4">Всі хаби</h2>
       <div class="grid grid-cols-2 gap-6">
         <ng-container *ngFor="let hub of hubs()">
-          <div
-            class="border rounded-xl p-6 shadow hover:shadow-md transition cursor-pointer"
-            [routerLink]="['/hubs', hub.id]"
-            [queryParams]="{ tab: 'posts' }"
-          >
-            <div class="flex items-start space-x-5">
-              <img
-                [src]="hub.mainPhotoUrl || '/assets/images/1.jpg'"
-                alt="{{ hub.name }}"
-                class="size-32 min-w-[128px] rounded-lg"
-              />
-              <div class="flex flex-col gap-3 w-full">
-                <h3 class="font-bold text-gray-800 text-2xl">{{ hub.name }}</h3>
-                <p class="text-xs text-gray-100">{{ hub.description }}</p>
+  <div
+    class="border rounded-xl p-6 shadow hover:shadow-md transition cursor-pointer flex"
+    [routerLink]="['/hubs', hub.id]"
+    [queryParams]="{ tab: 'posts' }"
+  >
+    <div class="flex items-start space-x-5">
+      <img
+        [src]="hub.mainPhotoUrl || '/assets/images/1.jpg'"
+        alt="{{ hub.name }}"
+        class="size-32 min-w-[128px] rounded-lg object-cover" />
 
-                <div class="mt-5 flex justify-between">
-                  <button
-                    class="px-4 py-1 border-2 font-medium rounded-full transition duration-300 ease-in-out hover:bg-gray-200"
-                    (click)="openModal()"
-                  >
-                    Дізнатися більше
-                  </button>
-                  <button
-                    class="px-4 py-1 border-2 font-medium rounded-full transition duration-300 ease-in-out hover:bg-gray-200"
-                    (click)="openModal()"
-                  >
-                    Слідкувати
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </div>
-    </div>
-  </div>
-</div>
+      <div class="flex flex-col gap-3 w-full">
+        <h3 class="font-bold text-gray-800 text-2xl">{{ hub.name }}</h3>
+        
+        <p class="text-sm text-gray-600 leading-relaxed">{{ hub.description }}</p>
 
-<div class="p-6 text-gray-900 flex justify-center min-h-screen">
-  <div class="">
-    <!-- Header -->
-    <div class="flex justify-start items-start mb-6 bg-[#f0f0f0] border p-4">
-      <div>
-        <h2 class="text-2xl font-bold">Welcome to Hubs!</h2>
-        <p class="text-sm text-gray-700">
-          Follow Hubs to explore your interests on FinHub.
-        </p>
-        <div class="flex space-x-3 mt-3">
-          <button
-            class="px-4 py-2 border border-green-600 text-green-700 rounded-full transition duration-300 ease-in-out hover:bg-green-600 hover:text-white"
+        <div class="mt-auto flex justify-end pt-4"> <button
+            class="px-4 py-1 border-2 font-medium rounded-full transition duration-300 ease-in-out hover:bg-gray-200"
             (click)="openModal()"
           >
-            + Create a Hub
+            Дізнатися більше
           </button>
-          @if(hubs().length > 0) {
-          <button
-            class="px-4 py-2 border border-green-600 text-green-700 rounded-full transition duration-300 ease-in-out hover:bg-green-600 hover:text-white"
-          >
-            + Discover Hub
-          </button>
-          }
         </div>
       </div>
     </div>
-    @if(hubs().length > 0) {
-    <!-- Discover Hubs -->
-    <div>
-      <h3 class="text-xl font-semibold mb-4">Discover Hubs</h3>
-      <div class="flex flex-wrap gap-4 justify-between max-w-[880px]">
-        <ng-container *ngFor="let hub of hubs()">
-          <div
-            class="bg-[#f0f0f0] rounded-lg overflow-hidden shadow hover:shadow-lg transition w-52"
-            [routerLink]="['/hubs', hub.id]"
-            [queryParams]="{ tab: 'posts' }"
-          >
-            <div class="relative">
-              <img
-                [src]="hub.backgroundPhotoUrl || '/assets/images/hero-back.jpg'"
-                alt="{{ hub.name }}"
-                class="w-full h-20 object-cover"
-              />
-              <div class="absolute inset-x-0 top-[53px] flex justify-center">
-                <img
-                  [src]="hub.mainPhotoUrl || '/assets/images/1.jpg'"
-                  alt="{{ hub.name }}"
-                  class="w-12 h-12 rounded-lg border-2 border-black"
-                />
-              </div>
-            </div>
-            <div
-              class="p-8 pb-16 px-8 flex flex-col justify-center items-center text-center"
-            >
-              <div>
-                <h4 class="font-bold text-gray-900 text-sm mb-1">
-                  {{ hub.name }}
-                </h4>
-              </div>
-              <div class="text-xs text-gray-600 line-clamp-3">
-                {{ hub.description }}
-              </div>
-            </div>
-          </div>
-        </ng-container>
+  </div>
+</ng-container>
       </div>
     </div>
-
-    } @else {
-    <div class="flex flex-col items-center pt-32">
-      <h1>🚧 No Hubs Yet 🚧</h1>
-      <p>Be the first one to create!</p>
-    </div>
-
-    }
   </div>
 </div>
 
 <!-- Modal -->
 <div
   *ngIf="isModalOpen"
-  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center"
+  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-[999]"
   (click)="closeModal()"
 >
   <div
@@ -162,11 +78,11 @@
     (click)="stopPropagation($event)"
     (keydown.enter)="submitHub()"
   >
-    <h3 class="text-xl font-semibold mb-4">Create a Hub</h3>
+    <h3 class="text-xl font-semibold mb-4">Створити хаб</h3>
 
     <!-- Name Field -->
     <label class="block text-sm font-medium text-gray-700 mb-2 mt-4"
-      >Name</label
+      >Ім`я</label
     >
     <input
       [(ngModel)]="hubName"
@@ -178,7 +94,7 @@
         'border-red-500 focus:ring-red-500':
           hubName.length > 0 && hubName.length < 3
       }"
-      placeholder="Enter hub name"
+      placeholder="Введіть назву хабу"
     />
     <p *ngIf="errors.name && isSubmitted" class="text-red-500 text-xs mt-1">
       {{ errors.name }}
@@ -186,7 +102,7 @@
 
     <!-- Description Field -->
     <label class="block text-sm font-medium text-gray-700 mb-2 mt-4"
-      >Brief description</label
+      >Короткий опис</label
     >
     <textarea
       [(ngModel)]="hubDescription"
@@ -198,46 +114,106 @@
         'border-red-500 focus:ring-red-500':
           hubDescription.length > 0 && hubDescription.length < 5
       }"
-      placeholder="Enter a brief description"
+      placeholder="Введіть короткий опис"
     ></textarea>
     <p *ngIf="errors.description && isSubmitted" class="text-red-500 text-xs">
       {{ errors.description }}
     </p>
 
     <!-- Main Photo Upload -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2 mt-4"
-        >Main Photo</label
+    <div class="mt-4">
+      <label class="block text-sm font-medium text-gray-700 mb-2"
+        >Основне фото</label
       >
       <input
         type="file"
         (change)="onMainPhotoSelected($event)"
         accept="image/*"
-        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+        class="hidden"
+        #mainPhotoInputModal
       />
+
+      <div class="flex items-center space-x-3">
+        <button
+          type="button"
+          (click)="mainPhotoInputModal.click()"
+          class="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold text-sm rounded-full border-0 transition whitespace-nowrap"
+        >
+          Виберіть файл
+        </button>
+        <span class="text-sm text-gray-500 truncate" *ngIf="!mainPhotoFileName"
+          >Файл не вибрано</span
+        >
+        <span
+          class="text-sm text-gray-600 truncate"
+          *ngIf="mainPhotoFileName"
+          [title]="mainPhotoFileName"
+          >{{ mainPhotoFileName }}</span
+        >
+        <button
+          type="button"
+          *ngIf="mainPhotoFileName"
+          (click)="clearMainPhoto()"
+          class="ml-auto text-red-500 hover:text-red-700 text-sm font-semibold"
+        >
+          Очистити
+        </button>
+      </div>
+
       <img
         *ngIf="mainPhotoPreview"
         [src]="mainPhotoPreview"
-        alt="Background photo preview"
+        alt="Попередній перегляд основного фото"
         class="mt-2 rounded-lg w-full h-40 object-cover border border-gray-300"
       />
     </div>
 
     <!-- Background Photo Field -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2 mt-4"
-        >Background Photo</label
+    <div class="mt-4">
+      <label class="block text-sm font-medium text-gray-700 mb-2"
+        >Фонове фото</label
       >
       <input
         type="file"
         (change)="onBackgroundPhotoSelected($event)"
         accept="image/*"
-        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+        class="hidden"
+        #backgroundPhotoInputModal
       />
+
+      <div class="flex items-center space-x-3">
+        <button
+          type="button"
+          (click)="backgroundPhotoInputModal.click()"
+          class="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold text-sm rounded-full border-0 transition whitespace-nowrap"
+        >
+          Виберіть файл
+        </button>
+        <span
+          class="text-sm text-gray-500 truncate"
+          *ngIf="!backgroundPhotoFileName"
+          >Файл не вибрано</span
+        >
+        <span
+          class="text-sm text-gray-600 truncate"
+          *ngIf="backgroundPhotoFileName"
+          [title]="backgroundPhotoFileName"
+          >{{ backgroundPhotoFileName }}</span
+        >
+        <button
+          type="button"
+          *ngIf="backgroundPhotoFileName"
+          (click)="clearBackgroundPhoto()"
+          class="ml-auto text-red-500 hover:text-red-700 text-sm font-semibold"
+        >
+          Очистити
+        </button>
+      </div>
+
       <img
         *ngIf="backgroundPhotoPreview"
         [src]="backgroundPhotoPreview"
-        alt="Background photo preview"
+        alt="Попередній перегляд фонового фото"
         class="mt-2 rounded-lg w-full h-40 object-cover border border-gray-300"
       />
     </div>
@@ -248,13 +224,13 @@
         (click)="closeModal()"
         class="px-4 py-2 text-gray-600 border border-gray-400 rounded hover:bg-gray-200"
       >
-        Cancel
+        Скасувати
       </button>
       <button
         (click)="submitHub()"
         class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
       >
-        Create
+        Створити
       </button>
     </div>
   </div>

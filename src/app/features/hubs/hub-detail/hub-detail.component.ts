@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Hub } from '../models/hub.interface';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HubService } from '../services/hub.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/interfaces/user/user.interface';
@@ -32,6 +32,8 @@ export class HubDetailComponent implements OnInit {
 
   //hooks
   ngOnInit(): void {
+    window.scrollTo(0, 0);
+    
     this.currentUser = this.authService.currentUser()?.user;
 
     this.route.queryParams.subscribe(params => {
@@ -43,6 +45,12 @@ export class HubDetailComponent implements OnInit {
 
     this.loadHubId();
     this.isFollowingHub();
+  }
+
+  onHubSaved() {
+    if (this.hubId) {
+      this.loadHub(this.hubId);
+    }
   }
 
   isFollowingHub() {
@@ -80,10 +88,12 @@ export class HubDetailComponent implements OnInit {
     });
   }
 
+  router = inject(Router);
+
   selectTab(tab: string) {
     this.selectedTab = tab;
+    this.router.navigate(['/hubs', this.hubId], { queryParams: { tab: tab } })
   }
-
 
   toggleFollow(hub: Hub): void {
     //this.authService.setCurerntUser();

@@ -1,22 +1,22 @@
 @if(requests.length === 0) {
 <div class="text-center animate-fade-in text-gray-500 my-4">
-  No requests.
+  Жодних запитів.
 </div>
 } @else{
 
 <div class="flex justify-center">
   <div class="w-full max-w-6xl">
-    <h2 class="text-xl font-bold my-4 text-center">Join Requests</h2>
+    <h2 class="text-xl font-bold my-4 text-center">Запити на приєднання</h2>
     <div class="overflow-x-auto">
       <table class="w-full border-collapse bg-white shadow rounded-xl">
         <thead class="bg-gray-100 font-semibold text-gray-800">
           <tr>
-            <th class="p-2 border text-left">Username</th>
-            <th class="p-2 border text-left">Description</th>
-            <th class="p-2 border text-left">Content</th>
-            <th class="p-2 border text-left">Status</th>
-            <th class="p-2 border text-left">Date</th>
-            <th class="p-2 border text-center">Actions</th>
+            <th class="p-2 border text-left">Ім'я</th>
+            <th class="p-2 border text-left">Опис</th>
+            <th class="p-2 border text-left">Зміст</th>
+            <th class="p-2 border text-left">Статус</th>
+            <th class="p-2 border text-left">Дата</th>
+            <th class="p-2 border text-center">Дії</th>
           </tr>
         </thead>
         <tbody>
@@ -35,7 +35,7 @@
                   (click)="openModal(request.description!.valueOf())"
                   class="text-green-600 underline text-sm ml-1"
                 >
-                  View
+                  Перегляд
                 </button>
               </ng-container>
               <ng-template #shortContent>
@@ -52,7 +52,7 @@
                   (click)="openModal(request.content)"
                   class="text-green-600 underline text-sm ml-1"
                 >
-                  View
+                  Перегляд
                 </button>
               </ng-container>
               <ng-template #shortContent>
@@ -82,14 +82,14 @@
                   class="flex items-center gap-1 text-white bg-green-500 hover:bg-green-600 px-3 py-1 rounded transition"
                   (click)="approveRequest(request)"
                 >
-                  Approve
+                  Схвалити
                 </button>
                 <button
                   *ngIf="request.status === 'Pending'"
                   class="flex items-center gap-1 text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition"
                   (click)="denyRequest(request)"
                 >
-                  Deny
+                  Відхилити
                 </button>
                 <p *ngIf="request.status !== 'Pending'" class="text-gray-600">
                   {{ request.status }}

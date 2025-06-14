@@ -93,7 +93,7 @@
         </svg>
         } @else {
         <img
-          [src]="this.authService.currentUser()?.user?.profilePictureUrl"
+          [src]="this.authService.currentUser()?.user?.profilePictureUrl || '/assets/images/Sample_User_Icon.png'"
           alt="User Icon"
           class="size-[35px] rounded-full text-teal-500 absolute top-0 left-0 border border-gray-400"
         />
